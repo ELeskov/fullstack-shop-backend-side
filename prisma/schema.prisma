@@ -13,21 +13,168 @@ model User {
   name     String
   email    String  @unique
   password String
-  pricture String?
+  picture  String?
 
   role UserRole @default(REGULAR)
 
   isVerified        Boolean @default(false) @map("is_verified")
   isTwoFactorEnable Boolean @default(false) @map("is_two_factor_enable")
 
-  method AuthMetod
+  method AuthMethod
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   accounts Account[]
+  shops    Shop[]
+  products Product[]
+  reviews  Review[]
+  orders   Order[]
 
   @@map("users")
+}
+
+model Shop {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  products   Product[]
+  categories Category[]
+  colors     Color[]
+  reviews    Review[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("shops")
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+  price       Int
+  images      String[]
+
+  reviews    Review[]
+  orderItems OrderItem[]
+
+  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shopId String? @map("shop_id")
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @map("category_id")
+
+  color   Color?  @relation(fields: [colorId], references: [id])
+  colorId String? @map("color_id")
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model Category {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+
+  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shopId String? @map("shop_id")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model Color {
+  id String @id @default(uuid())
+
+  title String
+  value String
+
+  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shopId String? @map("shop_id")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("colors")
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  text   String
+  rating Int
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shopId String? @map("shop_id")
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?  @map("product_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reviews")
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  status EnumOrderStatus @default(PENDING)
+  total  Int
+
+  items OrderItem[]
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+
+  quantity Int
+  price    Int
+
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @map("order_id")
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?  @map("product_id")
+
+  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shopId String? @map("shop_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("order_item")
 }
 
 model Account {
@@ -65,7 +212,7 @@ enum UserRole {
   ADMIN
 }
 
-enum AuthMetod {
+enum AuthMethod {
   CREDENTIALS
   GOOGLE
   YANDEX
@@ -75,4 +222,9 @@ enum TokenType {
   VERIFICATION
   TWO_FACTOR
   PASSWORD_RESET
+}
+
+enum EnumOrderStatus {
+  PENDING
+  PAYED
 }

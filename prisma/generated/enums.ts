@@ -17,13 +17,13 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-export const AuthMetod = {
+export const AuthMethod = {
   CREDENTIALS: 'CREDENTIALS',
   GOOGLE: 'GOOGLE',
   YANDEX: 'YANDEX'
 } as const
 
-export type AuthMetod = (typeof AuthMetod)[keyof typeof AuthMetod]
+export type AuthMethod = (typeof AuthMethod)[keyof typeof AuthMethod]
 
 
 export const TokenType = {
@@ -33,3 +33,11 @@ export const TokenType = {
 } as const
 
 export type TokenType = (typeof TokenType)[keyof typeof TokenType]
+
+
+export const EnumOrderStatus = {
+  PENDING: 'PENDING',
+  PAYED: 'PAYED'
+} as const
+
+export type EnumOrderStatus = (typeof EnumOrderStatus)[keyof typeof EnumOrderStatus]

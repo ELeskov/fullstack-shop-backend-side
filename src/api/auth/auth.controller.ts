@@ -1,7 +1,89 @@
-import { Controller } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common'
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger'
+import { type Request, type Response } from 'express'
 
+import { AuthService } from './auth.service'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
+
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  public constructor(private readonly authService: AuthService) {}
+
+  @ApiOperation({ summary: 'Регистрация пользователя' })
+  @ApiBody({ type: RegisterDto })
+  @ApiCreatedResponse({
+    description: 'Пользователь зарегистрирован',
+  })
+  @ApiBadRequestResponse({
+    description: 'Ошибка валидации входных данных.',
+  })
+  @ApiConflictResponse({
+    description: 'Пользователь с такой почтой уже существует',
+  })
+  @ApiNotFoundResponse({
+    description:
+      'Пользователь не найден. Пожалуйста проверьте введенные данные',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post('register')
+  public async register(@Req() req: Request, @Body() dto: RegisterDto) {
+    return this.authService.register(req, dto)
+  }
+
+  @ApiOperation({ summary: 'Вход (логин)' })
+  @ApiBody({ type: LoginDto })
+  @ApiOkResponse({
+    description:
+      'Успешный вход. Может вернуть accessToken в body и/или установить cookie',
+  })
+  @ApiBadRequestResponse({
+    description: 'Ошибка валидации входных данных.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Неверные учетные данные.',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  public async login(@Req() req: Request, @Body() dto: LoginDto) {
+    return this.authService.login(req, dto)
+  }
+
+  @ApiOperation({ summary: 'Выход (logout)' })
+  @ApiCookieAuth()
+  @ApiOkResponse({
+    description:
+      'Сессия завершена. Обычно сервер очищает cookie/refresh-token или инвалидирует сессию.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Нет валидной сессии/токена для выхода.',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  public async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.logout(req, res)
+  }
 }
