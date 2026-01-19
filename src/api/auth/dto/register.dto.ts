@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  Validate,
-} from 'class-validator'
-
-import { IsPasswordsMatchingConstraint } from '@/shared/decorators/is-passwords-matching-constraint.decorator'
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator'
 
 /**
  * DTO для регистрации пользователя.
@@ -59,26 +51,12 @@ export class RegisterDto {
   })
   password!: string
 
-  /**
-   * Подтверждение пароля пользователя.
-   * Должно совпадать с полем `password`.
-   *
-   * @example password123
-   */
   @ApiProperty({
-    example: 'password123',
-    description:
-      'Подтверждение пароля. Должно совпадать с полем "password". ' +
-      'Проверяется кастомным валидатором IsPasswordsMatchingConstraint.',
-    minLength: 6,
+    description: 'Captcha verification code',
+    example: '03AFcWeA...',
   })
-  @IsString({ message: 'Пароль подтверждения должен быть строкой.' })
-  @IsNotEmpty({ message: 'Поле подтверждения пароля не может быть пустым.' })
-  @MinLength(6, {
-    message: 'Пароль подтверждения должен содержать не менее 6 символов.',
-  })
-  @Validate(IsPasswordsMatchingConstraint, {
-    message: 'Пароли не совпадают.',
-  })
-  passwordRepeat!: string
+  @IsString({ message: 'Капча должна быть строкой' })
+  @IsNotEmpty({ message: 'Капча обязательна' })
+  @IsOptional()
+  public captcha?: string
 }

@@ -22,6 +22,7 @@ import {
 import { type Request, type Response } from 'express'
 
 import { AuthService } from './auth.service'
+import { AuthResponseDto } from './dto/auth-response.dto'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 
@@ -32,6 +33,10 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiBody({ type: RegisterDto })
+  @ApiOkResponse({
+    description: 'Успешная регистрация.',
+    type: AuthResponseDto,
+  })
   @ApiCreatedResponse({
     description: 'Пользователь зарегистрирован',
   })
@@ -45,6 +50,7 @@ export class AuthController {
     description:
       'Пользователь не найден. Пожалуйста проверьте введенные данные',
   })
+  // @Turnstile()
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   public async register(@Req() req: Request, @Body() dto: RegisterDto) {
@@ -56,6 +62,7 @@ export class AuthController {
   @ApiOkResponse({
     description:
       'Успешный вход. Может вернуть accessToken в body и/или установить cookie',
+    type: AuthResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Ошибка валидации входных данных.',
@@ -72,11 +79,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Выход (logout)' })
   @ApiCookieAuth()
   @ApiOkResponse({
-    description:
-      'Сессия завершена. Обычно сервер очищает cookie/refresh-token или инвалидирует сессию.',
+    description: 'Сессия завершена. Очистка cookie и инвалидация сессии.',
+    type: AuthResponseDto,
   })
   @ApiUnauthorizedResponse({
-    description: 'Нет валидной сессии/токена для выхода.',
+    description: 'Нет валидной сессии для выхода.',
   })
   @HttpCode(HttpStatus.OK)
   @Post('logout')

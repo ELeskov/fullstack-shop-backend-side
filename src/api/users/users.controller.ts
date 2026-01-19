@@ -22,7 +22,7 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('profile')
+  @Get('me')
   @Authorization()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
@@ -30,10 +30,10 @@ export class UsersController {
     description: 'Профиль текущего пользователя.',
   })
   @ApiUnauthorizedResponse({
-    description: 'Не авторизован (нет/невалидный токен).',
+    description: 'Не авторизован.',
   })
-  public async findProfile(@Authorized('id') userId: string) {
-    return this.usersService.findById(userId)
+  public async me(@Authorized('id') userId: string) {
+    return this.usersService.getMe(userId)
   }
 
   @Get(':id')

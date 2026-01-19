@@ -32,7 +32,7 @@ export class AuthService {
       throw new ConflictException('Пользователь с такой почтой уже существует')
     }
 
-    const newUser = await this.userService.create({
+    const user = await this.userService.create({
       name: dto.name,
       email: dto.email,
       password: dto.password,
@@ -40,7 +40,7 @@ export class AuthService {
       picture: '',
     })
 
-    return await this.saveSession(req, newUser)
+    return await this.saveSession(req, user)
   }
 
   public async login(req: Request, dto: LoginDto) {
@@ -92,7 +92,7 @@ export class AuthService {
           )
         }
 
-        resolve(user)
+        resolve({ userId: user.id })
       })
     })
   }

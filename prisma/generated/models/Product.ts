@@ -360,7 +360,7 @@ export type ProductCreateInput = {
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   color?: Prisma.ColorCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -392,7 +392,7 @@ export type ProductUpdateInput = {
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   color?: Prisma.ColorUpdateOneWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -822,7 +822,7 @@ export type ProductCreateWithoutShopInput = {
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   color?: Prisma.ColorCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateWithoutShopInput = {
@@ -878,7 +878,7 @@ export type ProductCreateWithoutCategoryInput = {
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   color?: Prisma.ColorCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -934,7 +934,7 @@ export type ProductCreateWithoutColorInput = {
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateWithoutColorInput = {
@@ -990,7 +990,7 @@ export type ProductCreateWithoutReviewsInput = {
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   color?: Prisma.ColorCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -1036,7 +1036,7 @@ export type ProductUpdateWithoutReviewsInput = {
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   color?: Prisma.ColorUpdateOneWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -1066,7 +1066,7 @@ export type ProductCreateWithoutOrderItemsInput = {
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   color?: Prisma.ColorCreateNestedOneWithoutProductsInput
-  user?: Prisma.UserCreateNestedOneWithoutProductsInput
+  user?: Prisma.UserCreateNestedOneWithoutFavoritesInput
 }
 
 export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -1112,7 +1112,7 @@ export type ProductUpdateWithoutOrderItemsInput = {
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   color?: Prisma.ColorUpdateOneWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -1211,7 +1211,7 @@ export type ProductUpdateWithoutShopInput = {
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   color?: Prisma.ColorUpdateOneWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutShopInput = {
@@ -1267,7 +1267,7 @@ export type ProductUpdateWithoutCategoryInput = {
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   color?: Prisma.ColorUpdateOneWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -1323,7 +1323,7 @@ export type ProductUpdateWithoutColorInput = {
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
-  user?: Prisma.UserUpdateOneWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFavoritesNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutColorInput = {

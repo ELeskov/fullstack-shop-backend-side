@@ -7,6 +7,7 @@ import session from 'express-session'
 import { createClient } from 'redis'
 
 import { AppModule } from './app.module.js'
+import { isDev } from './shared/utils/is-dev.util.js'
 import { ms, StringValue } from './shared/utils/ms.util.js'
 import { parseBoolean } from './shared/utils/parse-boolean.util.js'
 import { setupSwagger } from './shared/utils/swagger.util.js'
@@ -37,13 +38,12 @@ async function bootstrap() {
       resave: true,
       saveUninitialized: false,
       cookie: {
-        domain: config.getOrThrow<string>('SESSION_DOMAIN'),
         maxAge: ms(config.getOrThrow<StringValue>('SESSION_MAX_AGE')),
         httpOnly: parseBoolean(
           config.getOrThrow<StringValue>('SESSION_HTTP_ONLY'),
         ),
         secure: parseBoolean(config.getOrThrow<StringValue>('SESSION_SECURE')),
-        sameSite: 'lax',
+        sameSite: isDev(config) ? 'none' : 'lax',
       },
       store: new RedisStore({
         client: redisClient,

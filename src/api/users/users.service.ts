@@ -16,6 +16,29 @@ export class UsersService {
       },
       include: {
         accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    return user
+  }
+
+  public async getMe(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
       },
     })
 
@@ -41,6 +64,7 @@ export class UsersService {
 
   public async create(userCreateType: ICreateUser) {
     const { name, email, password, picture, method } = userCreateType
+
     const user = await this.prismaService.user.create({
       data: {
         name,
