@@ -21,6 +21,13 @@ import {
 } from '@nestjs/swagger'
 import { type Request, type Response } from 'express'
 
+import {
+  BadRequestErrorDto,
+  ConflictErrorDto,
+  NotFoundErrorDto,
+  UnauthorizedErrorDto,
+} from '../../types/error-response.dto'
+
 import { AuthService } from './auth.service'
 import { AuthResponseDto } from './dto/auth-response.dto'
 import { LoginDto } from './dto/login.dto'
@@ -42,13 +49,16 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     description: 'Ошибка валидации входных данных.',
+    type: BadRequestErrorDto,
   })
   @ApiConflictResponse({
     description: 'Пользователь с такой почтой уже существует',
+    type: ConflictErrorDto,
   })
   @ApiNotFoundResponse({
     description:
       'Пользователь не найден. Пожалуйста проверьте введенные данные',
+    type: NotFoundErrorDto,
   })
   // @Turnstile()
   @HttpCode(HttpStatus.CREATED)
@@ -66,9 +76,11 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     description: 'Ошибка валидации входных данных.',
+    type: BadRequestErrorDto,
   })
   @ApiUnauthorizedResponse({
     description: 'Неверные учетные данные.',
+    type: UnauthorizedErrorDto,
   })
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -84,6 +96,7 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: 'Нет валидной сессии для выхода.',
+    type: UnauthorizedErrorDto,
   })
   @HttpCode(HttpStatus.OK)
   @Post('logout')

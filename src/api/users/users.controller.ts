@@ -14,6 +14,12 @@ import { UserRole } from '@prisma/generated/enums'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
 
+import {
+  ForbiddenErrorDto,
+  NotFoundErrorDto,
+  UnauthorizedErrorDto,
+} from '../../types/error-response.dto'
+
 import { UsersService } from './users.service'
 
 @ApiTags('users')
@@ -31,6 +37,7 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({
     description: 'Не авторизован.',
+    type: UnauthorizedErrorDto,
   })
   public async me(@Authorized('id') userId: string) {
     return this.usersService.getMe(userId)
@@ -47,12 +54,17 @@ export class UsersController {
   })
   @ApiOkResponse({ description: 'Пользователь найден.' })
   @ApiUnauthorizedResponse({
-    description: 'Не авторизован (нет/невалидный токен).',
+    description: 'Не авторизован.',
+    type: UnauthorizedErrorDto,
   })
   @ApiForbiddenResponse({
     description: 'Недостаточно прав (требуется роль ADMIN).',
+    type: ForbiddenErrorDto,
   })
-  @ApiNotFoundResponse({ description: 'Пользователь с таким id не найден.' })
+  @ApiNotFoundResponse({
+    description: 'Пользователь с таким id не найден.',
+    type: NotFoundErrorDto,
+  })
   public async findById(@Param('id') id: string) {
     return this.usersService.findById(id)
   }
