@@ -11,11 +11,11 @@ import { UsersModule } from './users/users.module'
   imports: [
     AuthModule,
     UsersModule,
-    TurnstileModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: getTurnstileConfig,
-      inject: [ConfigService],
-    }),
+    // TurnstileModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: getTurnstileConfig,
+    //   inject: [ConfigService],
+    // }),
   ],
 })
 export class ApiModule {}

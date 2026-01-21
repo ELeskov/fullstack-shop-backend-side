@@ -9,7 +9,7 @@ export function getTurnstileConfig(
   configService: ConfigService<AllConfigs>,
 ): TurnstileOptions {
   return {
-    secretKey: configService.get('turnstile.secretKey', {
+    secretKey: configService.getOrThrow('turnstile.secretKey', {
       infer: true,
     }),
     token: req => req.body.captcha,
