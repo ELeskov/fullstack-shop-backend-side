@@ -80,8 +80,7 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: 'Неверные учетные данные.',
-    type: UnauthorizedErrorDto,
-  })
+    type: UnauthorizedErrorDto,  })
   @HttpCode(HttpStatus.OK)
   @Post('login')
   public async login(@Req() req: Request, @Body() dto: LoginDto) {
