@@ -17,8 +17,8 @@ import type * as Prisma from "./prismaNamespace"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.0.1",
-  "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
+  "clientVersion": "7.3.0",
+  "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
   "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id String @id @default(uuid())\n\n  name     String\n  email    String  @unique\n  password String\n  picture  String?\n\n  role UserRole @default(REGULAR)\n\n  isVerified        Boolean @default(false) @map(\"is_verified\")\n  isTwoFactorEnable Boolean @default(false) @map(\"is_two_factor_enable\")\n\n  method AuthMethod\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  accounts  Account[]\n  shops     Shop[]\n  favorites Product[]\n  reviews   Review[]\n  orders    Order[]\n\n  @@map(\"users\")\n}\n\nmodel Shop {\n  id String @id @default(uuid())\n\n  title       String\n  description String\n\n  user   User?   @relation(fields: [userId], references: [id])\n  userId String? @map(\"user_id\")\n\n  products   Product[]\n  categories Category[]\n  colors     Color[]\n  reviews    Review[]\n  orderItems OrderItem[]\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"shops\")\n}\n\nmodel Product {\n  id String @id @default(uuid())\n\n  title       String\n  description String\n  price       Int\n  images      String[]\n\n  reviews    Review[]\n  orderItems OrderItem[]\n\n  shop   Shop?   @relation(fields: [shopId], references: [id])\n  shopId String? @map(\"shop_id\")\n\n  category   Category @relation(fields: [categoryId], references: [id])\n  categoryId String   @map(\"category_id\")\n\n  color   Color?  @relation(fields: [colorId], references: [id])\n  colorId String? @map(\"color_id\")\n\n  user   User?   @relation(fields: [userId], references: [id])\n  userId String? @map(\"user_id\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"products\")\n}\n\nmodel Category {\n  id String @id @default(uuid())\n\n  title       String\n  description String\n\n  shop   Shop?   @relation(fields: [shopId], references: [id])\n  shopId String? @map(\"shop_id\")\n\n  products Product[]\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"categories\")\n}\n\nmodel Color {\n  id String @id @default(uuid())\n\n  title String\n  value String\n\n  shop   Shop?   @relation(fields: [shopId], references: [id])\n  shopId String? @map(\"shop_id\")\n\n  products Product[]\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"colors\")\n}\n\nmodel Review {\n  id String @id @default(uuid())\n\n  text   String\n  rating Int\n\n  user   User?   @relation(fields: [userId], references: [id])\n  userId String? @map(\"user_id\")\n\n  shop   Shop?   @relation(fields: [shopId], references: [id])\n  shopId String? @map(\"shop_id\")\n\n  product   Product? @relation(fields: [productId], references: [id])\n  productId String?  @map(\"product_id\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"reviews\")\n}\n\nmodel Order {\n  id String @id @default(uuid())\n\n  status EnumOrderStatus @default(PENDING)\n  total  Int\n\n  items OrderItem[]\n\n  user   User?   @relation(fields: [userId], references: [id])\n  userId String? @map(\"user_id\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"orders\")\n}\n\nmodel OrderItem {\n  id String @id @default(uuid())\n\n  quantity Int\n  price    Int\n\n  order   Order?  @relation(fields: [orderId], references: [id])\n  orderId String? @map(\"order_id\")\n\n  product   Product? @relation(fields: [productId], references: [id])\n  productId String?  @map(\"product_id\")\n\n  shop   Shop?   @relation(fields: [shopId], references: [id])\n  shopId String? @map(\"shop_id\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"order_item\")\n}\n\nmodel Account {\n  id String @id @default(uuid())\n\n  type     String\n  provider String\n\n  accessToken  String? @map(\"access_token\")\n  refreshToken String? @map(\"refresh_token\")\n  expiresAt    Int     @map(\"expires_at\")\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  user   User?   @relation(fields: [userId], references: [id])\n  userId String? @map(\"user_id\")\n\n  @@map(\"accounts\")\n}\n\nmodel Token {\n  id String @id @default(uuid())\n\n  email     String\n  token     String    @unique\n  type      TokenType\n  expiresIn DateTime  @map(\"expires_in\")\n\n  @@map(\"tokens\")\n}\n\nenum UserRole {\n  REGULAR\n  ADMIN\n}\n\nenum AuthMethod {\n  CREDENTIALS\n  GOOGLE\n  YANDEX\n}\n\nenum TokenType {\n  VERIFICATION\n  TWO_FACTOR\n  PASSWORD_RESET\n}\n\nenum EnumOrderStatus {\n  PENDING\n  PAYED\n}\n",
   "runtimeDataModel": {
@@ -37,12 +37,14 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.js"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.js")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js")
     return await decodeBase64AsWasm(wasm)
-  }
+  },
+
+  importName: "./query_compiler_fast_bg.js"
 }
 
 
@@ -62,7 +64,7 @@ export interface PrismaClientConstructor {
    * const users = await prisma.user.findMany()
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+   * Read more in our [docs](https://pris.ly/d/client).
    */
 
   new <
@@ -84,7 +86,7 @@ export interface PrismaClientConstructor {
  * const users = await prisma.user.findMany()
  * ```
  * 
- * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+ * Read more in our [docs](https://pris.ly/d/client).
  */
 
 export interface PrismaClient<
@@ -113,7 +115,7 @@ export interface PrismaClient<
    * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
 
@@ -125,7 +127,7 @@ export interface PrismaClient<
    * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
 
@@ -136,7 +138,7 @@ export interface PrismaClient<
    * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
 
@@ -148,7 +150,7 @@ export interface PrismaClient<
    * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
 

@@ -18,7 +18,7 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Имя обязательно для заполнения.' })
   name!: string
 
-  /**
+  /**`
    * Email пользователя.
    *
    * @example example@example.com
