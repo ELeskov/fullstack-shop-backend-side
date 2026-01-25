@@ -1,5 +1,17 @@
-import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common'
 import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Req,
+} from '@nestjs/common'
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
   ApiCookieAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -10,16 +22,20 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { UserRole } from '@prisma/generated/enums'
+import { type Request } from 'express'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
 
 import {
+  BadRequestErrorDto,
+  ConflictErrorDto,
   ForbiddenErrorDto,
   NotFoundErrorDto,
   UnauthorizedErrorDto,
 } from '../../types/error-response.dto'
 
+import { UpdateUserDataDto } from './dto/updateUserData.dto'
 import { UsersService } from './users.service'
 
 @ApiTags('users')
@@ -67,5 +83,32 @@ export class UsersController {
   })
   public async findById(@Param('id') id: string) {
     return this.usersService.findById(id)
+  }
+
+  @Patch('me')
+  @Authorization(UserRole.REGULAR)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Обновление собственных данных пользователя (Имя, Email)',
+  })
+  @ApiBody({ type: UpdateUserDataDto })
+  @ApiOkResponse({ description: 'Данные успешно обновлены' })
+  @ApiUnauthorizedResponse({
+    description: 'Не авторизован',
+    type: UnauthorizedErrorDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Некорректные данные',
+    type: BadRequestErrorDto,
+  })
+  @ApiConflictResponse({
+    description: 'Email уже используется',
+    type: ConflictErrorDto,
+  })
+  public async updateOwnUserData(
+    @Req() req: Request,
+    @Body() dto: UpdateUserDataDto,
+  ) {
+    return this.usersService.updateUserData(req, dto)
   }
 }

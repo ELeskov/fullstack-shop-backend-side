@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { hash } from 'argon2'
+import { Request } from 'express'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 
+import { UpdateUserDataDto } from './dto/updateUserData.dto'
 import { ICreateUser } from './types/create-user.interface'
 
 @Injectable()
@@ -40,13 +46,14 @@ export class UsersService {
         shops: true,
         favorites: true,
       },
+      omit: {
+        password: true,
+      },
     })
 
     if (!user) {
       throw new NotFoundException('Пользователь не найден')
     }
-    
-    delete user['password']
 
     return user
   }
@@ -65,7 +72,7 @@ export class UsersService {
   }
 
   public async create(userCreateType: ICreateUser) {
-    const { name, email, password, picture, method } = userCreateType
+    const { name, email, password, method, picture } = userCreateType
 
     const user = await this.prismaService.user.create({
       data: {
@@ -81,5 +88,44 @@ export class UsersService {
     })
 
     return user
+  }
+
+  public async updateUserData(req: Request, dto: UpdateUserDataDto) {
+    const userId = req.session.userId
+
+    const existingUser = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    })
+
+    if (!existingUser) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    if (dto.newEmail && dto.newEmail !== existingUser.email) {
+      const emailExists = await this.prismaService.user.findUnique({
+        where: { email: dto.newEmail },
+      })
+
+      if (emailExists) {
+        throw new ConflictException('Пользователь с таким email уже существует')
+      }
+    }
+
+    const updatedUser = await this.prismaService.user.update({
+      where: { id: userId },
+      data: {
+        email: dto.newEmail,
+        name: dto.firstName,
+      },
+      include: {
+        accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
+      },
+      omit: { password: true },
+    })
+
+    return updatedUser
   }
 }
