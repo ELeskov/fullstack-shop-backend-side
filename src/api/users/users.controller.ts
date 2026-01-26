@@ -36,6 +36,7 @@ import {
 } from '../../types/error-response.dto'
 
 import { UpdateUserDataDto } from './dto/updateUserData.dto'
+import { UserResponseDto } from './dto/userResponse.dto'
 import { UsersService } from './users.service'
 
 @ApiTags('users')
@@ -50,6 +51,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
   @ApiOkResponse({
     description: 'Профиль текущего пользователя.',
+    type: UserResponseDto,
   })
   @ApiUnauthorizedResponse({
     description: 'Не авторизован.',
@@ -92,7 +94,10 @@ export class UsersController {
     summary: 'Обновление собственных данных пользователя (Имя, Email)',
   })
   @ApiBody({ type: UpdateUserDataDto })
-  @ApiOkResponse({ description: 'Данные успешно обновлены' })
+  @ApiOkResponse({
+    description: 'Данные успешно обновлены',
+    type: UserResponseDto,
+  })
   @ApiUnauthorizedResponse({
     description: 'Не авторизован',
     type: UnauthorizedErrorDto,

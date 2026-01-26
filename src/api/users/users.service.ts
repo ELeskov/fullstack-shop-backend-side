@@ -20,6 +20,9 @@ export class UsersService {
       where: {
         id,
       },
+      omit:{
+        password: true
+      },
       include: {
         accounts: true,
         orders: true,
