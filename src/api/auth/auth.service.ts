@@ -1,8 +1,11 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/generated/client'
@@ -14,6 +17,7 @@ import { PrismaService } from '@/infra/prisma/prisma.service'
 
 import { UsersService } from '../users/users.service'
 
+import { AccountService } from './account/account.service'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 
@@ -23,6 +27,8 @@ export class AuthService {
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
+    @Inject(forwardRef(() => AccountService))
+    private readonly accountService: AccountService,
   ) {}
 
   public async register(req: Request, dto: RegisterDto) {
@@ -32,7 +38,7 @@ export class AuthService {
       throw new ConflictException('Пользователь с такой почтой уже существует')
     }
 
-    const user = await this.userService.create({
+    const newUser = await this.userService.create({
       name: dto.name,
       email: dto.email,
       password: dto.password,
@@ -40,7 +46,14 @@ export class AuthService {
       picture: '',
     })
 
-    return await this.saveSession(req, user)
+    // return await this.saveSession(req, user)
+
+    await this.accountService.sendVerificationToken(newUser)
+
+    return {
+      message:
+        'Вы успешно зарегистрировались. Пожалуйста, подтвердите ваш email. Сообщение было отправлено на вашу почту.',
+    }
   }
 
   public async login(req: Request, dto: LoginDto) {
@@ -57,6 +70,13 @@ export class AuthService {
     if (!isValidPassword) {
       throw new NotFoundException(
         'Пользователь не найден. Пожалуйста проверьте введенные данные',
+      )
+    }
+
+    if (!user.isVerified) {
+      await this.accountService.sendVerificationToken(user)
+      throw new UnauthorizedException(
+        'Ваш email не подтвержден. Проверьте вашу почту и подтвердите email',
       )
     }
 

@@ -20,6 +20,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { type Request, type Response } from 'express'
+import { Turnstile } from 'nestjs-cloudflare-captcha'
 
 import {
   BadRequestErrorDto,
@@ -60,7 +61,7 @@ export class AuthController {
       'Пользователь не найден. Пожалуйста проверьте введенные данные',
     type: NotFoundErrorDto,
   })
-  // @Turnstile()
+  @Turnstile()
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   public async register(@Req() req: Request, @Body() dto: RegisterDto) {
@@ -80,7 +81,9 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: 'Неверные учетные данные.',
-    type: UnauthorizedErrorDto,  })
+    type: UnauthorizedErrorDto,
+  })
+  @Turnstile()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   public async login(@Req() req: Request, @Body() dto: LoginDto) {

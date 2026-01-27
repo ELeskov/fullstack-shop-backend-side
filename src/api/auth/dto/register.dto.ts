@@ -51,12 +51,12 @@ export class RegisterDto {
   })
   password!: string
 
-  // @ApiProperty({
-  //   description: 'Captcha verification code',
-  //   example: '03AFcWeA...',
-  // })
-  // @IsString({ message: 'Капча должна быть строкой' })
-  // @IsNotEmpty({ message: 'Капча обязательна' })
-  // @IsOptional()
-  // public captcha?: string
+  @ApiProperty({
+    description: 'Captcha verification code',
+    example: '03AFcWeA...',
+  })
+  @IsString({ message: 'Капча должна быть строкой' })
+  @IsNotEmpty({ message: 'Капча обязательна' })
+  @IsOptional()
+  public captcha?: string
 }
