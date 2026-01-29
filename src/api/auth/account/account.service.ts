@@ -66,18 +66,10 @@ export class AccountService {
         isVerified: true,
       },
     })
-    
-    console.log('🔍 ТОКЕН ПЕРЕД УДАЛЕНИЕМ:', {
-      id: existingToken.id,
-      token: existingToken.token,
-      email: existingToken.email,
-    })
 
-    await this.prismaService.token.delete({
+    await this.prismaService.token.deleteMany({
       where: { id: existingToken.id },
     })
-
-    console.log('✅ Токен удалён!')
 
     return await this.authService.saveSession(req, existingUser)
   }
