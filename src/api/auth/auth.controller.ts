@@ -68,7 +68,7 @@ export class AuthController {
     return this.authService.register(req, dto)
   }
 
-  @ApiOperation({ summary: 'Вход (логин)' })
+  @ApiOperation({ summary: 'Вход' })
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description:

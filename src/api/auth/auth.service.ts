@@ -46,8 +46,6 @@ export class AuthService {
       picture: '',
     })
 
-    // return await this.saveSession(req, user)
-
     await this.accountService.sendVerificationToken(newUser)
 
     return {
@@ -100,6 +98,8 @@ export class AuthService {
   }
 
   public async saveSession(req: Request, user: User) {
+    console.log('Save session');
+    
     return new Promise((resolve, reject) => {
       req.session.userId = user.id
 

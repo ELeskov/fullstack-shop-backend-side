@@ -54,7 +54,7 @@ export class AccountService {
 
     if (!existingUser) {
       throw new NotFoundException(
-        'Прльзователь с указанной почтой не найден. Убедитесь, что вы ввели правильный email',
+        'Пользователь с указанной почтой не найден. Убедитесь, что вы ввели правильный email',
       )
     }
 
@@ -66,15 +66,20 @@ export class AccountService {
         isVerified: true,
       },
     })
-
-    await this.prismaService.token.delete({
-      where: {
-        email: existingUser.email,
-        token: TokenType.VERIFICATION,
-      },
+    
+    console.log('🔍 ТОКЕН ПЕРЕД УДАЛЕНИЕМ:', {
+      id: existingToken.id,
+      token: existingToken.token,
+      email: existingToken.email,
     })
 
-    return this.authService.saveSession(req, existingUser)
+    await this.prismaService.token.delete({
+      where: { id: existingToken.id },
+    })
+
+    console.log('✅ Токен удалён!')
+
+    return await this.authService.saveSession(req, existingUser)
   }
 
   public async sendVerificationToken(user: User) {

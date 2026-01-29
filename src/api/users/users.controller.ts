@@ -110,7 +110,7 @@ export class UsersController {
     description: 'Email уже используется',
     type: ConflictErrorDto,
   })
-  public async updateOwnUserData(
+  public async patchUser(
     @Req() req: Request,
     @Body() dto: UpdateUserDataDto,
   ) {
