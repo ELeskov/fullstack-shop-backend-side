@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module'
 import { TurnstileModule } from 'nestjs-cloudflare-captcha'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { getTurnstileConfig } from '@/config/loaders/turnstile.config-loader'
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { getTurnstileConfig } from '@/config/loaders/turnstile.config-loader'
     UsersModule,
     AccountModule,
     MailModule,
+    S3Module,
     TurnstileModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: getTurnstileConfig,

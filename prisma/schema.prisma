@@ -27,7 +27,8 @@ model User {
 
   accounts  Account[]
   shops     Shop[]
-  favorites Product[]
+  favorites Favorites[]
+  baskets   Basket[]
   reviews   Review[]
   orders    Order[]
 
@@ -75,13 +76,76 @@ model Product {
   color   Color?  @relation(fields: [colorId], references: [id])
   colorId String? @map("color_id")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  basketItems    BasketItem[]
+  favoritesItems FavoritesItem[]
+
+  @@map("products")
+}
+
+model Basket {
+  id String @id @default(uuid())
+
+  totalAmount Int @default(0)
+
   user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  userId String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("products")
+  basketItems BasketItem[]
+
+  @@map("basket")
+}
+
+model BasketItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  basketId String @map("basket_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("product_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("basket_items")
+}
+
+model Favorites {
+  id String @id @default(uuid())
+
+  totalAmount Int @default(0)
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  favoritesItems FavoritesItem[]
+
+  @@map("favorites")
+}
+
+model FavoritesItem {
+  id String @id @default(uuid())
+
+  favorites   Favorites @relation(fields: [favoritesId], references: [id], onDelete: Cascade)
+  favoritesId String    @map("favorites_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("product_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("favorites_items")
 }
 
 model Category {

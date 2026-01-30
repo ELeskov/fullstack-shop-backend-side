@@ -30,9 +30,9 @@ export default tseslint.config(
       'unused-imports': unusedImports,
     },
     rules: {
+      '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
       'prettier/prettier': 'off',
       'no-console': 'warn',
       'no-debugger': 'error',

@@ -3,40 +3,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
+import { User } from '@prisma/generated/client'
 import { hash } from 'argon2'
 import { Request } from 'express'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
+import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
+
+import { S3Service } from '../s3/s3.service'
 
 import { UpdateUserDataDto } from './dto/updateUserData.dto'
 import { ICreateUser } from './types/create-user.interface'
 
 @Injectable()
 export class UsersService {
-  public constructor(private readonly prismaService: PrismaService) {}
-
-  public async findById(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        id,
-      },
-      omit:{
-        password: true
-      },
-      include: {
-        accounts: true,
-        orders: true,
-        shops: true,
-        favorites: true,
-      },
-    })
-
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден')
-    }
-
-    return user
-  }
+  public constructor(
+    private readonly prismaService: PrismaService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   public async getMe(id: string) {
     const user = await this.prismaService.user.findUnique({
@@ -51,6 +35,29 @@ export class UsersService {
       },
       omit: {
         password: true,
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    return user
+  }
+
+  public async findById(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+      omit: {
+        password: true,
+      },
+      include: {
+        accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
       },
     })
 
@@ -130,5 +137,25 @@ export class UsersService {
     })
 
     return updatedUser
+  }
+
+  public async changeAvatar(user: User, file: Express.Multer.File) {
+    const newAvatartUrl = await this.s3Service.upload(file)
+
+    if (user.picture) {
+      const key = extractKeyFromUrl(user.picture)
+      await this.s3Service.delete(key)
+    }
+
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        picture: newAvatartUrl,
+      },
+    })
+
+    return { url: newAvatartUrl }
   }
 }

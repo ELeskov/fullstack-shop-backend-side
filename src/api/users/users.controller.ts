@@ -1,13 +1,19 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpCode,
   HttpStatus,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Patch,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -21,6 +27,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
+import { User } from '@prisma/generated/client'
 import { UserRole } from '@prisma/generated/enums'
 import { type Request } from 'express'
 
@@ -35,6 +42,7 @@ import {
   UnauthorizedErrorDto,
 } from '../../types/error-response.dto'
 
+import { UpdateUserAvatartResponseDto } from './dto/updateAvatarResponse.dto'
 import { UpdateUserDataDto } from './dto/updateUserData.dto'
 import { UserResponseDto } from './dto/userResponse.dto'
 import { UsersService } from './users.service'
@@ -88,7 +96,7 @@ export class UsersController {
   }
 
   @Patch('me')
-  @Authorization(UserRole.REGULAR)
+  @Authorization()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Обновление собственных данных пользователя (Имя, Email)',
@@ -110,10 +118,42 @@ export class UsersController {
     description: 'Email уже используется',
     type: ConflictErrorDto,
   })
-  public async patchUser(
-    @Req() req: Request,
-    @Body() dto: UpdateUserDataDto,
-  ) {
+  public async patchUser(@Req() req: Request, @Body() dto: UpdateUserDataDto) {
     return this.usersService.updateUserData(req, dto)
+  }
+
+  @Patch('me/avatar')
+  @HttpCode(HttpStatus.OK)
+  @Authorization()
+  @ApiOperation({
+    summary: 'Обновление фото аватара',
+  })
+  @ApiOkResponse({
+    description: 'Фото успешно обновлено',
+    type: UpdateUserAvatartResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Не авторизован',
+    type: UnauthorizedErrorDto,
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  public upload(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: /\/(jpg|jpeg|png|webp)$/,
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 1000 * 1000 * 10,
+            message: 'Можно загружать файлы не больше 10 МБ',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Authorized() user: User,
+  ) {
+    return this.usersService.changeAvatar(user, file)
   }
 }
