@@ -19,7 +19,7 @@ import { MailService } from '@/libs/mail/mail.service'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { LoginDto } from './dto/login.dto'
-import { PatchUserDto } from './dto/PatchUser.dto'
+import { PatchUserDto } from './dto/patchUser.dto'
 import { RegisterDto } from './dto/register.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
@@ -182,7 +182,7 @@ export class AccountService {
       })
     })
 
-    return this.saveSession(req, user)
+    return true
   }
 
   public async sendVerificationToken(email: string) {
@@ -231,11 +231,19 @@ export class AccountService {
     const expiresIn = new Date(Date.now() + 60 * 60 * 1000)
 
     await this.prismaService.token.deleteMany({
-      where: { email, type },
+      where: {
+        email,
+        type,
+      },
     })
 
     return this.prismaService.token.create({
-      data: { email, token, type, expiresIn },
+      data: {
+        email,
+        token,
+        type,
+        expiresIn,
+      },
     })
   }
 }

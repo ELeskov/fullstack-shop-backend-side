@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   DeleteObjectCommand,
   PutObjectCommand,
@@ -29,7 +26,7 @@ export class S3Service {
   }
 
   public async upload(file: Express.Multer.File): Promise<string> {
-    const key = `avatars/${Date.now()}-${Math.random().toString(36).slice(2)}-${file.originalname as string}`
+    const key = `avatars/${Date.now()}-${Math.random().toString(36).slice(2)}-${file.originalname}`
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,

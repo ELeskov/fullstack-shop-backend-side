@@ -5,7 +5,7 @@ import { Request } from 'express'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
-import { PatchUserDto } from '../auth/account/dto/PatchUser.dto'
+import { PatchUserDto } from '../auth/account/dto/patchUser.dto'
 import { S3Service } from '../s3/s3.service'
 
 @Injectable()

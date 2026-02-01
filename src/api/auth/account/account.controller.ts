@@ -44,8 +44,9 @@ import {
 import { AccountService } from './account.service'
 import { AccountResponseDto } from './dto/account-response.dto'
 import { LoginDto } from './dto/login.dto'
-import { PatchUserDto } from './dto/PatchUser.dto'
+import { PatchUserDto } from './dto/patchUser.dto'
 import { RegisterDto } from './dto/register.dto'
+import { SendVerificationEmailDto } from './dto/sendVerificationEmail.dto'
 import { UpdateUserAvatarResponseDto } from './dto/updateAvatarResponse.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
@@ -183,6 +184,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: 'Выход (logout)' })
+  @Authorization()
   @ApiCookieAuth()
   @ApiOkResponse({
     description: 'Сессия завершена. Очистка cookie и инвалидация сессии.',
@@ -201,8 +203,9 @@ export class AccountController {
     return this.accountService.logout(req, res)
   }
 
-  @Post('verify')
+  @Post('email/verify')
   @ApiCookieAuth()
+  @Authorization()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Подтверждение email по токену',
@@ -211,53 +214,45 @@ export class AccountController {
   })
   @ApiOkResponse({
     description: 'Email успешно подтверждён. Создана сессия авторизации',
-    schema: {
-      type: 'object',
-      properties: {
-        userId: {
-          type: 'string',
-          example: '550e8400-e29b-41d4-a716-446655440001',
-        },
-      },
-    },
   })
   @ApiBadRequestResponse({
     description: 'Токен истёк или недействителен',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 400 },
-        message: {
-          type: 'string',
-          example:
-            'Токен подтверждения истек. Пожалуйста, запросите новый токен для подтверждения',
-        },
-        error: { type: 'string', example: 'Bad Request' },
-      },
-    },
+    type: BadRequestErrorDto,
   })
   @ApiNotFoundResponse({
     description: 'Токен не найден или пользователь не существует',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 404 },
-        message: {
-          type: 'string',
-          example:
-            'Токен подтверждения не найден. Пожалуйста, убедитесь, что у вас правильный токен',
-        },
-        error: { type: 'string', example: 'Not Found' },
-      },
-    },
+    type: NotFoundErrorDto,
   })
   @ApiBody({
     type: VerificationTokenDto,
   })
-  public async newVerification(
+  public async confirmEmail(
     @Req() req: Request,
     @Body() dto: VerificationTokenDto,
   ) {
     return this.accountService.confirmEmail(req, dto)
+  }
+
+  @Post('email/verification/send')
+  @ApiCookieAuth()
+  @Authorization()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Отправить письмо для подтверждения email',
+    description:
+      'Отправляет письмо с одноразовым токеном подтверждения на email текущего пользователя (из сессии). Если токен уже был — перевыпускает/заменяет.',
+  })
+  @ApiOkResponse({
+    description: 'Письмо отправлено (или переотправлено)',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Не авторизован',
+    type: UnauthorizedErrorDto,
+  })
+  @ApiBody({
+    type: SendVerificationEmailDto,
+  })
+  public async sendVerificationEmail(@Body() dto: SendVerificationEmailDto) {
+    return this.accountService.sendVerificationToken(dto.email)
   }
 }
