@@ -1,23 +1,5 @@
+import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common'
 import {
-  Body,
-  Controller,
-  FileTypeValidator,
-  Get,
-  HttpCode,
-  HttpStatus,
-  MaxFileSizeValidator,
-  Param,
-  ParseFilePipe,
-  Patch,
-  Req,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiConflictResponse,
   ApiCookieAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -27,47 +9,23 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
-import { User } from '@prisma/generated/client'
 import { UserRole } from '@prisma/generated/enums'
-import { type Request } from 'express'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
-import { Authorized } from '@/shared/decorators/authorized.decorator'
 
 import {
-  BadRequestErrorDto,
-  ConflictErrorDto,
   ForbiddenErrorDto,
   NotFoundErrorDto,
   UnauthorizedErrorDto,
 } from '../../types/error-response.dto'
 
-import { UpdateUserAvatartResponseDto } from './dto/updateAvatarResponse.dto'
-import { UpdateUserDataDto } from './dto/updateUserData.dto'
-import { UserResponseDto } from './dto/userResponse.dto'
 import { UsersService } from './users.service'
 
-@ApiTags('users')
 @ApiCookieAuth()
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Get('me')
-  @Authorization()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
-  @ApiOkResponse({
-    description: 'Профиль текущего пользователя.',
-    type: UserResponseDto,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован.',
-    type: UnauthorizedErrorDto,
-  })
-  public async me(@Authorized('id') userId: string) {
-    return this.usersService.getMe(userId)
-  }
 
   @Get(':id')
   @Authorization(UserRole.ADMIN)
@@ -93,67 +51,5 @@ export class UsersController {
   })
   public async findById(@Param('id') id: string) {
     return this.usersService.findById(id)
-  }
-
-  @Patch('me')
-  @Authorization()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Обновление собственных данных пользователя (Имя, Email)',
-  })
-  @ApiBody({ type: UpdateUserDataDto })
-  @ApiOkResponse({
-    description: 'Данные успешно обновлены',
-    type: UserResponseDto,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Некорректные данные',
-    type: BadRequestErrorDto,
-  })
-  @ApiConflictResponse({
-    description: 'Email уже используется',
-    type: ConflictErrorDto,
-  })
-  public async patchUser(@Req() req: Request, @Body() dto: UpdateUserDataDto) {
-    return this.usersService.updateUserData(req, dto)
-  }
-
-  @Patch('me/avatar')
-  @HttpCode(HttpStatus.OK)
-  @Authorization()
-  @ApiOperation({
-    summary: 'Обновление фото аватара',
-  })
-  @ApiOkResponse({
-    description: 'Фото успешно обновлено',
-    type: UpdateUserAvatartResponseDto,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
-  @UseInterceptors(FileInterceptor('file'))
-  public upload(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType: /\/(jpg|jpeg|png|webp)$/,
-          }),
-          new MaxFileSizeValidator({
-            maxSize: 1000 * 1000 * 10,
-            message: 'Можно загружать файлы не больше 10 МБ',
-          }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-    @Authorized() user: User,
-  ) {
-    return this.usersService.changeAvatar(user, file)
   }
 }

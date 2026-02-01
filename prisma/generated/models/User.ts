@@ -232,7 +232,8 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   shops?: Prisma.ShopListRelationFilter
-  favorites?: Prisma.ProductListRelationFilter
+  favorites?: Prisma.FavoritesListRelationFilter
+  baskets?: Prisma.BasketListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }
@@ -251,7 +252,8 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   shops?: Prisma.ShopOrderByRelationAggregateInput
-  favorites?: Prisma.ProductOrderByRelationAggregateInput
+  favorites?: Prisma.FavoritesOrderByRelationAggregateInput
+  baskets?: Prisma.BasketOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
 }
@@ -273,7 +275,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   shops?: Prisma.ShopListRelationFilter
-  favorites?: Prisma.ProductListRelationFilter
+  favorites?: Prisma.FavoritesListRelationFilter
+  baskets?: Prisma.BasketListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }, "id" | "email">
@@ -326,7 +329,8 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
 }
@@ -345,7 +349,8 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
 }
@@ -364,7 +369,8 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
 }
@@ -383,7 +389,8 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -517,6 +524,22 @@ export type UserUpdateOneWithoutShopsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShopsInput, Prisma.UserUpdateWithoutShopsInput>, Prisma.UserUncheckedUpdateWithoutShopsInput>
 }
 
+export type UserCreateNestedOneWithoutBasketsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBasketsInput, Prisma.UserUncheckedCreateWithoutBasketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBasketsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBasketsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBasketsInput, Prisma.UserUncheckedCreateWithoutBasketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBasketsInput
+  upsert?: Prisma.UserUpsertWithoutBasketsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBasketsInput, Prisma.UserUpdateWithoutBasketsInput>, Prisma.UserUncheckedUpdateWithoutBasketsInput>
+}
+
 export type UserCreateNestedOneWithoutFavoritesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFavoritesInput, Prisma.UserUncheckedCreateWithoutFavoritesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoritesInput
@@ -594,7 +617,8 @@ export type UserCreateWithoutShopsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
 }
@@ -612,7 +636,8 @@ export type UserUncheckedCreateWithoutShopsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
 }
@@ -646,7 +671,8 @@ export type UserUpdateWithoutShopsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
 }
@@ -664,7 +690,100 @@ export type UserUncheckedUpdateWithoutShopsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBasketsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  picture?: string | null
+  role?: $Enums.UserRole
+  isVerified?: boolean
+  isTwoFactorEnable?: boolean
+  method: $Enums.AuthMethod
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  shops?: Prisma.ShopCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBasketsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  picture?: string | null
+  role?: $Enums.UserRole
+  isVerified?: boolean
+  isTwoFactorEnable?: boolean
+  method: $Enums.AuthMethod
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBasketsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBasketsInput, Prisma.UserUncheckedCreateWithoutBasketsInput>
+}
+
+export type UserUpsertWithoutBasketsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBasketsInput, Prisma.UserUncheckedUpdateWithoutBasketsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBasketsInput, Prisma.UserUncheckedCreateWithoutBasketsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBasketsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBasketsInput, Prisma.UserUncheckedUpdateWithoutBasketsInput>
+}
+
+export type UserUpdateWithoutBasketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTwoFactorEnable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  method?: Prisma.EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBasketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isTwoFactorEnable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  method?: Prisma.EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -683,6 +802,7 @@ export type UserCreateWithoutFavoritesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
 }
@@ -701,6 +821,7 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
 }
@@ -735,6 +856,7 @@ export type UserUpdateWithoutFavoritesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
 }
@@ -753,6 +875,7 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -771,7 +894,8 @@ export type UserCreateWithoutReviewsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
 }
 
@@ -789,7 +913,8 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -823,7 +948,8 @@ export type UserUpdateWithoutReviewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
 }
 
@@ -841,7 +967,8 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -859,7 +986,8 @@ export type UserCreateWithoutOrdersInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -877,7 +1005,8 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -911,7 +1040,8 @@ export type UserUpdateWithoutOrdersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -929,7 +1059,8 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -946,7 +1077,8 @@ export type UserCreateWithoutAccountsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   shops?: Prisma.ShopCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
 }
@@ -964,7 +1096,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   shops?: Prisma.ShopUncheckedCreateNestedManyWithoutUserInput
-  favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoritesUncheckedCreateNestedManyWithoutUserInput
+  baskets?: Prisma.BasketUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
 }
@@ -998,7 +1131,8 @@ export type UserUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shops?: Prisma.ShopUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
 }
@@ -1016,7 +1150,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shops?: Prisma.ShopUncheckedUpdateManyWithoutUserNestedInput
-  favorites?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoritesUncheckedUpdateManyWithoutUserNestedInput
+  baskets?: Prisma.BasketUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1030,6 +1165,7 @@ export type UserCountOutputType = {
   accounts: number
   shops: number
   favorites: number
+  baskets: number
   reviews: number
   orders: number
 }
@@ -1038,6 +1174,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   shops?: boolean | UserCountOutputTypeCountShopsArgs
   favorites?: boolean | UserCountOutputTypeCountFavoritesArgs
+  baskets?: boolean | UserCountOutputTypeCountBasketsArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
 }
@@ -1070,7 +1207,14 @@ export type UserCountOutputTypeCountShopsArgs<ExtArgs extends runtime.Types.Exte
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountFavoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProductWhereInput
+  where?: Prisma.FavoritesWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBasketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BasketWhereInput
 }
 
 /**
@@ -1103,6 +1247,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   shops?: boolean | Prisma.User$shopsArgs<ExtArgs>
   favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
+  baskets?: boolean | Prisma.User$basketsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1155,6 +1300,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   shops?: boolean | Prisma.User$shopsArgs<ExtArgs>
   favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
+  baskets?: boolean | Prisma.User$basketsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1167,7 +1313,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     shops: Prisma.$ShopPayload<ExtArgs>[]
-    favorites: Prisma.$ProductPayload<ExtArgs>[]
+    favorites: Prisma.$FavoritesPayload<ExtArgs>[]
+    baskets: Prisma.$BasketPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
   }
@@ -1579,7 +1726,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shops<T extends Prisma.User$shopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shopsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  favorites<T extends Prisma.User$favoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  favorites<T extends Prisma.User$favoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FavoritesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  baskets<T extends Prisma.User$basketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$basketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BasketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2062,23 +2210,47 @@ export type User$shopsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
  */
 export type User$favoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Product
+   * Select specific fields to fetch from the Favorites
    */
-  select?: Prisma.ProductSelect<ExtArgs> | null
+  select?: Prisma.FavoritesSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Product
+   * Omit specific fields from the Favorites
    */
-  omit?: Prisma.ProductOmit<ExtArgs> | null
+  omit?: Prisma.FavoritesOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProductInclude<ExtArgs> | null
-  where?: Prisma.ProductWhereInput
-  orderBy?: Prisma.ProductOrderByWithRelationInput | Prisma.ProductOrderByWithRelationInput[]
-  cursor?: Prisma.ProductWhereUniqueInput
+  include?: Prisma.FavoritesInclude<ExtArgs> | null
+  where?: Prisma.FavoritesWhereInput
+  orderBy?: Prisma.FavoritesOrderByWithRelationInput | Prisma.FavoritesOrderByWithRelationInput[]
+  cursor?: Prisma.FavoritesWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
+  distinct?: Prisma.FavoritesScalarFieldEnum | Prisma.FavoritesScalarFieldEnum[]
+}
+
+/**
+ * User.baskets
+ */
+export type User$basketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Basket
+   */
+  select?: Prisma.BasketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Basket
+   */
+  omit?: Prisma.BasketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BasketInclude<ExtArgs> | null
+  where?: Prisma.BasketWhereInput
+  orderBy?: Prisma.BasketOrderByWithRelationInput | Prisma.BasketOrderByWithRelationInput[]
+  cursor?: Prisma.BasketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BasketScalarFieldEnum | Prisma.BasketScalarFieldEnum[]
 }
 
 /**

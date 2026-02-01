@@ -1,121 +1,247 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
+  ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/generated/client'
-import { TokenType } from '@prisma/generated/enums'
-import { Request } from 'express'
-import { v4 as uuidv4 } from 'uuid'
+import { AuthMethod, TokenType } from '@prisma/generated/enums'
+import { verify } from 'argon2'
+import { Request, Response } from 'express'
+import { v4 as uuidV4 } from 'uuid'
 
+import { S3Service } from '@/api/s3/s3.service'
 import { UsersService } from '@/api/users/users.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
 
-import { AuthService } from '../auth.service'
-
-import { AccountDto } from './dto/account.dto'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
+import { VerificationTokenDto } from './dto/verificationToken.dto'
+import { PatchUserDto } from './dto/PatchUser.dto'
+import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 @Injectable()
 export class AccountService {
   public constructor(
-    private readonly prismaService: PrismaService,
     private readonly mailService: MailService,
-    private readonly userService: UsersService,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+    private readonly s3Service: S3Service,
   ) {}
 
-  public async newVerification(req: Request, dto: AccountDto) {
-    const existingToken = await this.prismaService.token.findFirst({
+  public async getMe(id: string) {
+    const user = await this.prismaService.user.findUnique({
       where: {
-        token: dto.token,
-        type: TokenType.VERIFICATION,
+        id,
+      },
+      include: {
+        accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
+      },
+      omit: {
+        password: true,
       },
     })
 
-    if (!existingToken) {
-      throw new NotFoundException(
-        'Токен подтверждения не найден. Пожалуйста, убедитесь, что у вас правильный токен',
-      )
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
     }
 
-    const hasExpired = new Date(existingToken.expiresIn) < new Date()
+    return user
+  }
 
-    if (hasExpired) {
-      throw new BadRequestException(
-        'Токен подтверждения истек. Пожалуйста, запросите новый токен для подтверждения',
-      )
-    }
+  public async patchMe(req: Request, dto: PatchUserDto) {
+    const userId = req.session.userId
 
-    const existingUser = await this.userService.findByEmail(existingToken.email)
+    const existingUser = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    })
 
     if (!existingUser) {
-      throw new NotFoundException(
-        'Пользователь с указанной почтой не найден. Убедитесь, что вы ввели правильный email',
-      )
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    const updatedUser = await this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: dto.firstName,
+      },
+      include: {
+        accounts: true,
+        orders: true,
+        shops: true,
+        favorites: true,
+      },
+      omit: {
+        password: true,
+      },
+    })
+
+    return updatedUser
+  }
+
+  public async changeMeAvatar(user: User, file: Express.Multer.File) {
+    const newAvatarUrl = await this.s3Service.upload(file)
+
+    if (user.picture) {
+      const key = extractKeyFromUrl(user.picture)
+      await this.s3Service.delete(key)
     }
 
     await this.prismaService.user.update({
       where: {
-        id: existingUser.id,
+        id: user.id,
       },
       data: {
-        isVerified: true,
+        picture: newAvatarUrl,
       },
     })
 
-    await this.prismaService.token.deleteMany({
-      where: { id: existingToken.id },
-    })
-
-    return await this.authService.saveSession(req, existingUser)
+    return { url: newAvatarUrl }
   }
 
-  public async sendVerificationToken(user: User) {
-    const verificationToken = await this.generateVerificationToken(user.email)
+  public async register(req: Request, dto: RegisterDto) {
+    const existingUser = await this.usersService.findByEmail(dto.email)
 
-    await this.mailService.sendVerificationEmail(
-      verificationToken.email,
-      verificationToken.token,
-    )
+    if (existingUser) {
+      throw new ConflictException('Пользователь с такой почтой уже существует')
+    }
+
+    const user = await this.prismaService.user.create({
+      data: {
+        name: dto.name,
+        email: dto.email,
+        password: dto.password,
+        method: AuthMethod.CREDENTIALS,
+        picture: '',
+      },
+    })
+
+    return this.saveSession(req, user)
+  }
+
+  public async login(req: Request, dto: LoginDto) {
+    const user = await this.usersService.findByEmail(dto.email)
+    if (!user || !user.password) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    const isValidPassword = await verify(user.password, dto.password)
+
+    if (!isValidPassword) {
+      throw new NotFoundException('Неверный пароль')
+    }
+
+    if (!user.isVerified) {
+      await this.sendVerificationToken(user.email)
+      throw new UnauthorizedException('Подтвердите email')
+    }
+
+    return this.saveSession(req, user)
+  }
+
+  public async logout(req: Request, res: Response) {
+    return new Promise((resolve, reject) => {
+      req.session.destroy(err => {
+        if (err) {
+          return reject(
+            new InternalServerErrorException(
+              'Ошибка, при попытке выйти из аккаунта',
+            ),
+          )
+        }
+        res.clearCookie(this.configService.getOrThrow('SESSION_NAME'))
+
+        resolve(true)
+      })
+    })
+  }
+
+  public async confirmEmail(req: Request, dto: VerificationTokenDto) {
+    const token = await this.verifyToken(dto)
+    const user = await this.prismaService.user.findUnique({
+      where: { email: token.email },
+    })
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    await this.prismaService.$transaction(async tx => {
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          isVerified: true,
+        },
+      })
+      await tx.token.deleteMany({
+        where: { email: token.email, type: TokenType.VERIFICATION },
+      })
+    })
+
+    return this.saveSession(req, user)
+  }
+
+  public async sendVerificationToken(email: string) {
+    const { token } = await this.generateToken(email, TokenType.VERIFICATION)
+
+    await this.mailService.sendVerificationEmail(email, token)
 
     return true
   }
 
-  private async generateVerificationToken(email: string) {
-    const token = uuidv4()
-
-    const expiresIn = new Date()
-    expiresIn.setHours(expiresIn.getHours() + 1)
-
-    const existingToken = await this.prismaService.token.findFirst({
-      where: {
-        email,
-        type: TokenType.VERIFICATION,
-      },
+  public async verifyToken(dto: VerificationTokenDto) {
+    const token = await this.prismaService.token.findFirst({
+      where: { token: dto.token, type: TokenType.VERIFICATION },
     })
 
-    if (existingToken) {
-      await this.prismaService.token.delete({
-        where: {
-          id: existingToken.id,
-          type: TokenType.VERIFICATION,
-        },
-      })
+    if (!token) {
+      throw new NotFoundException('Токен не найден')
     }
 
-    const verificationToken = await this.prismaService.token.create({
-      data: {
-        email,
-        token,
-        expiresIn,
-        type: TokenType.VERIFICATION,
-      },
+    if (new Date(token.expiresIn) < new Date()) {
+      throw new BadRequestException('Токен истек')
+    }
+
+    return token
+  }
+
+  public async saveSession(req: Request, user: User) {
+    return new Promise((resolve, reject) => {
+      req.session.userId = user.id
+      req.session.save(err => {
+        if (err) {
+          return reject(
+            new InternalServerErrorException(
+              'Не удалось сохранить сессию. Проверьте правильно ли настроены параметры сессии',
+            ),
+          )
+        }
+
+        resolve({ userId: user.id })
+      })
+    })
+  }
+
+  private async generateToken(email: string, type: TokenType) {
+    const token = uuidV4()
+    const expiresIn = new Date(Date.now() + 60 * 60 * 1000)
+
+    await this.prismaService.token.deleteMany({
+      where: { email, type },
     })
 
-    return verificationToken
+    return this.prismaService.token.create({
+      data: { email, token, type, expiresIn },
+    })
   }
 }

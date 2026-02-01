@@ -33,6 +33,26 @@ export type Shop = Prisma.ShopModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model Basket
+ * 
+ */
+export type Basket = Prisma.BasketModel
+/**
+ * Model BasketItem
+ * 
+ */
+export type BasketItem = Prisma.BasketItemModel
+/**
+ * Model Favorites
+ * 
+ */
+export type Favorites = Prisma.FavoritesModel
+/**
+ * Model FavoritesItem
+ * 
+ */
+export type FavoritesItem = Prisma.FavoritesItemModel
+/**
  * Model Category
  * 
  */

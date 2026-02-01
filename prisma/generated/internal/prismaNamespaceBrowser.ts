@@ -54,6 +54,10 @@ export const ModelName = {
   User: 'User',
   Shop: 'Shop',
   Product: 'Product',
+  Basket: 'Basket',
+  BasketItem: 'BasketItem',
+  Favorites: 'Favorites',
+  FavoritesItem: 'FavoritesItem',
   Category: 'Category',
   Color: 'Color',
   Review: 'Review',
@@ -117,12 +121,56 @@ export const ProductScalarFieldEnum = {
   shopId: 'shopId',
   categoryId: 'categoryId',
   colorId: 'colorId',
-  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const BasketScalarFieldEnum = {
+  id: 'id',
+  totalAmount: 'totalAmount',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BasketScalarFieldEnum = (typeof BasketScalarFieldEnum)[keyof typeof BasketScalarFieldEnum]
+
+
+export const BasketItemScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  basketId: 'basketId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BasketItemScalarFieldEnum = (typeof BasketItemScalarFieldEnum)[keyof typeof BasketItemScalarFieldEnum]
+
+
+export const FavoritesScalarFieldEnum = {
+  id: 'id',
+  totalAmount: 'totalAmount',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FavoritesScalarFieldEnum = (typeof FavoritesScalarFieldEnum)[keyof typeof FavoritesScalarFieldEnum]
+
+
+export const FavoritesItemScalarFieldEnum = {
+  id: 'id',
+  favoritesId: 'favoritesId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FavoritesItemScalarFieldEnum = (typeof FavoritesItemScalarFieldEnum)[keyof typeof FavoritesItemScalarFieldEnum]
 
 
 export const CategoryScalarFieldEnum = {

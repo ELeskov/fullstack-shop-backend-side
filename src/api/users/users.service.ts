@@ -1,19 +1,12 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { User } from '@prisma/generated/client'
-import { hash } from 'argon2'
 import { Request } from 'express'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
+import { PatchUserDto } from '../auth/account/dto/PatchUser.dto'
 import { S3Service } from '../s3/s3.service'
-
-import { UpdateUserDataDto } from './dto/updateUserData.dto'
-import { ICreateUser } from './types/create-user.interface'
 
 @Injectable()
 export class UsersService {
@@ -21,29 +14,6 @@ export class UsersService {
     private readonly prismaService: PrismaService,
     private readonly s3Service: S3Service,
   ) {}
-
-  public async getMe(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        accounts: true,
-        orders: true,
-        shops: true,
-        favorites: true,
-      },
-      omit: {
-        password: true,
-      },
-    })
-
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден')
-    }
-
-    return user
-  }
 
   public async findById(id: string) {
     const user = await this.prismaService.user.findUnique({
@@ -81,26 +51,7 @@ export class UsersService {
     return user
   }
 
-  public async create(userCreateType: ICreateUser) {
-    const { name, email, password, method, picture } = userCreateType
-
-    const user = await this.prismaService.user.create({
-      data: {
-        name,
-        email,
-        password: password ? await hash(password) : '',
-        picture,
-        method,
-      },
-      include: {
-        accounts: true,
-      },
-    })
-
-    return user
-  }
-
-  public async updateUserData(req: Request, dto: UpdateUserDataDto) {
+  public async patchUser(req: Request, dto: PatchUserDto) {
     const userId = req.session.userId
 
     const existingUser = await this.prismaService.user.findUnique({
@@ -111,20 +62,11 @@ export class UsersService {
       throw new NotFoundException('Пользователь не найден')
     }
 
-    if (dto.newEmail && dto.newEmail !== existingUser.email) {
-      const emailExists = await this.prismaService.user.findUnique({
-        where: { email: dto.newEmail },
-      })
-
-      if (emailExists) {
-        throw new ConflictException('Пользователь с таким email уже существует')
-      }
-    }
-
     const updatedUser = await this.prismaService.user.update({
-      where: { id: userId },
+      where: {
+        id: userId,
+      },
       data: {
-        email: dto.newEmail,
         name: dto.firstName,
       },
       include: {
@@ -133,14 +75,16 @@ export class UsersService {
         shops: true,
         favorites: true,
       },
-      omit: { password: true },
+      omit: {
+        password: true,
+      },
     })
 
     return updatedUser
   }
 
   public async changeAvatar(user: User, file: Express.Multer.File) {
-    const newAvatartUrl = await this.s3Service.upload(file)
+    const newAvatarUrl = await this.s3Service.upload(file)
 
     if (user.picture) {
       const key = extractKeyFromUrl(user.picture)
@@ -152,10 +96,10 @@ export class UsersService {
         id: user.id,
       },
       data: {
-        picture: newAvatartUrl,
+        picture: newAvatarUrl,
       },
     })
 
-    return { url: newAvatartUrl }
+    return { url: newAvatarUrl }
   }
 }

@@ -387,6 +387,10 @@ export const ModelName = {
   User: 'User',
   Shop: 'Shop',
   Product: 'Product',
+  Basket: 'Basket',
+  BasketItem: 'BasketItem',
+  Favorites: 'Favorites',
+  FavoritesItem: 'FavoritesItem',
   Category: 'Category',
   Color: 'Color',
   Review: 'Review',
@@ -409,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "shop" | "product" | "category" | "color" | "review" | "order" | "orderItem" | "account" | "token"
+    modelProps: "user" | "shop" | "product" | "basket" | "basketItem" | "favorites" | "favoritesItem" | "category" | "color" | "review" | "order" | "orderItem" | "account" | "token"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -632,6 +636,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductCountAggregateOutputType> | number
+        }
+      }
+    }
+    Basket: {
+      payload: Prisma.$BasketPayload<ExtArgs>
+      fields: Prisma.BasketFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BasketFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BasketFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        findFirst: {
+          args: Prisma.BasketFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BasketFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        findMany: {
+          args: Prisma.BasketFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>[]
+        }
+        create: {
+          args: Prisma.BasketCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        createMany: {
+          args: Prisma.BasketCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BasketCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>[]
+        }
+        delete: {
+          args: Prisma.BasketDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        update: {
+          args: Prisma.BasketUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        deleteMany: {
+          args: Prisma.BasketDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BasketUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BasketUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>[]
+        }
+        upsert: {
+          args: Prisma.BasketUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketPayload>
+        }
+        aggregate: {
+          args: Prisma.BasketAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBasket>
+        }
+        groupBy: {
+          args: Prisma.BasketGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasketGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BasketCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasketCountAggregateOutputType> | number
+        }
+      }
+    }
+    BasketItem: {
+      payload: Prisma.$BasketItemPayload<ExtArgs>
+      fields: Prisma.BasketItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BasketItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BasketItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        findFirst: {
+          args: Prisma.BasketItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BasketItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        findMany: {
+          args: Prisma.BasketItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>[]
+        }
+        create: {
+          args: Prisma.BasketItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        createMany: {
+          args: Prisma.BasketItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BasketItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>[]
+        }
+        delete: {
+          args: Prisma.BasketItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        update: {
+          args: Prisma.BasketItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.BasketItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BasketItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BasketItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.BasketItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasketItemPayload>
+        }
+        aggregate: {
+          args: Prisma.BasketItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBasketItem>
+        }
+        groupBy: {
+          args: Prisma.BasketItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasketItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BasketItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasketItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    Favorites: {
+      payload: Prisma.$FavoritesPayload<ExtArgs>
+      fields: Prisma.FavoritesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FavoritesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FavoritesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        findFirst: {
+          args: Prisma.FavoritesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FavoritesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        findMany: {
+          args: Prisma.FavoritesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>[]
+        }
+        create: {
+          args: Prisma.FavoritesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        createMany: {
+          args: Prisma.FavoritesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FavoritesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>[]
+        }
+        delete: {
+          args: Prisma.FavoritesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        update: {
+          args: Prisma.FavoritesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        deleteMany: {
+          args: Prisma.FavoritesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FavoritesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FavoritesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>[]
+        }
+        upsert: {
+          args: Prisma.FavoritesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesPayload>
+        }
+        aggregate: {
+          args: Prisma.FavoritesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFavorites>
+        }
+        groupBy: {
+          args: Prisma.FavoritesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FavoritesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FavoritesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FavoritesCountAggregateOutputType> | number
+        }
+      }
+    }
+    FavoritesItem: {
+      payload: Prisma.$FavoritesItemPayload<ExtArgs>
+      fields: Prisma.FavoritesItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FavoritesItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FavoritesItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        findFirst: {
+          args: Prisma.FavoritesItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FavoritesItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        findMany: {
+          args: Prisma.FavoritesItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>[]
+        }
+        create: {
+          args: Prisma.FavoritesItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        createMany: {
+          args: Prisma.FavoritesItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FavoritesItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>[]
+        }
+        delete: {
+          args: Prisma.FavoritesItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        update: {
+          args: Prisma.FavoritesItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.FavoritesItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FavoritesItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FavoritesItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.FavoritesItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FavoritesItemPayload>
+        }
+        aggregate: {
+          args: Prisma.FavoritesItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFavoritesItem>
+        }
+        groupBy: {
+          args: Prisma.FavoritesItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FavoritesItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FavoritesItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FavoritesItemCountAggregateOutputType> | number
         }
       }
     }
@@ -1230,12 +1530,56 @@ export const ProductScalarFieldEnum = {
   shopId: 'shopId',
   categoryId: 'categoryId',
   colorId: 'colorId',
-  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const BasketScalarFieldEnum = {
+  id: 'id',
+  totalAmount: 'totalAmount',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BasketScalarFieldEnum = (typeof BasketScalarFieldEnum)[keyof typeof BasketScalarFieldEnum]
+
+
+export const BasketItemScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  basketId: 'basketId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BasketItemScalarFieldEnum = (typeof BasketItemScalarFieldEnum)[keyof typeof BasketItemScalarFieldEnum]
+
+
+export const FavoritesScalarFieldEnum = {
+  id: 'id',
+  totalAmount: 'totalAmount',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FavoritesScalarFieldEnum = (typeof FavoritesScalarFieldEnum)[keyof typeof FavoritesScalarFieldEnum]
+
+
+export const FavoritesItemScalarFieldEnum = {
+  id: 'id',
+  favoritesId: 'favoritesId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FavoritesItemScalarFieldEnum = (typeof FavoritesItemScalarFieldEnum)[keyof typeof FavoritesItemScalarFieldEnum]
 
 
 export const CategoryScalarFieldEnum = {
@@ -1574,6 +1918,10 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   shop?: Prisma.ShopOmit
   product?: Prisma.ProductOmit
+  basket?: Prisma.BasketOmit
+  basketItem?: Prisma.BasketItemOmit
+  favorites?: Prisma.FavoritesOmit
+  favoritesItem?: Prisma.FavoritesItemOmit
   category?: Prisma.CategoryOmit
   color?: Prisma.ColorOmit
   review?: Prisma.ReviewOmit
