@@ -4,7 +4,6 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/generated/client'
@@ -17,12 +16,12 @@ import { S3Service } from '@/api/s3/s3.service'
 import { UsersService } from '@/api/users/users.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
+import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { LoginDto } from './dto/login.dto'
+import { PatchUserDto } from './dto/PatchUser.dto'
 import { RegisterDto } from './dto/register.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
-import { PatchUserDto } from './dto/PatchUser.dto'
-import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 @Injectable()
 export class AccountService {
@@ -139,11 +138,6 @@ export class AccountService {
 
     if (!isValidPassword) {
       throw new NotFoundException('Неверный пароль')
-    }
-
-    if (!user.isVerified) {
-      await this.sendVerificationToken(user.email)
-      throw new UnauthorizedException('Подтвердите email')
     }
 
     return this.saveSession(req, user)
