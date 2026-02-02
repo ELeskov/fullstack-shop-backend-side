@@ -46,7 +46,8 @@ import { AccountResponseDto } from './dto/account-response.dto'
 import { LoginDto } from './dto/login.dto'
 import { PatchUserDto } from './dto/patchUser.dto'
 import { RegisterDto } from './dto/register.dto'
-import { SendVerificationEmailDto } from './dto/sendVerificationEmail.dto'
+import { ResetPasswordDto } from './dto/reset-password.dto'
+import { SendEmailDto } from './dto/sendEmail.dto'
 import { UpdateUserAvatarResponseDto } from './dto/updateAvatarResponse.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
@@ -226,11 +227,47 @@ export class AccountController {
   @ApiBody({
     type: VerificationTokenDto,
   })
-  public async confirmEmail(
+  public async confirmEmail(@Body() dto: VerificationTokenDto) {
+    return this.accountService.confirmEmail(dto)
+  }
+
+  @Post('password/reset')
+  @ApiCookieAuth()
+  @Authorization()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Сброс пароля по токену',
+    description:
+      'Сбрасывает пароль пользователя по токену из письма восстановления. Обновляет пароль и удаляет токен сброса.',
+  })
+  @ApiOkResponse({
+    description: 'Пароль успешно сброшен',
+    schema: {
+      type: 'boolean',
+      example: true,
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Токен истёк или недействителен',
+    type: BadRequestErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Токен не найден или пользователь не существует',
+    type: NotFoundErrorDto,
+  })
+  @ApiConflictResponse({
+    description: 'Пароли не совпадают',
+  })
+  @ApiBody({
+    type: ResetPasswordDto,
+    description: 'Токен из письма + новый пароль',
+  })
+  public async resetPassword(
+    @Body() dto: ResetPasswordDto,
     @Req() req: Request,
-    @Body() dto: VerificationTokenDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.accountService.confirmEmail(req, dto)
+    return this.accountService.resetPassword(dto, req, res)
   }
 
   @Post('email/verification/send')
@@ -240,7 +277,7 @@ export class AccountController {
   @ApiOperation({
     summary: 'Отправить письмо для подтверждения email',
     description:
-      'Отправляет письмо с одноразовым токеном подтверждения на email текущего пользователя (из сессии). Если токен уже был — перевыпускает/заменяет.',
+      'Отправляет письмо с одноразовым токеном подтверждения на email текущего пользователя.',
   })
   @ApiOkResponse({
     description: 'Письмо отправлено (или переотправлено)',
@@ -250,9 +287,32 @@ export class AccountController {
     type: UnauthorizedErrorDto,
   })
   @ApiBody({
-    type: SendVerificationEmailDto,
+    type: SendEmailDto,
   })
-  public async sendVerificationEmail(@Body() dto: SendVerificationEmailDto) {
+  public async sendVerificationEmail(@Body() dto: SendEmailDto) {
     return this.accountService.sendVerificationToken(dto.email)
+  }
+
+  @Post('password/reset/send')
+  @ApiCookieAuth()
+  @Authorization()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Отправить письмо для сброса пароля',
+    description:
+      'Отправляет письмо с одноразовым токеном сброса пароля на email текущего пользователя.',
+  })
+  @ApiOkResponse({
+    description: 'Письмо отправлено (или переотправлено)',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Не авторизован',
+    type: UnauthorizedErrorDto,
+  })
+  @ApiBody({
+    type: SendEmailDto,
+  })
+  public async sendResetPasswordEmail(@Body() dto: SendEmailDto) {
+    return this.accountService.sendResetPasswordToken(dto.email)
   }
 }

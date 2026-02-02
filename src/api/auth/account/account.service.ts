@@ -8,7 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/generated/client'
 import { AuthMethod, TokenType } from '@prisma/generated/enums'
-import { verify } from 'argon2'
+import { hash, verify } from 'argon2'
 import { Request, Response } from 'express'
 import { v4 as uuidV4 } from 'uuid'
 
@@ -21,6 +21,7 @@ import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 import { LoginDto } from './dto/login.dto'
 import { PatchUserDto } from './dto/patchUser.dto'
 import { RegisterDto } from './dto/register.dto'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
 @Injectable()
@@ -119,7 +120,7 @@ export class AccountService {
       data: {
         name: dto.name,
         email: dto.email,
-        password: dto.password,
+        password: await hash(dto.password),
         method: AuthMethod.CREDENTIALS,
         picture: '',
       },
@@ -160,8 +161,8 @@ export class AccountService {
     })
   }
 
-  public async confirmEmail(req: Request, dto: VerificationTokenDto) {
-    const token = await this.verifyToken(dto)
+  public async confirmEmail(dto: VerificationTokenDto) {
+    const token = await this.verifyToken(dto, TokenType.VERIFICATION)
     const user = await this.prismaService.user.findUnique({
       where: { email: token.email },
     })
@@ -185,14 +186,48 @@ export class AccountService {
     return true
   }
 
-    public async sendResetPasswordToken(email: string) {
-    const { token } = await this.generateToken(email, TokenType.PASSWORD_RESET)
+  public async resetPassword(
+    dto: ResetPasswordDto,
+    req: Request,
+    res: Response,
+  ) {
+    const token = await this.verifyToken(dto, TokenType.PASSWORD_RESET)
+    const user = await this.prismaService.user.findUnique({
+      where: { email: token.email },
+    })
 
-    await this.mailService.sendVerificationEmail(email, token)
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
+    }
+
+    if (dto.password !== dto.confirmPassword) {
+      throw new ConflictException('Пароли не совпадают')
+    }
+
+    await this.prismaService.$transaction(async tx => {
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          password: await hash(dto.password),
+        },
+      })
+      await tx.token.deleteMany({
+        where: { email: token.email, type: TokenType.PASSWORD_RESET },
+      })
+    })
+
+    await this.logout(req, res)
 
     return true
   }
 
+  public async sendResetPasswordToken(email: string) {
+    const { token } = await this.generateToken(email, TokenType.PASSWORD_RESET)
+
+    await this.mailService.sendResetPasswordEmail(email, token)
+
+    return true
+  }
 
   public async sendVerificationToken(email: string) {
     const { token } = await this.generateToken(email, TokenType.VERIFICATION)
@@ -202,9 +237,9 @@ export class AccountService {
     return true
   }
 
-  public async verifyToken(dto: VerificationTokenDto) {
+  public async verifyToken(dto: VerificationTokenDto, tokenType: TokenType) {
     const token = await this.prismaService.token.findFirst({
-      where: { token: dto.token, type: TokenType.VERIFICATION },
+      where: { token: dto.token, type: tokenType },
     })
 
     if (!token) {

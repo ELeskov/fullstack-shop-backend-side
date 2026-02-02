@@ -1,5 +1,4 @@
-import { Body, Heading, Link, Tailwind, Text } from "@react-email/components"
-import { Html } from "@react-email/html"
+import { Body, Button, Container, Heading, Html, Preview, Section, Tailwind, Text } from "@react-email/components"
 import * as React from 'react'
 
 interface ConfirmationTemplateProps {
@@ -7,14 +6,6 @@ interface ConfirmationTemplateProps {
 	token: string
 }
 
-/**
- * Генерирует шаблон письма для подтверждения электронной почты пользователя.
- * Ссылка для подтверждения формируется из домена и токена. Письмо информирует,
- * что ссылка действительна 1 час.
- * 
- * @param {ConfirmationTemplateProps} props - Домен и токен для генерации ссылки.
- * @returns {JSX.Element} Сгенерированный шаблон письма.
- */
 export function VerificationTemplate({
 	domain,
 	token
@@ -22,17 +13,38 @@ export function VerificationTemplate({
 	const confirmLink = `${domain}/auth/verify?token=${token}`
 
 	return (
-		<Tailwind> 
+		<Tailwind>
 			<Html>
-				<Body className='text-black'>
-					<Heading>Подтверждение почты</Heading>
-					<Text>
-						Привет! Чтобы подтвердить свой адрес электронной почты, пожалуйста, перейдите по следующей ссылке:
-					</Text>
-					<Link href={confirmLink}>Подтвердить почту</Link>
-					<Text>
-						Эта ссылка действительна в течение 1 часа. Если вы не запрашивали подтверждение, просто проигнорируйте это сообщение.
-					</Text>
+				<Preview>Подтвердите ваш адрес электронной почты</Preview>
+				<Body className="text-white font-sans">
+					<Container className="max-w-[400px]">
+						<Section className="bg-zinc-900 border border-white/30 rounded-lg p-6 mb-6">
+						<Section className="text-center mb-8">
+							<Heading className="text-2xl font-bold mb-2">
+								Подтверждение почты
+							</Heading>
+							<Text className="text-zinc-400">
+								Пожалуйста, подтвердите ваш адрес электронной почты
+							</Text>
+						</Section>
+
+							<div className="text-center mb-6">
+								<Button
+									href={confirmLink}
+									className="bg-white text-black text-base font-medium py-3 px-6 rounded-lg inline-block"
+								>
+									Подтвердить почту
+								</Button>
+							</div>
+							
+							<Section className="bg-zinc-800 border-l-4 border-zinc-500 p-4 rounded">
+								<Text className="text-zinc-400 text-sm leading-relaxed">
+									<strong className="text-white">Важно:</strong> Эта ссылка действительна в течение 1 часа. 
+									Если вы не запрашивали подтверждение, просто проигнорируйте это сообщение.
+								</Text>
+							</Section>
+						</Section>
+					</Container>
 				</Body>
 			</Html>
 		</Tailwind>
