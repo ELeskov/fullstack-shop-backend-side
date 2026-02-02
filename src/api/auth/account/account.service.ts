@@ -185,6 +185,15 @@ export class AccountService {
     return true
   }
 
+    public async sendResetPasswordToken(email: string) {
+    const { token } = await this.generateToken(email, TokenType.PASSWORD_RESET)
+
+    await this.mailService.sendVerificationEmail(email, token)
+
+    return true
+  }
+
+
   public async sendVerificationToken(email: string) {
     const { token } = await this.generateToken(email, TokenType.VERIFICATION)
 
