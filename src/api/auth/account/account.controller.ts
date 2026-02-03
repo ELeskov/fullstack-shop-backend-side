@@ -294,8 +294,6 @@ export class AccountController {
   }
 
   @Post('password/reset/send')
-  @ApiCookieAuth()
-  @Authorization()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Отправить письмо для сброса пароля',
@@ -303,7 +301,7 @@ export class AccountController {
       'Отправляет письмо с одноразовым токеном сброса пароля на email текущего пользователя.',
   })
   @ApiOkResponse({
-    description: 'Письмо отправлено (или переотправлено)',
+    description: 'Письмо отправлено',
   })
   @ApiUnauthorizedResponse({
     description: 'Не авторизован',
