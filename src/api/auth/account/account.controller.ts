@@ -232,8 +232,6 @@ export class AccountController {
   }
 
   @Post('password/reset')
-  @ApiCookieAuth()
-  @Authorization()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Сброс пароля по токену',
