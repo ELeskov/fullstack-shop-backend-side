@@ -215,10 +215,10 @@ export type ShopOrderByWithRelationInput = {
 
 export type ShopWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  title?: string
   AND?: Prisma.ShopWhereInput | Prisma.ShopWhereInput[]
   OR?: Prisma.ShopWhereInput[]
   NOT?: Prisma.ShopWhereInput | Prisma.ShopWhereInput[]
-  title?: Prisma.StringFilter<"Shop"> | string
   description?: Prisma.StringFilter<"Shop"> | string
   userId?: Prisma.StringNullableFilter<"Shop"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Shop"> | Date | string
@@ -229,7 +229,7 @@ export type ShopWhereUniqueInput = Prisma.AtLeast<{
   colors?: Prisma.ColorListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
-}, "id">
+}, "id" | "title">
 
 export type ShopOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

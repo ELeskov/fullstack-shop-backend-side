@@ -15,13 +15,13 @@ export function ResetPasswordTemplate({
 	return (
 		<Tailwind>
 			<Html>
-				<Preview>Подтвердите ваш адрес электронной почты</Preview>
+				<Preview>Сброс пароля</Preview>
 				<Body className="text-white font-sans">
 					<Container className="max-w-[400px]">
 						<Section className="bg-zinc-900 border border-white/30 rounded-lg p-6 mb-6">
 						<Section className="text-center mb-8">
 							<Heading className="text-2xl font-bold mb-2">
-								Подтверждение почты
+								Сброс пароля
 							</Heading>
 							<Text className="text-zinc-400">
 								Пожалуйста, подтвердите сброс пароля
