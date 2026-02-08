@@ -38,8 +38,9 @@ model User {
 model Shop {
   id String @id @default(uuid())
 
-  title       String @unique
+  title       String  @unique
   description String
+  picture     String?
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")
@@ -65,8 +66,8 @@ model Product {
   images      String[]
 
   groupedOptions GroupOptions[]
-  reviews       Review[]
-  orderItems    OrderItem[]
+  reviews        Review[]
+  orderItems     OrderItem[]
 
   shop   Shop?   @relation(fields: [shopId], references: [id])
   shopId String? @map("shop_id")
