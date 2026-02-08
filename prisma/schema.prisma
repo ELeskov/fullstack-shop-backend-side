@@ -64,8 +64,9 @@ model Product {
   price       Int
   images      String[]
 
-  reviews    Review[]
-  orderItems OrderItem[]
+  groupedOpions GroupOptions[]
+  reviews       Review[]
+  orderItems    OrderItem[]
 
   shop   Shop?   @relation(fields: [shopId], references: [id])
   shopId String? @map("shop_id")
@@ -83,6 +84,37 @@ model Product {
   favoritesItems FavoritesItem[]
 
   @@map("products")
+}
+
+model GroupOptions {
+  id String @id @default(uuid())
+
+  groupName String
+
+  options ProductsOptions[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@map("group_options")
+}
+
+model ProductsOptions {
+  id String @id @default(uuid())
+
+  name  String
+  value String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  groupOptions   GroupOptions? @relation(fields: [groupOptionsId], references: [id])
+  groupOptionsId String?
+
+  @@map("product_options")
 }
 
 model Basket {

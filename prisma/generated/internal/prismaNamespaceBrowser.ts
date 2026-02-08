@@ -54,6 +54,8 @@ export const ModelName = {
   User: 'User',
   Shop: 'Shop',
   Product: 'Product',
+  GroupOptions: 'GroupOptions',
+  ProductsOptions: 'ProductsOptions',
   Basket: 'Basket',
   BasketItem: 'BasketItem',
   Favorites: 'Favorites',
@@ -126,6 +128,29 @@ export const ProductScalarFieldEnum = {
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const GroupOptionsScalarFieldEnum = {
+  id: 'id',
+  groupName: 'groupName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  productId: 'productId'
+} as const
+
+export type GroupOptionsScalarFieldEnum = (typeof GroupOptionsScalarFieldEnum)[keyof typeof GroupOptionsScalarFieldEnum]
+
+
+export const ProductsOptionsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  groupOptionsId: 'groupOptionsId'
+} as const
+
+export type ProductsOptionsScalarFieldEnum = (typeof ProductsOptionsScalarFieldEnum)[keyof typeof ProductsOptionsScalarFieldEnum]
 
 
 export const BasketScalarFieldEnum = {

@@ -387,6 +387,8 @@ export const ModelName = {
   User: 'User',
   Shop: 'Shop',
   Product: 'Product',
+  GroupOptions: 'GroupOptions',
+  ProductsOptions: 'ProductsOptions',
   Basket: 'Basket',
   BasketItem: 'BasketItem',
   Favorites: 'Favorites',
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "shop" | "product" | "basket" | "basketItem" | "favorites" | "favoritesItem" | "category" | "color" | "review" | "order" | "orderItem" | "account" | "token"
+    modelProps: "user" | "shop" | "product" | "groupOptions" | "productsOptions" | "basket" | "basketItem" | "favorites" | "favoritesItem" | "category" | "color" | "review" | "order" | "orderItem" | "account" | "token"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -636,6 +638,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductCountAggregateOutputType> | number
+        }
+      }
+    }
+    GroupOptions: {
+      payload: Prisma.$GroupOptionsPayload<ExtArgs>
+      fields: Prisma.GroupOptionsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GroupOptionsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GroupOptionsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        findFirst: {
+          args: Prisma.GroupOptionsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GroupOptionsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        findMany: {
+          args: Prisma.GroupOptionsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>[]
+        }
+        create: {
+          args: Prisma.GroupOptionsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        createMany: {
+          args: Prisma.GroupOptionsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GroupOptionsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>[]
+        }
+        delete: {
+          args: Prisma.GroupOptionsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        update: {
+          args: Prisma.GroupOptionsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        deleteMany: {
+          args: Prisma.GroupOptionsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GroupOptionsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GroupOptionsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>[]
+        }
+        upsert: {
+          args: Prisma.GroupOptionsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOptionsPayload>
+        }
+        aggregate: {
+          args: Prisma.GroupOptionsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGroupOptions>
+        }
+        groupBy: {
+          args: Prisma.GroupOptionsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOptionsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GroupOptionsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOptionsCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProductsOptions: {
+      payload: Prisma.$ProductsOptionsPayload<ExtArgs>
+      fields: Prisma.ProductsOptionsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductsOptionsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductsOptionsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        findFirst: {
+          args: Prisma.ProductsOptionsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductsOptionsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        findMany: {
+          args: Prisma.ProductsOptionsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>[]
+        }
+        create: {
+          args: Prisma.ProductsOptionsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        createMany: {
+          args: Prisma.ProductsOptionsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductsOptionsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>[]
+        }
+        delete: {
+          args: Prisma.ProductsOptionsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        update: {
+          args: Prisma.ProductsOptionsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductsOptionsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductsOptionsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductsOptionsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductsOptionsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductsOptionsPayload>
+        }
+        aggregate: {
+          args: Prisma.ProductsOptionsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductsOptions>
+        }
+        groupBy: {
+          args: Prisma.ProductsOptionsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductsOptionsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductsOptionsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductsOptionsCountAggregateOutputType> | number
         }
       }
     }
@@ -1537,6 +1687,29 @@ export const ProductScalarFieldEnum = {
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
+export const GroupOptionsScalarFieldEnum = {
+  id: 'id',
+  groupName: 'groupName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  productId: 'productId'
+} as const
+
+export type GroupOptionsScalarFieldEnum = (typeof GroupOptionsScalarFieldEnum)[keyof typeof GroupOptionsScalarFieldEnum]
+
+
+export const ProductsOptionsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  groupOptionsId: 'groupOptionsId'
+} as const
+
+export type ProductsOptionsScalarFieldEnum = (typeof ProductsOptionsScalarFieldEnum)[keyof typeof ProductsOptionsScalarFieldEnum]
+
+
 export const BasketScalarFieldEnum = {
   id: 'id',
   totalAmount: 'totalAmount',
@@ -1918,6 +2091,8 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   shop?: Prisma.ShopOmit
   product?: Prisma.ProductOmit
+  groupOptions?: Prisma.GroupOptionsOmit
+  productsOptions?: Prisma.ProductsOptionsOmit
   basket?: Prisma.BasketOmit
   basketItem?: Prisma.BasketItemOmit
   favorites?: Prisma.FavoritesOmit

@@ -11,6 +11,8 @@
 export type * from './models/User'
 export type * from './models/Shop'
 export type * from './models/Product'
+export type * from './models/GroupOptions'
+export type * from './models/ProductsOptions'
 export type * from './models/Basket'
 export type * from './models/BasketItem'
 export type * from './models/Favorites'

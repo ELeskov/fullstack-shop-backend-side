@@ -33,6 +33,16 @@ export type Shop = Prisma.ShopModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model GroupOptions
+ * 
+ */
+export type GroupOptions = Prisma.GroupOptionsModel
+/**
+ * Model ProductsOptions
+ * 
+ */
+export type ProductsOptions = Prisma.ProductsOptionsModel
+/**
  * Model Basket
  * 
  */
