@@ -106,6 +106,7 @@ export const ShopScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  picture: 'picture',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
