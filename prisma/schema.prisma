@@ -64,7 +64,7 @@ model Product {
   price       Int
   images      String[]
 
-  groupedOpions GroupOptions[]
+  groupedOptions GroupOptions[]
   reviews       Review[]
   orderItems    OrderItem[]
 

@@ -237,7 +237,7 @@ export type GroupOptionsCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.ProductsOptionsCreateNestedManyWithoutGroupOptionsInput
-  product?: Prisma.ProductCreateNestedOneWithoutGroupedOpionsInput
+  product?: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
 }
 
 export type GroupOptionsUncheckedCreateInput = {
@@ -255,7 +255,7 @@ export type GroupOptionsUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.ProductsOptionsUpdateManyWithoutGroupOptionsNestedInput
-  product?: Prisma.ProductUpdateOneWithoutGroupedOpionsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutGroupedOptionsNestedInput
 }
 
 export type GroupOptionsUncheckedUpdateInput = {
@@ -445,7 +445,7 @@ export type GroupOptionsCreateWithoutOptionsInput = {
   groupName: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  product?: Prisma.ProductCreateNestedOneWithoutGroupedOpionsInput
+  product?: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
 }
 
 export type GroupOptionsUncheckedCreateWithoutOptionsInput = {
@@ -477,7 +477,7 @@ export type GroupOptionsUpdateWithoutOptionsInput = {
   groupName?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  product?: Prisma.ProductUpdateOneWithoutGroupedOpionsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutGroupedOptionsNestedInput
 }
 
 export type GroupOptionsUncheckedUpdateWithoutOptionsInput = {

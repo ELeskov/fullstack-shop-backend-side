@@ -252,7 +252,7 @@ export type ProductWhereInput = {
   colorId?: Prisma.StringNullableFilter<"Product"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
-  groupedOpions?: Prisma.GroupOptionsListRelationFilter
+  groupedOptions?: Prisma.GroupOptionsListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   shop?: Prisma.XOR<Prisma.ShopNullableScalarRelationFilter, Prisma.ShopWhereInput> | null
@@ -273,7 +273,7 @@ export type ProductOrderByWithRelationInput = {
   colorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  groupedOpions?: Prisma.GroupOptionsOrderByRelationAggregateInput
+  groupedOptions?: Prisma.GroupOptionsOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   orderItems?: Prisma.OrderItemOrderByRelationAggregateInput
   shop?: Prisma.ShopOrderByWithRelationInput
@@ -297,7 +297,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   colorId?: Prisma.StringNullableFilter<"Product"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
-  groupedOpions?: Prisma.GroupOptionsListRelationFilter
+  groupedOptions?: Prisma.GroupOptionsListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   shop?: Prisma.XOR<Prisma.ShopNullableScalarRelationFilter, Prisma.ShopWhereInput> | null
@@ -349,7 +349,7 @@ export type ProductCreateInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
@@ -370,7 +370,7 @@ export type ProductUncheckedCreateInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
@@ -385,7 +385,7 @@ export type ProductUpdateInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
@@ -406,7 +406,7 @@ export type ProductUncheckedUpdateInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
@@ -581,20 +581,20 @@ export type ProductUpdateimagesInput = {
   push?: string | string[]
 }
 
-export type ProductCreateNestedOneWithoutGroupedOpionsInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOpionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOpionsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutGroupedOpionsInput
+export type ProductCreateNestedOneWithoutGroupedOptionsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOptionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOptionsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutGroupedOptionsInput
   connect?: Prisma.ProductWhereUniqueInput
 }
 
-export type ProductUpdateOneWithoutGroupedOpionsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOpionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOpionsInput>
-  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutGroupedOpionsInput
-  upsert?: Prisma.ProductUpsertWithoutGroupedOpionsInput
+export type ProductUpdateOneWithoutGroupedOptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOptionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOptionsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutGroupedOptionsInput
+  upsert?: Prisma.ProductUpsertWithoutGroupedOptionsInput
   disconnect?: Prisma.ProductWhereInput | boolean
   delete?: Prisma.ProductWhereInput | boolean
   connect?: Prisma.ProductWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutGroupedOpionsInput, Prisma.ProductUpdateWithoutGroupedOpionsInput>, Prisma.ProductUncheckedUpdateWithoutGroupedOpionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutGroupedOptionsInput, Prisma.ProductUpdateWithoutGroupedOptionsInput>, Prisma.ProductUncheckedUpdateWithoutGroupedOptionsInput>
 }
 
 export type ProductCreateNestedOneWithoutBasketItemsInput = {
@@ -749,7 +749,7 @@ export type ProductCreateWithoutShopInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
@@ -768,7 +768,7 @@ export type ProductUncheckedCreateWithoutShopInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
@@ -817,7 +817,7 @@ export type ProductScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
 }
 
-export type ProductCreateWithoutGroupedOpionsInput = {
+export type ProductCreateWithoutGroupedOptionsInput = {
   id?: string
   title: string
   description: string
@@ -834,7 +834,7 @@ export type ProductCreateWithoutGroupedOpionsInput = {
   favoritesItems?: Prisma.FavoritesItemCreateNestedManyWithoutProductInput
 }
 
-export type ProductUncheckedCreateWithoutGroupedOpionsInput = {
+export type ProductUncheckedCreateWithoutGroupedOptionsInput = {
   id?: string
   title: string
   description: string
@@ -851,23 +851,23 @@ export type ProductUncheckedCreateWithoutGroupedOpionsInput = {
   favoritesItems?: Prisma.FavoritesItemUncheckedCreateNestedManyWithoutProductInput
 }
 
-export type ProductCreateOrConnectWithoutGroupedOpionsInput = {
+export type ProductCreateOrConnectWithoutGroupedOptionsInput = {
   where: Prisma.ProductWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOpionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOpionsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOptionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOptionsInput>
 }
 
-export type ProductUpsertWithoutGroupedOpionsInput = {
-  update: Prisma.XOR<Prisma.ProductUpdateWithoutGroupedOpionsInput, Prisma.ProductUncheckedUpdateWithoutGroupedOpionsInput>
-  create: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOpionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOpionsInput>
+export type ProductUpsertWithoutGroupedOptionsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutGroupedOptionsInput, Prisma.ProductUncheckedUpdateWithoutGroupedOptionsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutGroupedOptionsInput, Prisma.ProductUncheckedCreateWithoutGroupedOptionsInput>
   where?: Prisma.ProductWhereInput
 }
 
-export type ProductUpdateToOneWithWhereWithoutGroupedOpionsInput = {
+export type ProductUpdateToOneWithWhereWithoutGroupedOptionsInput = {
   where?: Prisma.ProductWhereInput
-  data: Prisma.XOR<Prisma.ProductUpdateWithoutGroupedOpionsInput, Prisma.ProductUncheckedUpdateWithoutGroupedOpionsInput>
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutGroupedOptionsInput, Prisma.ProductUncheckedUpdateWithoutGroupedOptionsInput>
 }
 
-export type ProductUpdateWithoutGroupedOpionsInput = {
+export type ProductUpdateWithoutGroupedOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -884,7 +884,7 @@ export type ProductUpdateWithoutGroupedOpionsInput = {
   favoritesItems?: Prisma.FavoritesItemUpdateManyWithoutProductNestedInput
 }
 
-export type ProductUncheckedUpdateWithoutGroupedOpionsInput = {
+export type ProductUncheckedUpdateWithoutGroupedOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -909,7 +909,7 @@ export type ProductCreateWithoutBasketItemsInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
@@ -929,7 +929,7 @@ export type ProductUncheckedCreateWithoutBasketItemsInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   favoritesItems?: Prisma.FavoritesItemUncheckedCreateNestedManyWithoutProductInput
@@ -959,7 +959,7 @@ export type ProductUpdateWithoutBasketItemsInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
@@ -979,7 +979,7 @@ export type ProductUncheckedUpdateWithoutBasketItemsInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   favoritesItems?: Prisma.FavoritesItemUncheckedUpdateManyWithoutProductNestedInput
@@ -993,7 +993,7 @@ export type ProductCreateWithoutFavoritesItemsInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
@@ -1013,7 +1013,7 @@ export type ProductUncheckedCreateWithoutFavoritesItemsInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
@@ -1043,7 +1043,7 @@ export type ProductUpdateWithoutFavoritesItemsInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
@@ -1063,7 +1063,7 @@ export type ProductUncheckedUpdateWithoutFavoritesItemsInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1077,7 +1077,7 @@ export type ProductCreateWithoutCategoryInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
@@ -1096,7 +1096,7 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
@@ -1137,7 +1137,7 @@ export type ProductCreateWithoutColorInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
@@ -1156,7 +1156,7 @@ export type ProductUncheckedCreateWithoutColorInput = {
   categoryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
@@ -1197,7 +1197,7 @@ export type ProductCreateWithoutReviewsInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
@@ -1217,7 +1217,7 @@ export type ProductUncheckedCreateWithoutReviewsInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
   favoritesItems?: Prisma.FavoritesItemUncheckedCreateNestedManyWithoutProductInput
@@ -1247,7 +1247,7 @@ export type ProductUpdateWithoutReviewsInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -1267,7 +1267,7 @@ export type ProductUncheckedUpdateWithoutReviewsInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
   favoritesItems?: Prisma.FavoritesItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1281,7 +1281,7 @@ export type ProductCreateWithoutOrderItemsInput = {
   images?: Prisma.ProductCreateimagesInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutProductInput
   shop?: Prisma.ShopCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
@@ -1301,7 +1301,7 @@ export type ProductUncheckedCreateWithoutOrderItemsInput = {
   colorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutProductInput
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutProductInput
   favoritesItems?: Prisma.FavoritesItemUncheckedCreateNestedManyWithoutProductInput
@@ -1331,7 +1331,7 @@ export type ProductUpdateWithoutOrderItemsInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -1351,7 +1351,7 @@ export type ProductUncheckedUpdateWithoutOrderItemsInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
   favoritesItems?: Prisma.FavoritesItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1377,7 +1377,7 @@ export type ProductUpdateWithoutShopInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -1396,7 +1396,7 @@ export type ProductUncheckedUpdateWithoutShopInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1435,7 +1435,7 @@ export type ProductUpdateWithoutCategoryInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
@@ -1454,7 +1454,7 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   colorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1493,7 +1493,7 @@ export type ProductUpdateWithoutColorInput = {
   images?: Prisma.ProductUpdateimagesInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutProductNestedInput
   shop?: Prisma.ShopUpdateOneWithoutProductsNestedInput
@@ -1512,7 +1512,7 @@ export type ProductUncheckedUpdateWithoutColorInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groupedOpions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
+  groupedOptions?: Prisma.GroupOptionsUncheckedUpdateManyWithoutProductNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutProductNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutProductNestedInput
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutProductNestedInput
@@ -1537,7 +1537,7 @@ export type ProductUncheckedUpdateManyWithoutColorInput = {
  */
 
 export type ProductCountOutputType = {
-  groupedOpions: number
+  groupedOptions: number
   reviews: number
   orderItems: number
   basketItems: number
@@ -1545,7 +1545,7 @@ export type ProductCountOutputType = {
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  groupedOpions?: boolean | ProductCountOutputTypeCountGroupedOpionsArgs
+  groupedOptions?: boolean | ProductCountOutputTypeCountGroupedOptionsArgs
   reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
   orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
   basketItems?: boolean | ProductCountOutputTypeCountBasketItemsArgs
@@ -1565,7 +1565,7 @@ export type ProductCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * ProductCountOutputType without action
  */
-export type ProductCountOutputTypeCountGroupedOpionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ProductCountOutputTypeCountGroupedOptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GroupOptionsWhereInput
 }
 
@@ -1609,7 +1609,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   colorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  groupedOpions?: boolean | Prisma.Product$groupedOpionsArgs<ExtArgs>
+  groupedOptions?: boolean | Prisma.Product$groupedOptionsArgs<ExtArgs>
   reviews?: boolean | Prisma.Product$reviewsArgs<ExtArgs>
   orderItems?: boolean | Prisma.Product$orderItemsArgs<ExtArgs>
   shop?: boolean | Prisma.Product$shopArgs<ExtArgs>
@@ -1667,7 +1667,7 @@ export type ProductSelectScalar = {
 
 export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "images" | "shopId" | "categoryId" | "colorId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  groupedOpions?: boolean | Prisma.Product$groupedOpionsArgs<ExtArgs>
+  groupedOptions?: boolean | Prisma.Product$groupedOptionsArgs<ExtArgs>
   reviews?: boolean | Prisma.Product$reviewsArgs<ExtArgs>
   orderItems?: boolean | Prisma.Product$orderItemsArgs<ExtArgs>
   shop?: boolean | Prisma.Product$shopArgs<ExtArgs>
@@ -1691,7 +1691,7 @@ export type ProductIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Product"
   objects: {
-    groupedOpions: Prisma.$GroupOptionsPayload<ExtArgs>[]
+    groupedOptions: Prisma.$GroupOptionsPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
     shop: Prisma.$ShopPayload<ExtArgs> | null
@@ -2105,7 +2105,7 @@ readonly fields: ProductFieldRefs;
  */
 export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  groupedOpions<T extends Prisma.Product$groupedOpionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$groupedOpionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  groupedOptions<T extends Prisma.Product$groupedOptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$groupedOptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.Product$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderItems<T extends Prisma.Product$orderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shop<T extends Prisma.Product$shopArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$shopArgs<ExtArgs>>): Prisma.Prisma__ShopClient<runtime.Types.Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2548,9 +2548,9 @@ export type ProductDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Product.groupedOpions
+ * Product.groupedOptions
  */
-export type Product$groupedOpionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Product$groupedOptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the GroupOptions
    */
