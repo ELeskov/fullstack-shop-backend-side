@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/generated/client'
 export class PrismaService extends PrismaClient {
   constructor() {
     const adapter = new PrismaPg({
-      connectionString: process.env.POSTGRES_URL as string,
+      connectionString: process.env.POSTGRES_URL,
     })
 
     super({ adapter })

@@ -2,18 +2,19 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common'
 import { Request } from 'express'
 
-import { UsersService } from '@/api/users/users.service'
+import { PrismaService } from '@/infra/prisma/prisma.service'
 
 /**
  * Guard для проверки ролей пользователя.
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  public constructor(private readonly userService: UsersService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest()
@@ -24,7 +25,18 @@ export class AuthGuard implements CanActivate {
       )
     }
 
-    const user = await this.userService.findById(request.session.userId)
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: request.session.userId,
+      },
+      omit: {
+        password: true,
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден')
+    }
 
     request.user = user
 

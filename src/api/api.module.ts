@@ -7,11 +7,12 @@ import { MailModule } from '@/libs/mail/mail.module'
 
 import { AccountModule } from './auth/account/account.module'
 import { S3Module } from './s3/s3.module'
+import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
-import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
+    ShopModule,
     UsersModule,
     AccountModule,
     MailModule,
@@ -21,7 +22,6 @@ import { ShopModule } from './shop/shop.module';
       useFactory: getTurnstileConfig,
       inject: [ConfigService],
     }),
-    ShopModule,
   ],
 })
 export class ApiModule {}
