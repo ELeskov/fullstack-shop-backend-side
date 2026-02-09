@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
+import { S3_NAME_FOLDERS, S3FolderValue } from '@/shared/consts'
 
 @Injectable()
 export class S3Service {
@@ -25,8 +26,11 @@ export class S3Service {
     this.bucket = process.env['S3_BUCKET_NAME']!
   }
 
-  public async upload(file: Express.Multer.File): Promise<string> {
-    const key = `avatars/${Date.now()}-${Math.random().toString(36).slice(2)}-${file.originalname}`
+  public async upload(
+    s3Folder: S3FolderValue,
+    file: Express.Multer.File,
+  ): Promise<{ path: string }> {
+    const key = `${s3Folder}/${Date.now()}-${Math.random().toString(36).slice(2)}-${file.originalname}`
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -37,7 +41,7 @@ export class S3Service {
 
     await this.client.send(command)
 
-    return `https://${this.bucket}.s3.timeweb.cloud/${key}`
+    return { path: `https://${this.bucket}.s3.timeweb.cloud/${key}` }
   }
 
   async delete(key: string): Promise<void> {

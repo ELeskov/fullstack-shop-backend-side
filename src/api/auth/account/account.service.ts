@@ -16,6 +16,7 @@ import { S3Service } from '@/api/s3/s3.service'
 import { UsersService } from '@/api/users/users.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
+import { S3_NAME_FOLDERS } from '@/shared/consts'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { LoginDto } from './dto/login.dto'
@@ -90,7 +91,10 @@ export class AccountService {
   }
 
   public async changeMeAvatar(user: User, file: Express.Multer.File) {
-    const newAvatarUrl = await this.s3Service.upload(file)
+    const { path } = await this.s3Service.upload(
+      S3_NAME_FOLDERS.S3_USER_AVATAR,
+      file,
+    )
 
     if (user.picture) {
       const key = extractKeyFromUrl(user.picture)
@@ -102,11 +106,11 @@ export class AccountService {
         id: user.id,
       },
       data: {
-        picture: newAvatarUrl,
+        picture: path,
       },
     })
 
-    return { url: newAvatarUrl }
+    return { url: path }
   }
 
   public async register(req: Request, dto: RegisterDto) {
