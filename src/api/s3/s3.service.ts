@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
-import { S3_NAME_FOLDERS, S3FolderValue } from '@/shared/consts'
+import { S3FolderValue } from '@/shared/consts'
 
 @Injectable()
 export class S3Service {

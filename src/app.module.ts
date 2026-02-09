@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import 'multer'
 
 import { ApiModule } from '@/api/api.module'
 

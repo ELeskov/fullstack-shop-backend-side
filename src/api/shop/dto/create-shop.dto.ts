@@ -15,7 +15,4 @@ export class CreateShopDto {
   })
   @IsString()
   description!: string
-
-  @ApiProperty()
-  file!: Express.Multer.File
 }
