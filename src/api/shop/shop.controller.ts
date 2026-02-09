@@ -1,8 +1,14 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
-import { ApiCookieAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import {
+  ApiConflictResponse,
+  ApiCookieAuth,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
+import { ConflictErrorDto } from '@/types/error-response.dto'
 
 import { CreateShopDto } from './dto/create-shop.dto'
 import { ShopService } from './shop.service'
@@ -18,6 +24,10 @@ export class ShopController {
   @ApiOperation({ summary: 'Создание магазина' })
   @ApiOkResponse({
     description: 'Магазин успешно создался',
+  })
+  @ApiConflictResponse({
+    description: 'Ошибка при создании магазина',
+    type: ConflictErrorDto,
   })
   public async create(
     @Authorized('id') userId: string,

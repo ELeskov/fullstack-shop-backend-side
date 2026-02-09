@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 
@@ -9,7 +9,7 @@ export class ShopService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async create(userId: string, dto: CreateShopDto) {
-    await this.prismaService.shop.create({
+    const shop = await this.prismaService.shop.create({
       data: {
         title: dto.title,
         description: dto.description,
@@ -17,6 +17,11 @@ export class ShopService {
         userId,
       },
     })
+
+    if (!shop) {
+      throw new ConflictException('Ошибка при создании магазина')
+    }
+
     return true
   }
 }
