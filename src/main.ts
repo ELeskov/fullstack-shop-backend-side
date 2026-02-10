@@ -23,9 +23,11 @@ async function bootstrap() {
     url: config.getOrThrow<string>('REDIS_URI'),
   })
 
-  await redisClient.connect().catch(() => {
+  await redisClient.connect().catch(err => {
+    console.error('❌ Failed to connect to Redis:', err)
     process.exit(1)
   })
+  console.log('✅ Redis connected successfully.')
 
   app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')))
 

@@ -8,7 +8,9 @@ import {
   ParseFilePipe,
   Post,
   UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import {
   ApiBody,
   ApiConflictResponse,
@@ -16,6 +18,7 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger'
+import { User } from '@prisma/generated/client'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
@@ -65,6 +68,7 @@ export class ShopController {
   @ApiBody({
     type: UploadLogoShopDto,
   })
+  @UseInterceptors(FileInterceptor('file'))
   public async upload(
     @Authorized('id') userId: string,
     @UploadedFile(
@@ -81,7 +85,8 @@ export class ShopController {
       }),
     )
     file: Express.Multer.File,
+    @Authorized() user: User,
   ) {
-    return this.shopService.upload(file)
+    return this.shopService.upload(user, file)
   }
 }
