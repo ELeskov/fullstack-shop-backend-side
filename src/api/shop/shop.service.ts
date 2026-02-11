@@ -34,6 +34,14 @@ export class ShopService {
     return { shopId: id }
   }
 
+  public async getMeShops(userId: string) {
+    return await this.prismaService.shop.findMany({
+      where: {
+        userId,
+      },
+    })
+  }
+
   public async upload(shopId: string, file: Express.Multer.File) {
     try {
       if (!file || !shopId) {

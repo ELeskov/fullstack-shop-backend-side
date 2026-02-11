@@ -35,16 +35,10 @@ export class AccountService {
     private readonly s3Service: S3Service,
   ) {}
 
-  public async getMe(id: string) {
+  public async getMe(userId: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
-        id,
-      },
-      include: {
-        accounts: true,
-        orders: true,
-        shops: true,
-        favorites: true,
+        id: userId,
       },
       omit: {
         password: true,

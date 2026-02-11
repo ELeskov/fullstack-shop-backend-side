@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
   HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
@@ -18,14 +19,19 @@ import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
-import { ConflictErrorDto } from '@/types/error-response.dto'
+import {
+  ConflictErrorDto,
+  UnauthorizedErrorDto,
+} from '@/types/error-response.dto'
 
 import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
+import { ShopResponseDto } from './dto/shop-response.dto'
 import { UploadLogoShopRequestDto } from './dto/upload-logo-shop-request.dto'
 import { UploadLogoShopDto } from './dto/upload-logo-shop.dto'
 import { ShopService } from './shop.service'
@@ -37,7 +43,7 @@ export class ShopController {
   @Post('')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Создание магазина' })
   @ApiOkResponse({
     description: 'Магазин успешно создался',
@@ -91,5 +97,16 @@ export class ShopController {
     @Body('shopId') shopId: string,
   ) {
     return this.shopService.upload(shopId, file)
+  }
+
+  @Get('/@me')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiUnauthorizedResponse({ type: UnauthorizedErrorDto })
+  @ApiOperation({ summary: 'Мои магазины' })
+  @ApiOkResponse({ type: ShopResponseDto, isArray: true })
+  async getMyShops(@Authorized('id') userId: string) {
+    return this.shopService.getMeShops(userId)
   }
 }
