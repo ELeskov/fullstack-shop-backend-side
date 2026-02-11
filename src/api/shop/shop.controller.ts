@@ -14,16 +14,17 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import {
   ApiBody,
   ApiConflictResponse,
+  ApiConsumes,
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger'
-import { User } from '@prisma/generated/client'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
 import { ConflictErrorDto } from '@/types/error-response.dto'
 
+import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
 import { UploadLogoShopRequestDto } from './dto/upload-logo-shop-request.dto'
 import { UploadLogoShopDto } from './dto/upload-logo-shop.dto'
@@ -40,6 +41,7 @@ export class ShopController {
   @ApiOperation({ summary: 'Создание магазина' })
   @ApiOkResponse({
     description: 'Магазин успешно создался',
+    type: CreateShopResponseDto,
   })
   @ApiConflictResponse({
     description: 'Ошибка при создании магазина',
@@ -68,6 +70,7 @@ export class ShopController {
   @ApiBody({
     type: UploadLogoShopDto,
   })
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   public async upload(
     @Authorized('id') userId: string,
@@ -85,8 +88,8 @@ export class ShopController {
       }),
     )
     file: Express.Multer.File,
-    @Authorized() user: User,
+    @Body('shopId') shopId: string,
   ) {
-    return this.shopService.upload(user, file)
+    return this.shopService.upload(shopId, file)
   }
 }

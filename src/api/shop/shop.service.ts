@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { User } from '@prisma/generated/client'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
@@ -20,7 +19,7 @@ export class ShopService {
   ) {}
 
   public async create(userId: string, { title, description }: CreateShopDto) {
-    const shop = await this.prismaService.shop.create({
+    const { id } = await this.prismaService.shop.create({
       data: {
         title,
         description,
@@ -28,16 +27,16 @@ export class ShopService {
       },
     })
 
-    if (!shop) {
+    if (!id) {
       throw new ConflictException('Ошибка при создании магазина')
     }
 
-    return true
+    return { shopId: id }
   }
 
-  public async upload(user: User, file: Express.Multer.File) {
+  public async upload(shopId: string, file: Express.Multer.File) {
     try {
-      if (!file) {
+      if (!file || !shopId) {
         throw new NotFoundException('Файл не найден')
       }
 
@@ -50,11 +49,14 @@ export class ShopService {
         throw new NotFoundException('Ошибка создания файла')
       }
 
-      // await this.prismaService.shop.update({
-      //   where: {
-      //     userId: user.
-      //   },
-      // })
+      await this.prismaService.shop.update({
+        where: {
+          id: shopId,
+        },
+        data: {
+          picture: path,
+        },
+      })
 
       return { path }
     } catch (error) {
