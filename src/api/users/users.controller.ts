@@ -1,25 +1,17 @@
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common'
 import {
   ApiCookieAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { UserRole } from '@prisma/generated/enums'
 
 import { Authorization } from '@/shared/decorators/auth.decorator'
 
-import {
-  ForbiddenErrorDto,
-  NotFoundErrorDto,
-  UnauthorizedErrorDto,
-} from '../../types/error-response.dto'
-
 import { UsersService } from './users.service'
+import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 
 @ApiCookieAuth()
 @ApiTags('users')
@@ -37,18 +29,7 @@ export class UsersController {
     example: 'clx123abc...',
   })
   @ApiOkResponse({ description: 'Пользователь найден.' })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован.',
-    type: UnauthorizedErrorDto,
-  })
-  @ApiForbiddenResponse({
-    description: 'Недостаточно прав (требуется роль ADMIN).',
-    type: ForbiddenErrorDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Пользователь с таким id не найден.',
-    type: NotFoundErrorDto,
-  })
+  @ApiCommonErrors()
   public async findById(@Param('id') id: string) {
     return this.usersService.findById(id)
   }

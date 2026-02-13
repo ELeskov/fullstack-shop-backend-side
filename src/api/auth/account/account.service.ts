@@ -17,6 +17,7 @@ import { UsersService } from '@/api/users/users.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
+import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { LoginDto } from './dto/login.dto'
@@ -130,13 +131,19 @@ export class AccountService {
   public async login(req: Request, dto: LoginDto) {
     const user = await this.usersService.findByEmail(dto.email)
     if (!user || !user.password) {
-      throw new NotFoundException('Пользователь не найден')
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
     }
 
     const isValidPassword = await verify(user.password, dto.password)
 
     if (!isValidPassword) {
-      throw new NotFoundException('Неверный пароль')
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
     }
 
     return this.saveSession(req, user)

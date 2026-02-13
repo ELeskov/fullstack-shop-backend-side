@@ -16,30 +16,22 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import {
-  ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
   ApiCookieAuth,
   ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { User } from '@prisma/generated/client'
 import { Request, Response } from 'express'
 import { Turnstile } from 'nestjs-cloudflare-captcha'
 
 import { UserResponseDto } from '@/api/auth/account/dto/userResponse.dto'
+import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
-import {
-  BadRequestErrorDto,
-  ConflictErrorDto,
-  NotFoundErrorDto,
-  UnauthorizedErrorDto,
-} from '@/types/error-response.dto'
 
 import { AccountService } from './account.service'
 import { AccountResponseDto } from './dto/account-response.dto'
@@ -65,10 +57,7 @@ export class AccountController {
     description: 'Профиль текущего пользователя.',
     type: UserResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован.',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   public async me(@Authorized('id') userId: string) {
     return this.accountService.getMe(userId)
   }
@@ -85,14 +74,7 @@ export class AccountController {
     description: 'Данные успешно обновлены',
     type: UserResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Некорректные данные',
-    type: BadRequestErrorDto,
-  })
+  @ApiCommonErrors()
   public async patchUser(@Req() req: Request, @Body() dto: PatchUserDto) {
     return this.accountService.patchMe(req, dto)
   }
@@ -108,10 +90,7 @@ export class AccountController {
     description: 'Фото успешно обновлено',
     type: UpdateUserAvatarResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   @UseInterceptors(FileInterceptor('file'))
   public upload(
     @UploadedFile(
@@ -142,19 +121,7 @@ export class AccountController {
   @ApiCreatedResponse({
     description: 'Пользователь зарегистрирован',
   })
-  @ApiBadRequestResponse({
-    description: 'Ошибка валидации входных данных.',
-    type: BadRequestErrorDto,
-  })
-  @ApiConflictResponse({
-    description: 'Пользователь с такой почтой уже существует',
-    type: ConflictErrorDto,
-  })
-  @ApiNotFoundResponse({
-    description:
-      'Пользователь не найден. Пожалуйста проверьте введенные данные',
-    type: NotFoundErrorDto,
-  })
+  @ApiCommonErrors()
   @Turnstile()
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
@@ -169,14 +136,7 @@ export class AccountController {
       'Успешный вход. Может вернуть accessToken в body и/или установить cookie',
     type: AccountResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Ошибка валидации входных данных.',
-    type: BadRequestErrorDto,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Неверные учетные данные.',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   @Turnstile()
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -191,10 +151,7 @@ export class AccountController {
     description: 'Сессия завершена. Очистка cookie и инвалидация сессии.',
     type: AccountResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: 'Нет валидной сессии для выхода.',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   @HttpCode(HttpStatus.OK)
   @Post('logout')
   public async logout(
@@ -216,14 +173,7 @@ export class AccountController {
   @ApiOkResponse({
     description: 'Email успешно подтверждён. Создана сессия авторизации',
   })
-  @ApiBadRequestResponse({
-    description: 'Токен истёк или недействителен',
-    type: BadRequestErrorDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Токен не найден или пользователь не существует',
-    type: NotFoundErrorDto,
-  })
+  @ApiCommonErrors()
   @ApiBody({
     type: VerificationTokenDto,
   })
@@ -245,14 +195,7 @@ export class AccountController {
       example: true,
     },
   })
-  @ApiBadRequestResponse({
-    description: 'Токен истёк или недействителен',
-    type: BadRequestErrorDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Токен не найден или пользователь не существует',
-    type: NotFoundErrorDto,
-  })
+  @ApiCommonErrors()
   @ApiConflictResponse({
     description: 'Пароли не совпадают',
   })
@@ -280,10 +223,7 @@ export class AccountController {
   @ApiOkResponse({
     description: 'Письмо отправлено (или переотправлено)',
   })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   @ApiBody({
     type: SendEmailDto,
   })
@@ -301,10 +241,7 @@ export class AccountController {
   @ApiOkResponse({
     description: 'Письмо отправлено',
   })
-  @ApiUnauthorizedResponse({
-    description: 'Не авторизован',
-    type: UnauthorizedErrorDto,
-  })
+  @ApiCommonErrors()
   @ApiBody({
     type: SendEmailDto,
   })

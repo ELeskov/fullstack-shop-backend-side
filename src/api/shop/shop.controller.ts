@@ -14,20 +14,16 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import {
   ApiBody,
-  ApiConflictResponse,
   ApiConsumes,
   ApiCookieAuth,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 
+import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
-import {
-  ConflictErrorDto,
-  UnauthorizedErrorDto,
-} from '@/types/error-response.dto'
 
 import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
@@ -45,14 +41,11 @@ export class ShopController {
   @ApiCookieAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Создание магазина' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Магазин успешно создался',
     type: CreateShopResponseDto,
   })
-  @ApiConflictResponse({
-    description: 'Ошибка при создании магазина',
-    type: ConflictErrorDto,
-  })
+  @ApiCommonErrors()
   public async create(
     @Authorized('id') userId: string,
     @Body() dto: CreateShopDto,
@@ -65,13 +58,10 @@ export class ShopController {
   @ApiCookieAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Сохранение логотипа магазина' })
+  @ApiCommonErrors()
   @ApiOkResponse({
     description: 'Логотиип успешно сохранен',
     type: UploadLogoShopRequestDto,
-  })
-  @ApiConflictResponse({
-    description: 'Ошибка при сохранении логотипа',
-    type: ConflictErrorDto,
   })
   @ApiBody({
     type: UploadLogoShopDto,
@@ -103,7 +93,7 @@ export class ShopController {
   @Authorization()
   @ApiCookieAuth()
   @HttpCode(HttpStatus.OK)
-  @ApiUnauthorizedResponse({ type: UnauthorizedErrorDto })
+  @ApiCommonErrors()
   @ApiOperation({ summary: 'Мои магазины' })
   @ApiOkResponse({ type: ShopResponseDto, isArray: true })
   async getMyShops(@Authorized('id') userId: string) {
