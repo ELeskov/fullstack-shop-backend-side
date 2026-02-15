@@ -6,10 +6,13 @@ import {
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
+import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
+import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { S3Service } from '../s3/s3.service'
 
 import { CreateShopDto } from './dto/create-shop.dto'
+import { UpdateShopDto } from './dto/update-shop.dto'
 
 @Injectable()
 export class ShopService {
@@ -19,7 +22,7 @@ export class ShopService {
   ) {}
 
   public async create(userId: string, { title, description }: CreateShopDto) {
-    const { id } = await this.prismaService.shop.create({
+    const shop = await this.prismaService.shop.create({
       data: {
         title,
         description,
@@ -27,25 +30,76 @@ export class ShopService {
       },
     })
 
-    if (!id) {
+    if (!shop) {
       throw new ConflictException('Ошибка при создании магазина')
     }
 
-    return { shopId: id }
+    return shop
   }
 
-  public async getMeShops(userId: string) {
+  public async update({ title, description, shopId }: UpdateShopDto) {
+    const shop = await this.prismaService.shop.update({
+      where: {
+        id: shopId,
+      },
+      data: {
+        title,
+        description,
+      },
+    })
+
+    return shop
+  }
+
+  public async getMeAll(userId: string) {
     return await this.prismaService.shop.findMany({
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
   }
 
-  public async upload(shopId: string, file: Express.Multer.File) {
+  public async getById(shopId: string) {
+    const shop = await this.prismaService.shop.findUnique({
+      where: {
+        id: shopId,
+      },
+    })
+    if (!shop) {
+      throw new NotFoundException({
+        message: 'Магазина с таким id не найдено',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    return shop
+  }
+
+  public async setShopPicture(shopId: string, file: Express.Multer.File) {
     try {
       if (!file || !shopId) {
-        throw new NotFoundException('Файл не найден')
+        throw new ConflictException({ message: 'Ошибка валидации данных' })
+      }
+
+      const existingShop = await this.prismaService.shop.findUnique({
+        where: {
+          id: shopId,
+        },
+        select: {
+          picture: true,
+        },
+      })
+
+      if (!existingShop) {
+        throw new NotFoundException('Магазин не найден')
+      }
+
+      if (existingShop?.picture) {
+        const key = extractKeyFromUrl(existingShop.picture)
+        await this.s3Service.delete(key)
       }
 
       const { path } = await this.s3Service.upload(

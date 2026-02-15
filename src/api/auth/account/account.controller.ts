@@ -22,7 +22,6 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags,
 } from '@nestjs/swagger'
 import { User } from '@prisma/generated/client'
 import { Request, Response } from 'express'
@@ -43,7 +42,6 @@ import { SendEmailDto } from './dto/sendEmail.dto'
 import { UpdateUserAvatarResponseDto } from './dto/updateAvatarResponse.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
-@ApiTags('account')
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}

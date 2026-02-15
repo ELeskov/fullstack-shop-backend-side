@@ -6,7 +6,9 @@ import {
   HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -16,7 +18,6 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCookieAuth,
-  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger'
@@ -28,6 +29,7 @@ import { Authorized } from '@/shared/decorators/authorized.decorator'
 import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
 import { ShopResponseDto } from './dto/shop-response.dto'
+import { UpdateShopDto } from './dto/update-shop.dto'
 import { UploadLogoShopRequestDto } from './dto/upload-logo-shop-request.dto'
 import { UploadLogoShopDto } from './dto/upload-logo-shop.dto'
 import { ShopService } from './shop.service'
@@ -36,14 +38,14 @@ import { ShopService } from './shop.service'
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
-  @Post('')
+  @Post()
   @Authorization()
   @ApiCookieAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Создание магазина' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'Магазин успешно создался',
-    type: CreateShopResponseDto,
+    type: ShopResponseDto,
   })
   @ApiCommonErrors()
   public async create(
@@ -53,11 +55,53 @@ export class ShopController {
     return this.shopService.create(userId, dto)
   }
 
-  @Post('/logo')
+  @Get('@me')
   @Authorization()
   @ApiCookieAuth()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Сохранение логотипа магазина' })
+  @ApiCommonErrors()
+  @ApiOperation({ summary: 'Мои магазины' })
+  @ApiOkResponse({ type: ShopResponseDto, isArray: true })
+  async getMyShops(@Authorized('id') userId: string) {
+    return this.shopService.getMeAll(userId)
+  }
+
+  @Get(':id')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Поиск магазина по id' })
+  @ApiOkResponse({
+    description: 'Магазин найден',
+    type: ShopResponseDto,
+  })
+  @ApiCommonErrors()
+  public async getById(@Param('id') shopId: string) {
+    return this.shopService.getById(shopId)
+  }
+
+  @Patch()
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Обновление названия/описания магазина' })
+  @ApiOkResponse({
+    description: 'Данные магазин успешно обновлен',
+    type: CreateShopResponseDto,
+  })
+  @ApiBody({
+    type: UpdateShopDto,
+  })
+  @ApiCommonErrors()
+  public async update(@Body() dto: UpdateShopDto) {
+    return this.shopService.update(dto)
+  }
+
+  @Post('logo')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Сохранение или обновление логотипа магазина' })
   @ApiCommonErrors()
   @ApiOkResponse({
     description: 'Логотиип успешно сохранен',
@@ -68,8 +112,7 @@ export class ShopController {
   })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  public async upload(
-    @Authorized('id') userId: string,
+  public async setShopPicture(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -86,17 +129,6 @@ export class ShopController {
     file: Express.Multer.File,
     @Body('shopId') shopId: string,
   ) {
-    return this.shopService.upload(shopId, file)
-  }
-
-  @Get('/@me')
-  @Authorization()
-  @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
-  @ApiCommonErrors()
-  @ApiOperation({ summary: 'Мои магазины' })
-  @ApiOkResponse({ type: ShopResponseDto, isArray: true })
-  async getMyShops(@Authorized('id') userId: string) {
-    return this.shopService.getMeShops(userId)
+    return this.shopService.setShopPicture(shopId, file)
   }
 }
