@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   HttpCode,
@@ -46,70 +47,7 @@ import { VerificationTokenDto } from './dto/verificationToken.dto'
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  @Get('@me')
-  @Authorization()
-  @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
-  @ApiOkResponse({
-    description: 'Профиль текущего пользователя.',
-    type: UserResponseDto,
-  })
-  @ApiCommonErrors()
-  public async me(@Authorized('id') userId: string) {
-    return this.accountService.getMe(userId)
-  }
-
-  @Patch('@me')
-  @Authorization()
-  @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Обновление username пользователя',
-  })
-  @ApiBody({ type: PatchUserDto })
-  @ApiOkResponse({
-    description: 'Данные успешно обновлены',
-    type: UserResponseDto,
-  })
-  @ApiCommonErrors()
-  public async patchUser(@Req() req: Request, @Body() dto: PatchUserDto) {
-    return this.accountService.patchMe(req, dto)
-  }
-
-  @Patch('@me/avatar')
-  @HttpCode(HttpStatus.OK)
-  @Authorization()
-  @ApiCookieAuth()
-  @ApiOperation({
-    summary: 'Обновление фото аватара',
-  })
-  @ApiOkResponse({
-    description: 'Фото успешно обновлено',
-    type: UpdateUserAvatarResponseDto,
-  })
-  @ApiCommonErrors()
-  @UseInterceptors(FileInterceptor('file'))
-  public upload(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType: /\/(jpg|jpeg|png|webp)$/,
-          }),
-          new MaxFileSizeValidator({
-            maxSize: 1000 * 1000 * 10,
-            message: 'Можно загружать файлы не больше 10 МБ',
-          }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-    @Authorized() user: User,
-  ) {
-    return this.accountService.changeMeAvatar(user, file)
-  }
-
+  @Post('register')
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiBody({ type: RegisterDto })
   @ApiOkResponse({
@@ -122,11 +60,11 @@ export class AccountController {
   @ApiCommonErrors()
   @Turnstile()
   @HttpCode(HttpStatus.CREATED)
-  @Post('register')
   public async register(@Req() req: Request, @Body() dto: RegisterDto) {
     return this.accountService.register(req, dto)
   }
 
+  @Post('login')
   @ApiOperation({ summary: 'Вход' })
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
@@ -137,11 +75,11 @@ export class AccountController {
   @ApiCommonErrors()
   @Turnstile()
   @HttpCode(HttpStatus.OK)
-  @Post('login')
   public async login(@Req() req: Request, @Body() dto: LoginDto) {
     return this.accountService.login(req, dto)
   }
 
+  @Post('logout')
   @ApiOperation({ summary: 'Выход (logout)' })
   @Authorization()
   @ApiCookieAuth()
@@ -151,7 +89,6 @@ export class AccountController {
   })
   @ApiCommonErrors()
   @HttpCode(HttpStatus.OK)
-  @Post('logout')
   public async logout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -245,5 +182,84 @@ export class AccountController {
   })
   public async sendResetPasswordEmail(@Body() dto: SendEmailDto) {
     return this.accountService.sendResetPasswordToken(dto.email)
+  }
+
+  @Get('@me')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
+  @ApiOkResponse({
+    description: 'Профиль текущего пользователя.',
+    type: UserResponseDto,
+  })
+  @ApiCommonErrors()
+  public async me(@Authorized('id') userId: string) {
+    return this.accountService.getMe(userId)
+  }
+
+  @Patch('@me')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Обновление username пользователя',
+  })
+  @ApiBody({ type: PatchUserDto })
+  @ApiOkResponse({
+    description: 'Данные успешно обновлены',
+    type: UserResponseDto,
+  })
+  @ApiCommonErrors()
+  public async patchUser(@Req() req: Request, @Body() dto: PatchUserDto) {
+    return this.accountService.patchMe(req, dto)
+  }
+
+  @Patch('@me/avatar')
+  @HttpCode(HttpStatus.OK)
+  @Authorization()
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: 'Обновление фото аватара',
+  })
+  @ApiOkResponse({
+    description: 'Фото успешно обновлено',
+    type: UpdateUserAvatarResponseDto,
+  })
+  @ApiCommonErrors()
+  @UseInterceptors(FileInterceptor('file'))
+  public upload(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: /\/(jpg|jpeg|png|webp)$/,
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 1000 * 1000 * 10,
+            message: 'Можно загружать файлы не больше 10 МБ',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Authorized() user: User,
+  ) {
+    return this.accountService.changeMeAvatar(user, file)
+  }
+
+  @Delete('@me')
+  @Authorization()
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: 'Удаление аккаунта',
+  })
+  @ApiOkResponse({
+    description: 'Пользователь успешно удален',
+    example: true,
+  })
+  @ApiCommonErrors()
+  public delete(@Authorized('id') userId: string) {
+    return this.accountService.delete(userId)
   }
 }

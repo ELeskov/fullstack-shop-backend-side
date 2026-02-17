@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   HttpCode,
@@ -28,6 +29,7 @@ import { Authorized } from '@/shared/decorators/authorized.decorator'
 
 import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
+import { DeleteShopDto } from './dto/delete-shop.dto'
 import { ShopResponseDto } from './dto/shop-response.dto'
 import { UpdateShopDto } from './dto/update-shop.dto'
 import { UploadLogoShopRequestDto } from './dto/upload-logo-shop-request.dto'
@@ -53,6 +55,41 @@ export class ShopController {
     @Body() dto: CreateShopDto,
   ) {
     return this.shopService.create(userId, dto)
+  }
+
+  @Post('logo')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Сохранение или обновление логотипа магазина' })
+  @ApiCommonErrors()
+  @ApiOkResponse({
+    description: 'Логотиип успешно сохранен',
+    type: UploadLogoShopRequestDto,
+  })
+  @ApiBody({
+    type: UploadLogoShopDto,
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  public async setShopPicture(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: /\/(jpg|jpeg|png|webp)$/,
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 1000 * 1000 * 10,
+            message: 'Можно загружать файлы не больше 10 МБ',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body('shopId') shopId: string,
+  ) {
+    return this.shopService.setShopPicture(shopId, file)
   }
 
   @Get('@me')
@@ -97,38 +134,21 @@ export class ShopController {
     return this.shopService.update(dto)
   }
 
-  @Post('logo')
+  @Delete()
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Сохранение или обновление логотипа магазина' })
-  @ApiCommonErrors()
+  @ApiOperation({
+    summary: 'Удаление магазина',
+  })
   @ApiOkResponse({
-    description: 'Логотиип успешно сохранен',
-    type: UploadLogoShopRequestDto,
+    description: 'Магазин успешно удален',
+    example: true,
   })
   @ApiBody({
-    type: UploadLogoShopDto,
+    type: DeleteShopDto,
   })
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file'))
-  public async setShopPicture(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType: /\/(jpg|jpeg|png|webp)$/,
-          }),
-          new MaxFileSizeValidator({
-            maxSize: 1000 * 1000 * 10,
-            message: 'Можно загружать файлы не больше 10 МБ',
-          }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-    @Body('shopId') shopId: string,
-  ) {
-    return this.shopService.setShopPicture(shopId, file)
+  @ApiCommonErrors()
+  public delete(shopId: string) {
+    return this.shopService.delete(shopId)
   }
 }

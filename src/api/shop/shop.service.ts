@@ -37,47 +37,6 @@ export class ShopService {
     return shop
   }
 
-  public async update({ title, description, shopId }: UpdateShopDto) {
-    const shop = await this.prismaService.shop.update({
-      where: {
-        id: shopId,
-      },
-      data: {
-        title,
-        description,
-      },
-    })
-
-    return shop
-  }
-
-  public async getMeAll(userId: string) {
-    return await this.prismaService.shop.findMany({
-      where: {
-        userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-  }
-
-  public async getById(shopId: string) {
-    const shop = await this.prismaService.shop.findUnique({
-      where: {
-        id: shopId,
-      },
-    })
-    if (!shop) {
-      throw new NotFoundException({
-        message: 'Магазина с таким id не найдено',
-        code: ApiErrorCode.NOT_FOUND,
-      })
-    }
-
-    return shop
-  }
-
   public async setShopPicture(shopId: string, file: Express.Multer.File) {
     try {
       if (!file || !shopId) {
@@ -124,5 +83,63 @@ export class ShopService {
     } catch (error) {
       throw new ConflictException(error)
     }
+  }
+
+  public async getById(shopId: string) {
+    const shop = await this.prismaService.shop.findUnique({
+      where: {
+        id: shopId,
+      },
+    })
+    if (!shop) {
+      throw new NotFoundException({
+        message: 'Магазина с таким id не найдено',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    return shop
+  }
+
+  public async getMeAll(userId: string) {
+    return await this.prismaService.shop.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
+  public async update(dto: UpdateShopDto) {
+    const shop = await this.prismaService.shop.update({
+      where: {
+        id: dto.shopId,
+      },
+      data: {
+        title: dto.title,
+        description: dto.description,
+      },
+    })
+
+    return shop
+  }
+
+  public async delete(shopId: string) {
+    if (!shopId) {
+      throw new NotFoundException({
+        message: 'Магазин не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    await this.prismaService.shop.delete({
+      where: {
+        id: shopId,
+      },
+    })
+
+    return true
   }
 }
