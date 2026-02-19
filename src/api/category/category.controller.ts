@@ -1,4 +1,4 @@
-import { Controller, Delete, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Post } from '@nestjs/common'
 import {
   ApiBody,
   ApiCookieAuth,
@@ -9,7 +9,7 @@ import {
 import { Authorization } from '@/shared/decorators/auth.decorator'
 
 import { CategoryService } from './category.service'
-import { CategoryResponseDto } from './dto/category-resonse.dto'
+import { CategoryResponseDto } from './dto/category-response.dto'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { DeleteCategoryDto } from './dto/delete-category.dto'
 
@@ -25,7 +25,7 @@ export class CategoryController {
   @ApiBody({
     type: CreateCategoryDto,
   })
-  public create(dto: CreateCategoryDto) {
+  public create(@Body() dto: CreateCategoryDto) {
     return this.categoryService.create(dto)
   }
 
@@ -37,7 +37,7 @@ export class CategoryController {
   @ApiBody({
     type: DeleteCategoryDto,
   })
-  public delete(dto: DeleteCategoryDto) {
+  public delete(@Body() dto: DeleteCategoryDto) {
     return this.categoryService.delete(dto)
   }
 }

@@ -18,7 +18,6 @@ export class CategoryService {
         shopId: dto.shopId,
       },
       omit: {
-        createdAt: true,
         updatedAt: true,
       },
     })

@@ -10,6 +10,7 @@ import { CategoryModule } from './category/category.module'
 import { S3Module } from './s3/s3.module'
 import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
+import { ColorModule } from './color/color.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module'
       useFactory: getTurnstileConfig,
       inject: [ConfigService],
     }),
+    ColorModule,
   ],
 })
 export class ApiModule {}

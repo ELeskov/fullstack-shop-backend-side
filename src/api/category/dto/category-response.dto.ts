@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, MinLength } from 'class-validator'
+import { IsDate, IsString, MinLength } from 'class-validator'
 
 export class CategoryResponseDto {
   @ApiProperty({
@@ -25,4 +25,10 @@ export class CategoryResponseDto {
   })
   @IsString()
   shopId!: string
+
+  @ApiProperty({
+    description: 'Дата создания магазина',
+  })
+  @IsDate()
+  createdAt!: Date
 }

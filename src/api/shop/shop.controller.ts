@@ -27,6 +27,9 @@ import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
 
+import { CategoryResponseDto } from '../category/dto/category-response.dto'
+import { ColorResponseDto } from '../color/dto/color-response.dto'
+
 import { CreateShopResponseDto } from './dto/create-shop-response.dto'
 import { CreateShopDto } from './dto/create-shop.dto'
 import { DeleteShopDto } from './dto/delete-shop.dto'
@@ -64,7 +67,7 @@ export class ShopController {
   @ApiOperation({ summary: 'Сохранение или обновление логотипа магазина' })
   @ApiCommonErrors()
   @ApiOkResponse({
-    description: 'Логотиип успешно сохранен',
+    description: 'Логотип успешно сохранен',
     type: UploadLogoShopRequestDto,
   })
   @ApiBody({
@@ -115,6 +118,28 @@ export class ShopController {
   @ApiCommonErrors()
   public async getById(@Param('id') shopId: string) {
     return this.shopService.getById(shopId)
+  }
+
+  @Get(':shopId/categories')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Получить все категории магазина' })
+  @ApiOkResponse({ type: CategoryResponseDto, isArray: true })
+  @ApiCommonErrors()
+  async getMyCategories(@Param('shopId') shopId: string) {
+    return this.shopService.getMeAllCategories(shopId)
+  }
+
+  @Get(':shopId/colors')
+  @Authorization()
+  @ApiCookieAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Получить все цвета магазина' })
+  @ApiOkResponse({ type: ColorResponseDto, isArray: true })
+  @ApiCommonErrors()
+  async getColors(@Param('shopId') shopId: string) {
+    return this.shopService.getMeAllColors(shopId)
   }
 
   @Patch()

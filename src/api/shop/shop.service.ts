@@ -112,6 +112,36 @@ export class ShopService {
     })
   }
 
+  public async getMeAllCategories(shopId: string) {
+    await this.getById(shopId)
+
+    const categories = await this.prismaService.category.findMany({
+      where: {
+        shopId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return categories
+  }
+
+  public async getMeAllColors(shopId: string) {
+    await this.getById(shopId)
+
+    const categories = await this.prismaService.color.findMany({
+      where: {
+        shopId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return categories
+  }
+
   public async update(dto: UpdateShopDto) {
     const shop = await this.prismaService.shop.update({
       where: {
@@ -127,12 +157,7 @@ export class ShopService {
   }
 
   public async delete(shopId: string) {
-    if (!shopId) {
-      throw new NotFoundException({
-        message: 'Магазин не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
-    }
+    await this.getById(shopId)
 
     await this.prismaService.shop.delete({
       where: {
