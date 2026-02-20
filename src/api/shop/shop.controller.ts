@@ -60,7 +60,7 @@ export class ShopController {
   @ApiOperation({ summary: 'Сохранение логотипа магазина' })
   @ApiCommonErrors()
   @ApiOkResponse({
-    description: 'Логотиип успешно сохранен',
+    description: 'Логотип успешно сохранен',
     type: UploadLogoShopRequestDto,
   })
   @ApiBody({
