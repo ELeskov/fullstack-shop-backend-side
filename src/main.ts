@@ -30,8 +30,6 @@ async function bootstrap() {
     console.error('❌ Failed to connect to Redis:', err)
     process.exit(1)
   })
-  console.log('✅ Redis connected successfully.')
-
   app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')))
 
   app.useGlobalPipes(

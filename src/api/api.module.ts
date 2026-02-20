@@ -6,9 +6,11 @@ import { getTurnstileConfig } from '@/config/loaders/turnstile.config-loader'
 import { MailModule } from '@/libs/mail/mail.module'
 
 import { AccountModule } from './auth/account/account.module'
+import { CategoryModule } from './category/category.module'
 import { S3Module } from './s3/s3.module'
 import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
+import { ColorModule } from './color/color.module';
 
 @Module({
   imports: [
@@ -17,11 +19,13 @@ import { UsersModule } from './users/users.module'
     AccountModule,
     MailModule,
     S3Module,
+    CategoryModule,
     TurnstileModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: getTurnstileConfig,
       inject: [ConfigService],
     }),
+    ColorModule,
   ],
 })
 export class ApiModule {}

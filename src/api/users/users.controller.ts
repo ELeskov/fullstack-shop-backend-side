@@ -4,17 +4,15 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiTags,
 } from '@nestjs/swagger'
 import { UserRole } from '@prisma/generated/enums'
 
+import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 
 import { UsersService } from './users.service'
-import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 
 @ApiCookieAuth()
-@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

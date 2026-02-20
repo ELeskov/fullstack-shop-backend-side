@@ -36,6 +36,64 @@ export class AccountService {
     private readonly s3Service: S3Service,
   ) {}
 
+  public async register(req: Request, dto: RegisterDto) {
+    const existingUser = await this.usersService.findByEmail(dto.email)
+
+    if (existingUser) {
+      throw new ConflictException('Пользователь с такой почтой уже существует')
+    }
+
+    const user = await this.prismaService.user.create({
+      data: {
+        name: dto.name,
+        email: dto.email,
+        password: await hash(dto.password),
+        method: AuthMethod.CREDENTIALS,
+        picture: '',
+      },
+    })
+
+    return this.saveSession(req, user)
+  }
+
+  public async login(req: Request, dto: LoginDto) {
+    const user = await this.usersService.findByEmail(dto.email)
+    if (!user || !user.password) {
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    const isValidPassword = await verify(user.password, dto.password)
+
+    if (!isValidPassword) {
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    return this.saveSession(req, user)
+  }
+
+  public async logout(req: Request, res: Response) {
+    return new Promise((resolve, reject) => {
+      req.session.destroy(err => {
+        if (err) {
+          return reject(
+            new InternalServerErrorException(
+              'Ошибка, при попытке выйти из аккаунта',
+            ),
+          )
+        }
+        res.clearCookie(this.configService.getOrThrow('SESSION_NAME'))
+
+        resolve(true)
+      })
+    })
+  }
+
   public async getMe(userId: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -106,64 +164,6 @@ export class AccountService {
     })
 
     return { url: path }
-  }
-
-  public async register(req: Request, dto: RegisterDto) {
-    const existingUser = await this.usersService.findByEmail(dto.email)
-
-    if (existingUser) {
-      throw new ConflictException('Пользователь с такой почтой уже существует')
-    }
-
-    const user = await this.prismaService.user.create({
-      data: {
-        name: dto.name,
-        email: dto.email,
-        password: await hash(dto.password),
-        method: AuthMethod.CREDENTIALS,
-        picture: '',
-      },
-    })
-
-    return this.saveSession(req, user)
-  }
-
-  public async login(req: Request, dto: LoginDto) {
-    const user = await this.usersService.findByEmail(dto.email)
-    if (!user || !user.password) {
-      throw new NotFoundException({
-        message: 'Пользователь не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
-    }
-
-    const isValidPassword = await verify(user.password, dto.password)
-
-    if (!isValidPassword) {
-      throw new NotFoundException({
-        message: 'Пользователь не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
-    }
-
-    return this.saveSession(req, user)
-  }
-
-  public async logout(req: Request, res: Response) {
-    return new Promise((resolve, reject) => {
-      req.session.destroy(err => {
-        if (err) {
-          return reject(
-            new InternalServerErrorException(
-              'Ошибка, при попытке выйти из аккаунта',
-            ),
-          )
-        }
-        res.clearCookie(this.configService.getOrThrow('SESSION_NAME'))
-
-        resolve(true)
-      })
-    })
   }
 
   public async confirmEmail(dto: VerificationTokenDto) {
@@ -294,5 +294,22 @@ export class AccountService {
         expiresIn,
       },
     })
+  }
+
+  public async delete(userId: string) {
+    if (!userId) {
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        code: ApiErrorCode.NOT_FOUND,
+      })
+    }
+
+    await this.prismaService.user.delete({
+      where: {
+        id: userId,
+      },
+    })
+
+    return true
   }
 }

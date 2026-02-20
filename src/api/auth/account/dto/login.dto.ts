@@ -33,8 +33,7 @@ export class LoginDto {
    */
   @ApiProperty({
     example: 'password123',
-    description:
-      'Пароль пользователя. Минимальная длина — 6 символов (валидация на бэкенде).',
+    description: 'Пароль пользователя. Минимальная длина — 6 символов',
     minLength: 6,
   })
   @IsString({ message: 'Пароль должен быть строкой.' })
