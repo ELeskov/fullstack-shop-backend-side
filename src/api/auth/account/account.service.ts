@@ -24,6 +24,7 @@ import { LoginDto } from './dto/login.dto'
 import { PatchUserDto } from './dto/patchUser.dto'
 import { RegisterDto } from './dto/register.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { SendEmailDto } from './dto/sendEmail.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
 @Injectable()
@@ -226,10 +227,17 @@ export class AccountService {
     return true
   }
 
-  public async sendResetPasswordToken(email: string) {
-    const { token } = await this.generateToken(email, TokenType.PASSWORD_RESET)
+  public async sendResetPasswordToken(dto: SendEmailDto) {
+    if (!dto.email) {
+      throw new ConflictException('Email не валиден')
+    }
 
-    await this.mailService.sendResetPasswordEmail(email, token)
+    const { token } = await this.generateToken(
+      dto.email,
+      TokenType.PASSWORD_RESET,
+    )
+
+    await this.mailService.sendResetPasswordEmail(dto.email, token)
 
     return true
   }
@@ -285,6 +293,7 @@ export class AccountService {
         type,
       },
     })
+    console.log(email)
 
     return this.prismaService.token.create({
       data: {

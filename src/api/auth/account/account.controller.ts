@@ -181,7 +181,7 @@ export class AccountController {
     type: SendEmailDto,
   })
   public async sendResetPasswordEmail(@Body() dto: SendEmailDto) {
-    return this.accountService.sendResetPasswordToken(dto.email)
+    return this.accountService.sendResetPasswordToken(dto)
   }
 
   @Get('@me')

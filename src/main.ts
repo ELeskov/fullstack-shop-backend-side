@@ -34,8 +34,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
       transform: true,
+      whitelist: true,
       exceptionFactory: errors => {
         const details: Record<string, string[]> = {}
 
