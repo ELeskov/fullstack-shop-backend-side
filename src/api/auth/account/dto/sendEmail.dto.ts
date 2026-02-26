@@ -7,6 +7,6 @@ export class SendEmailDto {
     description: 'Email для отправки токена верификации',
   })
   @IsEmail()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Поле токен не может быть пустым.' })
   email!: string
 }

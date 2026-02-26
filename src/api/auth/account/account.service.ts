@@ -293,7 +293,6 @@ export class AccountService {
         type,
       },
     })
-    console.log(email)
 
     return this.prismaService.token.create({
       data: {
