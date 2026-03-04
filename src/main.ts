@@ -1,23 +1,25 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { NestFactory } from '@nestjs/core'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import { createClient } from 'redis'
 
-import { AppModule } from './app.module.js'
-import { ApiExceptionFilter } from './shared/filters/api-exception.filter.js'
-import { ApiErrorCode } from './shared/types/api-error-response.dto.js'
-import { isDev } from './shared/utils/is-dev.util.js'
-import { ms, StringValue } from './shared/utils/ms.util.js'
-import { parseBoolean } from './shared/utils/parse-boolean.util.js'
-import { setupSwagger } from './shared/utils/swagger.util.js'
+import { AppModule } from '@/app.module'
+import { ApiExceptionFilter } from '@/shared/filters/api-exception.filter.js'
+import { PrismaClientExceptionFilter } from '@/shared/filters/prisma-exception.filter.js'
+import { ApiErrorCode } from '@/shared/types/api-error-response.dto.js'
+import { isDev } from '@/shared/utils/is-dev.util.js'
+import { ms, StringValue } from '@/shared/utils/ms.util.js'
+import { parseBoolean } from '@/shared/utils/parse-boolean.util.js'
+import { setupSwagger } from '@/shared/utils/swagger.util.js'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   const config = app.get(ConfigService)
+  const { httpAdapter } = app.get(HttpAdapterHost)
 
   app.setGlobalPrefix('api')
 
@@ -54,7 +56,10 @@ async function bootstrap() {
     }),
   )
 
-  app.useGlobalFilters(new ApiExceptionFilter())
+  app.useGlobalFilters(
+    new ApiExceptionFilter(),
+    new PrismaClientExceptionFilter(httpAdapter),
+  )
 
   app.use(
     session({

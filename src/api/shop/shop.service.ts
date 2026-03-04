@@ -21,17 +21,16 @@ export class ShopService {
     private readonly s3Service: S3Service,
   ) {}
 
-  public async create(userId: string, { title, description }: CreateShopDto) {
+  public async create(userId: string, dto: CreateShopDto) {
     return this.prismaService.shop.create({
       data: {
-        title,
-        description,
+        ...dto,
         userId,
       },
     })
   }
 
-  public async setShopPicture(shopId: string, file: Express.Multer.File) {
+  public async uploadPicture(shopId: string, file: Express.Multer.File) {
     if (!file || !shopId) {
       throw new ConflictException('Ошибка валидации данных')
     }
@@ -71,11 +70,9 @@ export class ShopService {
     }
   }
 
-  public async getById(shopId: string) {
+  public async findById(id: string) {
     const shop = await this.prismaService.shop.findUnique({
-      where: {
-        id: shopId,
-      },
+      where: { id },
     })
 
     if (!shop) {
@@ -85,30 +82,30 @@ export class ShopService {
     return shop
   }
 
-  public async getMeAll(userId: string) {
+  public async findAllByUserId(userId: string) {
     return this.prismaService.shop.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     })
   }
 
-  public async getMyCategoriesByShopId(shopId: string) {
+  public async findCategoriesByShopId(shopId: string) {
     return this.prismaService.category.findMany({
       where: { shopId },
       orderBy: { createdAt: 'desc' },
     })
   }
 
-  public async getMeAllColors(shopId: string) {
+  public async findColorsByShopId(shopId: string) {
     return this.prismaService.color.findMany({
       where: { shopId },
       orderBy: { createdAt: 'desc' },
     })
   }
 
-  public async update(dto: UpdateShopDto) {
+  public async update(id: string, dto: UpdateShopDto) {
     return this.prismaService.shop.update({
-      where: { id: dto.shopId },
+      where: { id },
       data: {
         title: dto.title,
         description: dto.description,
@@ -116,13 +113,24 @@ export class ShopService {
     })
   }
 
-  public async delete(shopId: string) {
+  public async delete(id: string) {
+    const existingShop = await this.prismaService.shop.findUnique({
+      where: { id },
+      select: { picture: true },
+    })
+
+    if (!existingShop) {
+      throw new NotFoundException('Магазин не найден')
+    }
 
     await this.prismaService.shop.delete({
-      where: {
-        id: shopId,
-      },
+      where: { id },
     })
+
+    if (existingShop.picture) {
+      const key = extractKeyFromUrl(existingShop.picture)
+      await this.s3Service.delete(key)
+    }
 
     return true
   }

@@ -21,25 +21,27 @@ import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger'
 
 import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
 
-import { CategoryResponseDto } from '../category/dto/category-response.dto'
-import { ColorResponseDto } from '../color/dto/color-response.dto'
 
-import { CreateShopResponseDto } from './dto/create-shop-response.dto'
-import { CreateShopDto } from './dto/create-shop.dto'
-import { DeleteShopDto } from './dto/delete-shop.dto'
-import { ShopResponseDto } from './dto/shop-response.dto'
-import { UpdateShopDto } from './dto/update-shop.dto'
-import { UploadLogoShopRequestDto } from './dto/upload-logo-shop-request.dto'
-import { UploadLogoShopDto } from './dto/upload-logo-shop.dto'
-import { ShopService } from './shop.service'
+import { CreateShopDto } from '@/api/shop/dto/create-shop.dto'
+import { ShopService } from '@/api/shop/shop.service'
+import { ShopResponseDto } from '@/api/shop/dto/shop-response.dto'
+import { UploadLogoShopRequestDto } from '@/api/shop/dto/upload-logo-shop-request.dto'
+import { UploadLogoShopDto } from '@/api/shop/dto/upload-logo-shop.dto'
+import { CategoryResponseDto } from '@/api/category/dto/category-response.dto'
+import { ColorResponseDto } from '@/api/color/dto/color-response.dto'
+import { CreateShopResponseDto } from '@/api/shop/dto/create-shop-response.dto'
+import { UpdateShopDto } from '@/api/shop/dto/update-shop.dto'
+import { DeleteShopDto } from '@/api/shop/dto/delete-shop.dto'
 
-@Controller('shop')
+ApiTags('Shops')
+@Controller('shops')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
@@ -63,7 +65,6 @@ export class ShopController {
   @Post('logo')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Сохранение или обновление логотипа магазина' })
   @ApiCommonErrors()
   @ApiOkResponse({
@@ -75,7 +76,7 @@ export class ShopController {
   })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  public async setShopPicture(
+  public async uploadPicture(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -92,60 +93,55 @@ export class ShopController {
     file: Express.Multer.File,
     @Body('shopId') shopId: string,
   ) {
-    return this.shopService.setShopPicture(shopId, file)
+    return this.shopService.uploadPicture(shopId, file)
   }
 
   @Get('@me')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiCommonErrors()
   @ApiOperation({ summary: 'Мои магазины' })
   @ApiOkResponse({ type: ShopResponseDto, isArray: true })
-  async getMyShops(@Authorized('id') userId: string) {
-    return this.shopService.getMeAll(userId)
+  async findAllByUserId(@Authorized('id') userId: string) {
+    return this.shopService.findAllByUserId(userId)
   }
 
   @Get(':id')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Поиск магазина по id' })
   @ApiOkResponse({
     description: 'Магазин найден',
     type: ShopResponseDto,
   })
   @ApiCommonErrors()
-  public async getById(@Param('id') shopId: string) {
-    return this.shopService.getById(shopId)
+  public async findById(@Param('id') shopId: string) {
+    return this.shopService.findById(shopId)
   }
 
   @Get(':shopId/categories')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Получить все категории магазина' })
   @ApiOkResponse({ type: CategoryResponseDto, isArray: true })
   @ApiCommonErrors()
-  async getMyCategories(@Param('shopId') shopId: string) {
-    return this.shopService.getMyCategoriesByShopId(shopId)
+  async findCategoriesByShopId(@Param('shopId') shopId: string) {
+    return this.shopService.findCategoriesByShopId(shopId)
   }
 
   @Get(':shopId/colors')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Получить все цвета магазина' })
   @ApiOkResponse({ type: ColorResponseDto, isArray: true })
   @ApiCommonErrors()
-  async getColors(@Param('shopId') shopId: string) {
-    return this.shopService.getMeAllColors(shopId)
+  async findColorsByShopId(@Param('shopId') shopId: string) {
+    return this.shopService.findColorsByShopId(shopId)
   }
 
-  @Patch()
+  @Patch(':id')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Обновление названия/описания магазина' })
   @ApiOkResponse({
     description: 'Данные магазин успешно обновлен',
@@ -155,11 +151,11 @@ export class ShopController {
     type: UpdateShopDto,
   })
   @ApiCommonErrors()
-  public async update(@Body() dto: UpdateShopDto) {
-    return this.shopService.update(dto)
+  public async update(@Param('id') id: string, @Body() dto: UpdateShopDto) {
+    return this.shopService.update(id, dto)
   }
 
-  @Delete()
+  @Delete(':id')
   @Authorization()
   @ApiCookieAuth()
   @ApiOperation({
@@ -173,7 +169,7 @@ export class ShopController {
     type: DeleteShopDto,
   })
   @ApiCommonErrors()
-  public delete(shopId: string) {
-    return this.shopService.delete(shopId)
+  public delete(@Param('id') id: string) {
+    return this.shopService.delete(id)
   }
 }
