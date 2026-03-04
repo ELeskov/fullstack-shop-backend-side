@@ -7,13 +7,14 @@ import session from 'express-session'
 import { createClient } from 'redis'
 
 import { AppModule } from '@/app.module'
-import { ApiExceptionFilter } from '@/shared/filters/api-exception.filter.js'
-import { PrismaClientExceptionFilter } from '@/shared/filters/prisma-exception.filter.js'
-import { ApiErrorCode } from '@/shared/types/api-error-response.dto.js'
-import { isDev } from '@/shared/utils/is-dev.util.js'
-import { ms, StringValue } from '@/shared/utils/ms.util.js'
-import { parseBoolean } from '@/shared/utils/parse-boolean.util.js'
-import { setupSwagger } from '@/shared/utils/swagger.util.js'
+import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
+import { isDev } from '@/shared/utils/is-dev.util'
+import { ms, StringValue } from '@/shared/utils/ms.util'
+import { parseBoolean } from '@/shared/utils/parse-boolean.util'
+import { setupSwagger } from '@/shared/utils/swagger.util'
+
+import { ApiExceptionFilter } from './shared/filters/api-exception.filter'
+import { PrismaClientExceptionFilter } from './shared/filters/prisma-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

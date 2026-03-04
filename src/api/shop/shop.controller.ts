@@ -24,21 +24,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
-import { Authorization } from '@/shared/decorators/auth.decorator'
-import { Authorized } from '@/shared/decorators/authorized.decorator'
-
-
-import { CreateShopDto } from '@/api/shop/dto/create-shop.dto'
-import { ShopService } from '@/api/shop/shop.service'
-import { ShopResponseDto } from '@/api/shop/dto/shop-response.dto'
-import { UploadLogoShopRequestDto } from '@/api/shop/dto/upload-logo-shop-request.dto'
-import { UploadLogoShopDto } from '@/api/shop/dto/upload-logo-shop.dto'
 import { CategoryResponseDto } from '@/api/category/dto/category-response.dto'
 import { ColorResponseDto } from '@/api/color/dto/color-response.dto'
 import { CreateShopResponseDto } from '@/api/shop/dto/create-shop-response.dto'
-import { UpdateShopDto } from '@/api/shop/dto/update-shop.dto'
+import { CreateShopDto } from '@/api/shop/dto/create-shop.dto'
 import { DeleteShopDto } from '@/api/shop/dto/delete-shop.dto'
+import { ShopResponseDto } from '@/api/shop/dto/shop-response.dto'
+import { UpdateShopDto } from '@/api/shop/dto/update-shop.dto'
+import { UploadLogoShopRequestDto } from '@/api/shop/dto/upload-logo-shop-request.dto'
+import { UploadLogoShopDto } from '@/api/shop/dto/upload-logo-shop.dto'
+import { ShopService } from '@/api/shop/shop.service'
+import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
+import { Authorization } from '@/shared/decorators/auth.decorator'
+import { Authorized } from '@/shared/decorators/authorized.decorator'
 
 ApiTags('Shops')
 @Controller('shops')

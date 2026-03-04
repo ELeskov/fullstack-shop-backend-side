@@ -12,20 +12,17 @@ import { hash, verify } from 'argon2'
 import { Request, Response } from 'express'
 import { v4 as uuidV4 } from 'uuid'
 
+import { LoginDto } from '@/api/auth/account/dto/login.dto'
+import { PatchUserDto } from '@/api/auth/account/dto/patchUser.dto'
+import { RegisterDto } from '@/api/auth/account/dto/register.dto'
+import { ResetPasswordDto } from '@/api/auth/account/dto/reset-password.dto'
+import { VerificationTokenDto } from '@/api/auth/account/dto/verificationToken.dto'
 import { S3Service } from '@/api/s3/s3.service'
 import { UsersService } from '@/api/users/users.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
-import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
-
-import { LoginDto } from './dto/login.dto'
-import { PatchUserDto } from './dto/patchUser.dto'
-import { RegisterDto } from './dto/register.dto'
-import { ResetPasswordDto } from './dto/reset-password.dto'
-import { SendEmailDto } from './dto/sendEmail.dto'
-import { VerificationTokenDto } from './dto/verificationToken.dto'
 
 @Injectable()
 export class AccountService {
@@ -60,19 +57,13 @@ export class AccountService {
   public async login(req: Request, dto: LoginDto) {
     const user = await this.usersService.findByEmail(dto.email)
     if (!user || !user.password) {
-      throw new NotFoundException({
-        message: 'Пользователь не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
+      throw new NotFoundException('Пользователь не найден')
     }
 
     const isValidPassword = await verify(user.password, dto.password)
 
     if (!isValidPassword) {
-      throw new NotFoundException({
-        message: 'Пользователь не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
+      throw new NotFoundException('Пользователь не найден')
     }
 
     return this.saveSession(req, user)
@@ -89,13 +80,12 @@ export class AccountService {
           )
         }
         res.clearCookie(this.configService.getOrThrow('SESSION_NAME'))
-
         resolve(true)
       })
     })
   }
 
-  public async getMe(userId: string) {
+  public async getProfile(userId: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId,
@@ -112,18 +102,8 @@ export class AccountService {
     return user
   }
 
-  public async patchMe(req: Request, dto: PatchUserDto) {
-    const userId = req.session.userId
-
-    const existingUser = await this.prismaService.user.findUnique({
-      where: { id: userId },
-    })
-
-    if (!existingUser) {
-      throw new NotFoundException('Пользователь не найден')
-    }
-
-    const updatedUser = await this.prismaService.user.update({
+  public async updateProfile(userId: string, dto: PatchUserDto) {
+    return this.prismaService.user.update({
       where: {
         id: userId,
       },
@@ -140,20 +120,13 @@ export class AccountService {
         password: true,
       },
     })
-
-    return updatedUser
   }
 
-  public async changeMeAvatar(user: User, file: Express.Multer.File) {
+  public async updateAvatar(user: User, file: Express.Multer.File) {
     const { path } = await this.s3Service.upload(
       S3_NAME_FOLDERS.S3_USER_AVATAR,
       file,
     )
-
-    if (user.picture) {
-      const key = extractKeyFromUrl(user.picture)
-      await this.s3Service.delete(key)
-    }
 
     await this.prismaService.user.update({
       where: {
@@ -164,28 +137,25 @@ export class AccountService {
       },
     })
 
+    if (user.picture) {
+      const key = extractKeyFromUrl(user.picture)
+      await this.s3Service.delete(key)
+    }
+
     return { url: path }
   }
 
   public async confirmEmail(dto: VerificationTokenDto) {
-    const token = await this.verifyToken(dto, TokenType.VERIFICATION)
-    const user = await this.prismaService.user.findUnique({
-      where: { email: token.email },
-    })
-
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден')
-    }
+    const tokenRecord = await this.verifyToken(dto, TokenType.VERIFICATION)
 
     await this.prismaService.$transaction(async tx => {
       await tx.user.update({
-        where: { id: user.id },
-        data: {
-          isVerified: true,
-        },
+        where: { email: tokenRecord.email },
+        data: { isVerified: true },
       })
+
       await tx.token.deleteMany({
-        where: { email: token.email, type: TokenType.VERIFICATION },
+        where: { email: tokenRecord.email, type: TokenType.VERIFICATION },
       })
     })
 
@@ -197,28 +167,21 @@ export class AccountService {
     req: Request,
     res: Response,
   ) {
-    const token = await this.verifyToken(dto, TokenType.PASSWORD_RESET)
-    const user = await this.prismaService.user.findUnique({
-      where: { email: token.email },
-    })
-
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден')
-    }
-
     if (dto.password !== dto.confirmPassword) {
       throw new ConflictException('Пароли не совпадают')
     }
 
+    const tokenRecord = await this.verifyToken(dto, TokenType.PASSWORD_RESET)
+    const hashedPassword = await hash(dto.password)
+
     await this.prismaService.$transaction(async tx => {
       await tx.user.update({
-        where: { id: user.id },
-        data: {
-          password: await hash(dto.password),
-        },
+        where: { email: tokenRecord.email },
+        data: { password: hashedPassword },
       })
+
       await tx.token.deleteMany({
-        where: { email: token.email, type: TokenType.PASSWORD_RESET },
+        where: { email: tokenRecord.email, type: TokenType.PASSWORD_RESET },
       })
     })
 
@@ -227,43 +190,32 @@ export class AccountService {
     return true
   }
 
-  public async sendResetPasswordToken(dto: SendEmailDto) {
-    if (!dto.email) {
-      throw new ConflictException('Email не валиден')
-    }
-
-    const { token } = await this.generateToken(
-      dto.email,
-      TokenType.PASSWORD_RESET,
-    )
-
-    await this.mailService.sendResetPasswordEmail(dto.email, token)
-
+  public async sendResetPasswordToken(email: string) {
+    const { token } = await this.generateToken(email, TokenType.PASSWORD_RESET)
+    await this.mailService.sendResetPasswordEmail(email, token)
     return true
   }
 
   public async sendVerificationToken(email: string) {
     const { token } = await this.generateToken(email, TokenType.VERIFICATION)
-
     await this.mailService.sendVerificationEmail(email, token)
-
     return true
   }
 
   public async verifyToken(dto: VerificationTokenDto, tokenType: TokenType) {
-    const token = await this.prismaService.token.findFirst({
+    const tokenRecord = await this.prismaService.token.findFirst({
       where: { token: dto.token, type: tokenType },
     })
 
-    if (!token) {
-      throw new NotFoundException('Токен не найден')
+    if (!tokenRecord) {
+      throw new NotFoundException('Токен не найден или недействителен')
     }
 
-    if (new Date(token.expiresIn) < new Date()) {
-      throw new BadRequestException('Токен истек')
+    if (new Date(tokenRecord.expiresIn) < new Date()) {
+      throw new BadRequestException('Срок действия токена истек')
     }
 
-    return token
+    return tokenRecord
   }
 
   public async saveSession(req: Request, user: User) {
@@ -287,35 +239,24 @@ export class AccountService {
     const token = uuidV4()
     const expiresIn = new Date(Date.now() + 60 * 60 * 1000)
 
-    await this.prismaService.token.deleteMany({
-      where: {
-        email,
-        type,
-      },
-    })
+    return this.prismaService.$transaction(async tx => {
+      await tx.token.deleteMany({
+        where: { email, type },
+      })
 
-    return this.prismaService.token.create({
-      data: {
-        email,
-        token,
-        type,
-        expiresIn,
-      },
+      return tx.token.create({
+        data: { email, token, type, expiresIn },
+      })
     })
   }
 
   public async delete(userId: string) {
     if (!userId) {
-      throw new NotFoundException({
-        message: 'Пользователь не найден',
-        code: ApiErrorCode.NOT_FOUND,
-      })
+      throw new BadRequestException('ID пользователя обязателен')
     }
 
     await this.prismaService.user.delete({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
     })
 
     return true

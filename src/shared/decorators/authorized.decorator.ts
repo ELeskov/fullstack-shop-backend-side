@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { User } from '@prisma/generated/client'
-import { Request } from 'express'
+import { type Request } from 'express'
 
 export const Authorized = createParamDecorator(
   (data: keyof Omit<User, 'password'>, ctx: ExecutionContext) => {

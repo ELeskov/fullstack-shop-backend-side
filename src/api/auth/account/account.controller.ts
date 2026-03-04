@@ -23,6 +23,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger'
 import { User } from '@prisma/generated/client'
 import { Request, Response } from 'express'
@@ -43,6 +44,7 @@ import { SendEmailDto } from './dto/sendEmail.dto'
 import { UpdateUserAvatarResponseDto } from './dto/updateAvatarResponse.dto'
 import { VerificationTokenDto } from './dto/verificationToken.dto'
 
+@ApiTags('Accounts')
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
@@ -74,7 +76,6 @@ export class AccountController {
   })
   @ApiCommonErrors()
   @Turnstile()
-  @HttpCode(HttpStatus.OK)
   public async login(@Req() req: Request, @Body() dto: LoginDto) {
     return this.accountService.login(req, dto)
   }
@@ -88,7 +89,6 @@ export class AccountController {
     type: AccountResponseDto,
   })
   @ApiCommonErrors()
-  @HttpCode(HttpStatus.OK)
   public async logout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -99,7 +99,6 @@ export class AccountController {
   @Post('email/verify')
   @ApiCookieAuth()
   @Authorization()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Подтверждение email по токену',
     description:
@@ -117,7 +116,6 @@ export class AccountController {
   }
 
   @Post('password/reset')
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Сброс пароля по токену',
     description:
@@ -149,7 +147,6 @@ export class AccountController {
   @Post('email/verification/send')
   @ApiCookieAuth()
   @Authorization()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Отправить письмо для подтверждения email',
     description:
@@ -167,7 +164,6 @@ export class AccountController {
   }
 
   @Post('password/reset/send')
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Отправить письмо для сброса пароля',
     description:
@@ -181,13 +177,12 @@ export class AccountController {
     type: SendEmailDto,
   })
   public async sendResetPasswordEmail(@Body() dto: SendEmailDto) {
-    return this.accountService.sendResetPasswordToken(dto)
+    return this.accountService.sendResetPasswordToken(dto.email)
   }
 
   @Get('@me')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Получить профиль текущего пользователя' })
   @ApiOkResponse({
     description: 'Профиль текущего пользователя.',
@@ -195,13 +190,12 @@ export class AccountController {
   })
   @ApiCommonErrors()
   public async me(@Authorized('id') userId: string) {
-    return this.accountService.getMe(userId)
+    return this.accountService.getProfile(userId)
   }
 
   @Patch('@me')
   @Authorization()
   @ApiCookieAuth()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Обновление username пользователя',
   })
@@ -211,12 +205,14 @@ export class AccountController {
     type: UserResponseDto,
   })
   @ApiCommonErrors()
-  public async patchUser(@Req() req: Request, @Body() dto: PatchUserDto) {
-    return this.accountService.patchMe(req, dto)
+  public async updateProfile(
+    @Authorized('id') userId: string,
+    @Body() dto: PatchUserDto,
+  ) {
+    return this.accountService.updateProfile(userId, dto)
   }
 
   @Patch('@me/avatar')
-  @HttpCode(HttpStatus.OK)
   @Authorization()
   @ApiCookieAuth()
   @ApiOperation({
@@ -245,7 +241,7 @@ export class AccountController {
     file: Express.Multer.File,
     @Authorized() user: User,
   ) {
-    return this.accountService.changeMeAvatar(user, file)
+    return this.accountService.updateAvatar(user, file)
   }
 
   @Delete('@me')

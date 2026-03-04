@@ -5,14 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
+import { S3Service } from '@/api/s3/s3.service'
+import { CreateShopDto } from '@/api/shop/dto/create-shop.dto'
+import { UpdateShopDto } from '@/api/shop/dto/update-shop.dto'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
-
-import { S3Service } from '../s3/s3.service'
-
-import { CreateShopDto } from './dto/create-shop.dto'
-import { UpdateShopDto } from './dto/update-shop.dto'
 
 @Injectable()
 export class ShopService {
