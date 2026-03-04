@@ -128,7 +128,7 @@ export class ShopController {
   @ApiOkResponse({ type: CategoryResponseDto, isArray: true })
   @ApiCommonErrors()
   async getMyCategories(@Param('shopId') shopId: string) {
-    return this.shopService.getMeAllCategories(shopId)
+    return this.shopService.getMyCategoriesByShopId(shopId)
   }
 
   @Get(':shopId/colors')

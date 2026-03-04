@@ -20,7 +20,6 @@ async function bootstrap() {
   const config = app.get(ConfigService)
 
   app.setGlobalPrefix('api')
-  app.useGlobalFilters(new ApiExceptionFilter())
 
   const redisClient = createClient({
     url: config.getOrThrow<string>('REDIS_URI'),
@@ -30,6 +29,7 @@ async function bootstrap() {
     console.error('❌ Failed to connect to Redis:', err)
     process.exit(1)
   })
+
   app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')))
 
   app.useGlobalPipes(
@@ -53,6 +53,8 @@ async function bootstrap() {
       },
     }),
   )
+
+  app.useGlobalFilters(new ApiExceptionFilter())
 
   app.use(
     session({

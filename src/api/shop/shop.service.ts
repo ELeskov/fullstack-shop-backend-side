@@ -1,12 +1,12 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
-import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 import { S3Service } from '../s3/s3.service'
@@ -22,62 +22,48 @@ export class ShopService {
   ) {}
 
   public async create(userId: string, { title, description }: CreateShopDto) {
-    const shop = await this.prismaService.shop.create({
+    return this.prismaService.shop.create({
       data: {
         title,
         description,
         userId,
       },
     })
-
-    if (!shop) {
-      throw new ConflictException('Ошибка при создании магазина')
-    }
-
-    return shop
   }
 
   public async setShopPicture(shopId: string, file: Express.Multer.File) {
+    if (!file || !shopId) {
+      throw new ConflictException('Ошибка валидации данных')
+    }
+
+    const existingShop = await this.prismaService.shop.findUnique({
+      where: { id: shopId },
+      select: { picture: true },
+    })
+
+    if (!existingShop) {
+      throw new NotFoundException('Магазин не найден')
+    }
+
     try {
-      if (!file || !shopId) {
-        throw new ConflictException({ message: 'Ошибка валидации данных' })
-      }
-
-      const existingShop = await this.prismaService.shop.findUnique({
-        where: {
-          id: shopId,
-        },
-        select: {
-          picture: true,
-        },
-      })
-
-      if (!existingShop) {
-        throw new NotFoundException('Магазин не найден')
-      }
-
-      if (existingShop?.picture) {
-        const key = extractKeyFromUrl(existingShop.picture)
-        await this.s3Service.delete(key)
-      }
-
       const { path } = await this.s3Service.upload(
         S3_NAME_FOLDERS.S3_SHOP_LOGO,
         file,
       )
 
       if (!path) {
-        throw new NotFoundException('Ошибка создания файла')
+        throw new InternalServerErrorException('Ошибка при загрузке файла в S3')
       }
 
       await this.prismaService.shop.update({
-        where: {
-          id: shopId,
-        },
-        data: {
-          picture: path,
-        },
+        where: { id: shopId },
+        data: { picture: path },
       })
+
+      if (existingShop?.picture) {
+        const key = extractKeyFromUrl(existingShop.picture)
+        await this.s3Service.delete(key)
+      }
 
       return { path }
     } catch (error) {
@@ -91,73 +77,46 @@ export class ShopService {
         id: shopId,
       },
     })
+
     if (!shop) {
-      throw new NotFoundException({
-        message: 'Магазина с таким id не найдено',
-        code: ApiErrorCode.NOT_FOUND,
-      })
+      throw new NotFoundException('Магазина с таким id не найдено')
     }
 
     return shop
   }
 
   public async getMeAll(userId: string) {
-    return await this.prismaService.shop.findMany({
-      where: {
-        userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    return this.prismaService.shop.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
     })
   }
 
-  public async getMeAllCategories(shopId: string) {
-    await this.getById(shopId)
-
-    const categories = await this.prismaService.category.findMany({
-      where: {
-        shopId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+  public async getMyCategoriesByShopId(shopId: string) {
+    return this.prismaService.category.findMany({
+      where: { shopId },
+      orderBy: { createdAt: 'desc' },
     })
-
-    return categories
   }
 
   public async getMeAllColors(shopId: string) {
-    await this.getById(shopId)
-
-    const categories = await this.prismaService.color.findMany({
-      where: {
-        shopId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    return this.prismaService.color.findMany({
+      where: { shopId },
+      orderBy: { createdAt: 'desc' },
     })
-
-    return categories
   }
 
   public async update(dto: UpdateShopDto) {
-    const shop = await this.prismaService.shop.update({
-      where: {
-        id: dto.shopId,
-      },
+    return this.prismaService.shop.update({
+      where: { id: dto.shopId },
       data: {
         title: dto.title,
         description: dto.description,
       },
     })
-
-    return shop
   }
 
   public async delete(shopId: string) {
-    await this.getById(shopId)
 
     await this.prismaService.shop.delete({
       where: {

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import 'multer'
+import { providePrismaClientExceptionFilter } from 'nestjs-prisma'
 
 import { ApiModule } from '@/api/api.module'
 
@@ -23,5 +24,6 @@ import { IS_DEV_ENV } from './shared/utils/is-dev.util'
     ApiModule,
     MailModule,
   ],
+  providers: [providePrismaClientExceptionFilter()],
 })
 export class AppModule {}
