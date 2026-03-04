@@ -8,29 +8,27 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-
+  id       String  @id @default(uuid())
   name     String
   email    String  @unique
   password String
   picture  String?
 
-  role UserRole @default(REGULAR)
-
-  isVerified        Boolean @default(false) @map("is_verified")
-  isTwoFactorEnable Boolean @default(false) @map("is_two_factor_enable")
-
-  method AuthMethod
+  role              UserRole   @default(REGULAR)
+  method            AuthMethod
+  isVerified        Boolean    @default(false) @map("is_verified")
+  isTwoFactorEnable Boolean    @default(false) @map("is_two_factor_enable")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  accounts  Account[]
-  shops     Shop[]
-  favorites Favorites[]
-  baskets   Basket[]
-  reviews   Review[]
-  orders    Order[]
+  accounts Account[]
+  shops    Shop[]
+  reviews  Review[]
+  orders   Order[]
+
+  basket    Basket?
+  favorites Favorites?
 
   @@map("users")
 }
@@ -42,8 +40,8 @@ model Shop {
   description String
   picture     String?
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   products   Product[]
   categories Category[]
@@ -54,12 +52,12 @@ model Shop {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([userId])
   @@map("shops")
 }
 
 model Product {
-  id String @id @default(uuid())
-
+  id          String   @id @default(uuid())
   title       String
   description String
   price       Int
@@ -68,22 +66,23 @@ model Product {
   groupedOptions GroupOptions[]
   reviews        Review[]
   orderItems     OrderItem[]
+  basketItems    BasketItem[]
+  favoritesItems FavoritesItem[]
 
-  shop   Shop?   @relation(fields: [shopId], references: [id])
-  shopId String? @map("shop_id")
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId String @map("shop_id")
 
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId String   @map("category_id")
 
-  color   Color?  @relation(fields: [colorId], references: [id])
+  color   Color?  @relation(fields: [colorId], references: [id], onDelete: SetNull)
   colorId String? @map("color_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  basketItems    BasketItem[]
-  favoritesItems FavoritesItem[]
-
+  @@index([shopId])
+  @@index([categoryId])
   @@map("products")
 }
 
@@ -94,12 +93,13 @@ model GroupOptions {
 
   options ProductsOptions[]
 
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?
-
+  @@index([productId])
   @@map("group_options")
 }
 
@@ -109,29 +109,28 @@ model ProductsOptions {
   name  String
   value String
 
+  groupOptions   GroupOptions @relation(fields: [groupOptionsId], references: [id], onDelete: Cascade)
+  groupOptionsId String
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  groupOptions   GroupOptions? @relation(fields: [groupOptionsId], references: [id])
-  groupOptionsId String?
 
   @@map("product_options")
 }
 
 model Basket {
-  id String @id @default(uuid())
+  id          String @id @default(uuid())
+  totalAmount Int    @default(0)
 
-  totalAmount Int @default(0)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @map("user_id")
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  basketItems BasketItem[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  basketItems BasketItem[]
-
-  @@map("basket")
+  @@map("baskets")
 }
 
 model BasketItem {
@@ -141,27 +140,28 @@ model BasketItem {
   basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
   basketId String @map("basket_id")
 
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String  @map("product_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([basketId])
+  @@index([productId])
   @@map("basket_items")
 }
 
 model Favorites {
-  id String @id @default(uuid())
+  id          String @id @default(uuid())
+  totalAmount Int    @default(0)
 
-  totalAmount Int @default(0)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @map("user_id")
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  favoritesItems FavoritesItem[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  favoritesItems FavoritesItem[]
 
   @@map("favorites")
 }
@@ -172,12 +172,14 @@ model FavoritesItem {
   favorites   Favorites @relation(fields: [favoritesId], references: [id], onDelete: Cascade)
   favoritesId String    @map("favorites_id")
 
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String  @map("product_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([favoritesId])
+  @@index([productId])
   @@map("favorites_items")
 }
 
@@ -187,14 +189,15 @@ model Category {
   title       String
   description String
 
-  shop   Shop?   @relation(fields: [shopId], references: [id])
-  shopId String? @map("shop_id")
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId String @map("shop_id")
 
   products Product[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([shopId])
   @@map("categories")
 }
 
@@ -204,14 +207,15 @@ model Color {
   title String
   value String
 
-  shop   Shop?   @relation(fields: [shopId], references: [id])
-  shopId String? @map("shop_id")
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId String @map("shop_id")
 
   products Product[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([shopId])
   @@map("colors")
 }
 
@@ -221,18 +225,21 @@ model Review {
   text   String
   rating Int
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
-  shop   Shop?   @relation(fields: [shopId], references: [id])
-  shopId String? @map("shop_id")
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId String @map("shop_id")
 
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([userId])
+  @@index([shopId])
+  @@index([productId])
   @@map("reviews")
 }
 
@@ -244,12 +251,13 @@ model Order {
 
   items OrderItem[]
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([userId])
   @@map("orders")
 }
 
@@ -259,19 +267,20 @@ model OrderItem {
   quantity Int
   price    Int
 
-  order   Order?  @relation(fields: [orderId], references: [id])
-  orderId String? @map("order_id")
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String @map("order_id")
 
-  product   Product? @relation(fields: [productId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
   productId String?  @map("product_id")
 
-  shop   Shop?   @relation(fields: [shopId], references: [id])
+  shop   Shop?   @relation(fields: [shopId], references: [id], onDelete: SetNull)
   shopId String? @map("shop_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("order_item")
+  @@index([orderId])
+  @@map("order_items")
 }
 
 model Account {
@@ -282,13 +291,13 @@ model Account {
 
   accessToken  String? @map("access_token")
   refreshToken String? @map("refresh_token")
-  expiresAt    Int     @map("expires_at")
+  expiresAt    Int?    @map("expires_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
 
   @@map("accounts")
 }
@@ -307,21 +316,29 @@ model Token {
 enum UserRole {
   REGULAR
   ADMIN
+
+  @@map("user_roles")
 }
 
 enum AuthMethod {
   CREDENTIALS
   GOOGLE
   YANDEX
+
+  @@map("auth_methods")
 }
 
 enum TokenType {
   VERIFICATION
   TWO_FACTOR
   PASSWORD_RESET
+
+  @@map("token_types")
 }
 
 enum EnumOrderStatus {
   PENDING
   PAYED
+
+  @@map("enum_order_statuses")
 }

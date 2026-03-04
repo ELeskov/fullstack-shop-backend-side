@@ -232,16 +232,16 @@ export type BasketOrderByWithRelationInput = {
 
 export type BasketWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.BasketWhereInput | Prisma.BasketWhereInput[]
   OR?: Prisma.BasketWhereInput[]
   NOT?: Prisma.BasketWhereInput | Prisma.BasketWhereInput[]
   totalAmount?: Prisma.IntFilter<"Basket"> | number
-  userId?: Prisma.StringNullableFilter<"Basket"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   basketItems?: Prisma.BasketItemListRelationFilter
-}, "id">
+}, "id" | "userId">
 
 export type BasketOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -272,7 +272,7 @@ export type BasketCreateInput = {
   totalAmount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutBasketsInput
+  user?: Prisma.UserCreateNestedOneWithoutBasketInput
   basketItems?: Prisma.BasketItemCreateNestedManyWithoutBasketInput
 }
 
@@ -290,7 +290,7 @@ export type BasketUpdateInput = {
   totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutBasketsNestedInput
+  user?: Prisma.UserUpdateOneWithoutBasketNestedInput
   basketItems?: Prisma.BasketItemUpdateManyWithoutBasketNestedInput
 }
 
@@ -326,14 +326,9 @@ export type BasketUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type BasketListRelationFilter = {
-  every?: Prisma.BasketWhereInput
-  some?: Prisma.BasketWhereInput
-  none?: Prisma.BasketWhereInput
-}
-
-export type BasketOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type BasketNullableScalarRelationFilter = {
+  is?: Prisma.BasketWhereInput | null
+  isNot?: Prisma.BasketWhereInput | null
 }
 
 export type BasketCountOrderByAggregateInput = {
@@ -373,46 +368,36 @@ export type BasketScalarRelationFilter = {
   isNot?: Prisma.BasketWhereInput
 }
 
-export type BasketCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput> | Prisma.BasketCreateWithoutUserInput[] | Prisma.BasketUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput | Prisma.BasketCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.BasketCreateManyUserInputEnvelope
-  connect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
+export type BasketCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput
+  connect?: Prisma.BasketWhereUniqueInput
 }
 
-export type BasketUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput> | Prisma.BasketCreateWithoutUserInput[] | Prisma.BasketUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput | Prisma.BasketCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.BasketCreateManyUserInputEnvelope
-  connect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
+export type BasketUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput
+  connect?: Prisma.BasketWhereUniqueInput
 }
 
-export type BasketUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput> | Prisma.BasketCreateWithoutUserInput[] | Prisma.BasketUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput | Prisma.BasketCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.BasketUpsertWithWhereUniqueWithoutUserInput | Prisma.BasketUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.BasketCreateManyUserInputEnvelope
-  set?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  disconnect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  delete?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  connect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  update?: Prisma.BasketUpdateWithWhereUniqueWithoutUserInput | Prisma.BasketUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.BasketUpdateManyWithWhereWithoutUserInput | Prisma.BasketUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.BasketScalarWhereInput | Prisma.BasketScalarWhereInput[]
+export type BasketUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput
+  upsert?: Prisma.BasketUpsertWithoutUserInput
+  disconnect?: Prisma.BasketWhereInput | boolean
+  delete?: Prisma.BasketWhereInput | boolean
+  connect?: Prisma.BasketWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BasketUpdateToOneWithWhereWithoutUserInput, Prisma.BasketUpdateWithoutUserInput>, Prisma.BasketUncheckedUpdateWithoutUserInput>
 }
 
-export type BasketUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput> | Prisma.BasketCreateWithoutUserInput[] | Prisma.BasketUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput | Prisma.BasketCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.BasketUpsertWithWhereUniqueWithoutUserInput | Prisma.BasketUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.BasketCreateManyUserInputEnvelope
-  set?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  disconnect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  delete?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  connect?: Prisma.BasketWhereUniqueInput | Prisma.BasketWhereUniqueInput[]
-  update?: Prisma.BasketUpdateWithWhereUniqueWithoutUserInput | Prisma.BasketUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.BasketUpdateManyWithWhereWithoutUserInput | Prisma.BasketUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.BasketScalarWhereInput | Prisma.BasketScalarWhereInput[]
+export type BasketUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.BasketCreateOrConnectWithoutUserInput
+  upsert?: Prisma.BasketUpsertWithoutUserInput
+  disconnect?: Prisma.BasketWhereInput | boolean
+  delete?: Prisma.BasketWhereInput | boolean
+  connect?: Prisma.BasketWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BasketUpdateToOneWithWhereWithoutUserInput, Prisma.BasketUpdateWithoutUserInput>, Prisma.BasketUncheckedUpdateWithoutUserInput>
 }
 
 export type BasketCreateNestedOneWithoutBasketItemsInput = {
@@ -450,36 +435,31 @@ export type BasketCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
 }
 
-export type BasketCreateManyUserInputEnvelope = {
-  data: Prisma.BasketCreateManyUserInput | Prisma.BasketCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type BasketUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.BasketWhereUniqueInput
+export type BasketUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.BasketUpdateWithoutUserInput, Prisma.BasketUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.BasketCreateWithoutUserInput, Prisma.BasketUncheckedCreateWithoutUserInput>
+  where?: Prisma.BasketWhereInput
 }
 
-export type BasketUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.BasketWhereUniqueInput
+export type BasketUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.BasketWhereInput
   data: Prisma.XOR<Prisma.BasketUpdateWithoutUserInput, Prisma.BasketUncheckedUpdateWithoutUserInput>
 }
 
-export type BasketUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.BasketScalarWhereInput
-  data: Prisma.XOR<Prisma.BasketUpdateManyMutationInput, Prisma.BasketUncheckedUpdateManyWithoutUserInput>
+export type BasketUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  basketItems?: Prisma.BasketItemUpdateManyWithoutBasketNestedInput
 }
 
-export type BasketScalarWhereInput = {
-  AND?: Prisma.BasketScalarWhereInput | Prisma.BasketScalarWhereInput[]
-  OR?: Prisma.BasketScalarWhereInput[]
-  NOT?: Prisma.BasketScalarWhereInput | Prisma.BasketScalarWhereInput[]
-  id?: Prisma.StringFilter<"Basket"> | string
-  totalAmount?: Prisma.IntFilter<"Basket"> | number
-  userId?: Prisma.StringNullableFilter<"Basket"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
+export type BasketUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutBasketNestedInput
 }
 
 export type BasketCreateWithoutBasketItemsInput = {
@@ -487,7 +467,7 @@ export type BasketCreateWithoutBasketItemsInput = {
   totalAmount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutBasketsInput
+  user?: Prisma.UserCreateNestedOneWithoutBasketInput
 }
 
 export type BasketUncheckedCreateWithoutBasketItemsInput = {
@@ -519,43 +499,13 @@ export type BasketUpdateWithoutBasketItemsInput = {
   totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutBasketsNestedInput
+  user?: Prisma.UserUpdateOneWithoutBasketNestedInput
 }
 
 export type BasketUncheckedUpdateWithoutBasketItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type BasketCreateManyUserInput = {
-  id?: string
-  totalAmount?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type BasketUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  basketItems?: Prisma.BasketItemUpdateManyWithoutBasketNestedInput
-}
-
-export type BasketUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutBasketNestedInput
-}
-
-export type BasketUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }

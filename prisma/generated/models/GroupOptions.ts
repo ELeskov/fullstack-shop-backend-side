@@ -27,25 +27,25 @@ export type AggregateGroupOptions = {
 export type GroupOptionsMinAggregateOutputType = {
   id: string | null
   groupName: string | null
+  productId: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  productId: string | null
 }
 
 export type GroupOptionsMaxAggregateOutputType = {
   id: string | null
   groupName: string | null
+  productId: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  productId: string | null
 }
 
 export type GroupOptionsCountAggregateOutputType = {
   id: number
   groupName: number
+  productId: number
   createdAt: number
   updatedAt: number
-  productId: number
   _all: number
 }
 
@@ -53,25 +53,25 @@ export type GroupOptionsCountAggregateOutputType = {
 export type GroupOptionsMinAggregateInputType = {
   id?: true
   groupName?: true
+  productId?: true
   createdAt?: true
   updatedAt?: true
-  productId?: true
 }
 
 export type GroupOptionsMaxAggregateInputType = {
   id?: true
   groupName?: true
+  productId?: true
   createdAt?: true
   updatedAt?: true
-  productId?: true
 }
 
 export type GroupOptionsCountAggregateInputType = {
   id?: true
   groupName?: true
+  productId?: true
   createdAt?: true
   updatedAt?: true
-  productId?: true
   _all?: true
 }
 
@@ -150,9 +150,9 @@ export type GroupOptionsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type GroupOptionsGroupByOutputType = {
   id: string
   groupName: string
+  productId: string
   createdAt: Date
   updatedAt: Date
-  productId: string | null
   _count: GroupOptionsCountAggregateOutputType | null
   _min: GroupOptionsMinAggregateOutputType | null
   _max: GroupOptionsMaxAggregateOutputType | null
@@ -179,19 +179,19 @@ export type GroupOptionsWhereInput = {
   NOT?: Prisma.GroupOptionsWhereInput | Prisma.GroupOptionsWhereInput[]
   id?: Prisma.StringFilter<"GroupOptions"> | string
   groupName?: Prisma.StringFilter<"GroupOptions"> | string
+  productId?: Prisma.StringFilter<"GroupOptions"> | string
   createdAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
-  productId?: Prisma.StringNullableFilter<"GroupOptions"> | string | null
   options?: Prisma.ProductsOptionsListRelationFilter
-  product?: Prisma.XOR<Prisma.ProductNullableScalarRelationFilter, Prisma.ProductWhereInput> | null
+  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
 }
 
 export type GroupOptionsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   groupName?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  productId?: Prisma.SortOrderInput | Prisma.SortOrder
   options?: Prisma.ProductsOptionsOrderByRelationAggregateInput
   product?: Prisma.ProductOrderByWithRelationInput
 }
@@ -202,19 +202,19 @@ export type GroupOptionsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.GroupOptionsWhereInput[]
   NOT?: Prisma.GroupOptionsWhereInput | Prisma.GroupOptionsWhereInput[]
   groupName?: Prisma.StringFilter<"GroupOptions"> | string
+  productId?: Prisma.StringFilter<"GroupOptions"> | string
   createdAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
-  productId?: Prisma.StringNullableFilter<"GroupOptions"> | string | null
   options?: Prisma.ProductsOptionsListRelationFilter
-  product?: Prisma.XOR<Prisma.ProductNullableScalarRelationFilter, Prisma.ProductWhereInput> | null
+  product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
 }, "id">
 
 export type GroupOptionsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   groupName?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  productId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.GroupOptionsCountOrderByAggregateInput
   _max?: Prisma.GroupOptionsMaxOrderByAggregateInput
   _min?: Prisma.GroupOptionsMinOrderByAggregateInput
@@ -226,9 +226,9 @@ export type GroupOptionsScalarWhereWithAggregatesInput = {
   NOT?: Prisma.GroupOptionsScalarWhereWithAggregatesInput | Prisma.GroupOptionsScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"GroupOptions"> | string
   groupName?: Prisma.StringWithAggregatesFilter<"GroupOptions"> | string
+  productId?: Prisma.StringWithAggregatesFilter<"GroupOptions"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"GroupOptions"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"GroupOptions"> | Date | string
-  productId?: Prisma.StringNullableWithAggregatesFilter<"GroupOptions"> | string | null
 }
 
 export type GroupOptionsCreateInput = {
@@ -237,15 +237,15 @@ export type GroupOptionsCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.ProductsOptionsCreateNestedManyWithoutGroupOptionsInput
-  product?: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
+  product: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
 }
 
 export type GroupOptionsUncheckedCreateInput = {
   id?: string
   groupName: string
+  productId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  productId?: string | null
   options?: Prisma.ProductsOptionsUncheckedCreateNestedManyWithoutGroupOptionsInput
 }
 
@@ -255,24 +255,24 @@ export type GroupOptionsUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.ProductsOptionsUpdateManyWithoutGroupOptionsNestedInput
-  product?: Prisma.ProductUpdateOneWithoutGroupedOptionsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutGroupedOptionsNestedInput
 }
 
 export type GroupOptionsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   groupName?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   options?: Prisma.ProductsOptionsUncheckedUpdateManyWithoutGroupOptionsNestedInput
 }
 
 export type GroupOptionsCreateManyInput = {
   id?: string
   groupName: string
+  productId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  productId?: string | null
 }
 
 export type GroupOptionsUpdateManyMutationInput = {
@@ -285,9 +285,9 @@ export type GroupOptionsUpdateManyMutationInput = {
 export type GroupOptionsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   groupName?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type GroupOptionsListRelationFilter = {
@@ -303,30 +303,30 @@ export type GroupOptionsOrderByRelationAggregateInput = {
 export type GroupOptionsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   groupName?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
 }
 
 export type GroupOptionsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   groupName?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
 }
 
 export type GroupOptionsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   groupName?: Prisma.SortOrder
+  productId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  productId?: Prisma.SortOrder
 }
 
-export type GroupOptionsNullableScalarRelationFilter = {
-  is?: Prisma.GroupOptionsWhereInput | null
-  isNot?: Prisma.GroupOptionsWhereInput | null
+export type GroupOptionsScalarRelationFilter = {
+  is?: Prisma.GroupOptionsWhereInput
+  isNot?: Prisma.GroupOptionsWhereInput
 }
 
 export type GroupOptionsCreateNestedManyWithoutProductInput = {
@@ -377,12 +377,10 @@ export type GroupOptionsCreateNestedOneWithoutOptionsInput = {
   connect?: Prisma.GroupOptionsWhereUniqueInput
 }
 
-export type GroupOptionsUpdateOneWithoutOptionsNestedInput = {
+export type GroupOptionsUpdateOneRequiredWithoutOptionsNestedInput = {
   create?: Prisma.XOR<Prisma.GroupOptionsCreateWithoutOptionsInput, Prisma.GroupOptionsUncheckedCreateWithoutOptionsInput>
   connectOrCreate?: Prisma.GroupOptionsCreateOrConnectWithoutOptionsInput
   upsert?: Prisma.GroupOptionsUpsertWithoutOptionsInput
-  disconnect?: Prisma.GroupOptionsWhereInput | boolean
-  delete?: Prisma.GroupOptionsWhereInput | boolean
   connect?: Prisma.GroupOptionsWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.GroupOptionsUpdateToOneWithWhereWithoutOptionsInput, Prisma.GroupOptionsUpdateWithoutOptionsInput>, Prisma.GroupOptionsUncheckedUpdateWithoutOptionsInput>
 }
@@ -435,9 +433,9 @@ export type GroupOptionsScalarWhereInput = {
   NOT?: Prisma.GroupOptionsScalarWhereInput | Prisma.GroupOptionsScalarWhereInput[]
   id?: Prisma.StringFilter<"GroupOptions"> | string
   groupName?: Prisma.StringFilter<"GroupOptions"> | string
+  productId?: Prisma.StringFilter<"GroupOptions"> | string
   createdAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GroupOptions"> | Date | string
-  productId?: Prisma.StringNullableFilter<"GroupOptions"> | string | null
 }
 
 export type GroupOptionsCreateWithoutOptionsInput = {
@@ -445,15 +443,15 @@ export type GroupOptionsCreateWithoutOptionsInput = {
   groupName: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  product?: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
+  product: Prisma.ProductCreateNestedOneWithoutGroupedOptionsInput
 }
 
 export type GroupOptionsUncheckedCreateWithoutOptionsInput = {
   id?: string
   groupName: string
+  productId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  productId?: string | null
 }
 
 export type GroupOptionsCreateOrConnectWithoutOptionsInput = {
@@ -477,15 +475,15 @@ export type GroupOptionsUpdateWithoutOptionsInput = {
   groupName?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  product?: Prisma.ProductUpdateOneWithoutGroupedOptionsNestedInput
+  product?: Prisma.ProductUpdateOneRequiredWithoutGroupedOptionsNestedInput
 }
 
 export type GroupOptionsUncheckedUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   groupName?: Prisma.StringFieldUpdateOperationsInput | string
+  productId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type GroupOptionsCreateManyProductInput = {
@@ -552,65 +550,65 @@ export type GroupOptionsCountOutputTypeCountOptionsArgs<ExtArgs extends runtime.
 export type GroupOptionsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   groupName?: boolean
+  productId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  productId?: boolean
   options?: boolean | Prisma.GroupOptions$optionsArgs<ExtArgs>
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.GroupOptionsCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["groupOptions"]>
 
 export type GroupOptionsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   groupName?: boolean
+  productId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  productId?: boolean
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["groupOptions"]>
 
 export type GroupOptionsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   groupName?: boolean
+  productId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  productId?: boolean
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["groupOptions"]>
 
 export type GroupOptionsSelectScalar = {
   id?: boolean
   groupName?: boolean
+  productId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  productId?: boolean
 }
 
-export type GroupOptionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "groupName" | "createdAt" | "updatedAt" | "productId", ExtArgs["result"]["groupOptions"]>
+export type GroupOptionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "groupName" | "productId" | "createdAt" | "updatedAt", ExtArgs["result"]["groupOptions"]>
 export type GroupOptionsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   options?: boolean | Prisma.GroupOptions$optionsArgs<ExtArgs>
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.GroupOptionsCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GroupOptionsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }
 export type GroupOptionsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  product?: boolean | Prisma.GroupOptions$productArgs<ExtArgs>
+  product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }
 
 export type $GroupOptionsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "GroupOptions"
   objects: {
     options: Prisma.$ProductsOptionsPayload<ExtArgs>[]
-    product: Prisma.$ProductPayload<ExtArgs> | null
+    product: Prisma.$ProductPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     groupName: string
+    productId: string
     createdAt: Date
     updatedAt: Date
-    productId: string | null
   }, ExtArgs["result"]["groupOptions"]>
   composites: {}
 }
@@ -1006,7 +1004,7 @@ readonly fields: GroupOptionsFieldRefs;
 export interface Prisma__GroupOptionsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   options<T extends Prisma.GroupOptions$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupOptions$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductsOptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  product<T extends Prisma.GroupOptions$productArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupOptions$productArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  product<T extends Prisma.ProductDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductClient<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1038,9 +1036,9 @@ export interface Prisma__GroupOptionsClient<T, Null = never, ExtArgs extends run
 export interface GroupOptionsFieldRefs {
   readonly id: Prisma.FieldRef<"GroupOptions", 'String'>
   readonly groupName: Prisma.FieldRef<"GroupOptions", 'String'>
+  readonly productId: Prisma.FieldRef<"GroupOptions", 'String'>
   readonly createdAt: Prisma.FieldRef<"GroupOptions", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"GroupOptions", 'DateTime'>
-  readonly productId: Prisma.FieldRef<"GroupOptions", 'String'>
 }
     
 
@@ -1458,25 +1456,6 @@ export type GroupOptions$optionsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ProductsOptionsScalarFieldEnum | Prisma.ProductsOptionsScalarFieldEnum[]
-}
-
-/**
- * GroupOptions.product
- */
-export type GroupOptions$productArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Product
-   */
-  select?: Prisma.ProductSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Product
-   */
-  omit?: Prisma.ProductOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProductInclude<ExtArgs> | null
-  where?: Prisma.ProductWhereInput
 }
 
 /**

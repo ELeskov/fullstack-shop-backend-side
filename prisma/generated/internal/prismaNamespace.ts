@@ -1649,9 +1649,9 @@ export const UserScalarFieldEnum = {
   password: 'password',
   picture: 'picture',
   role: 'role',
+  method: 'method',
   isVerified: 'isVerified',
   isTwoFactorEnable: 'isTwoFactorEnable',
-  method: 'method',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1691,9 +1691,9 @@ export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeo
 export const GroupOptionsScalarFieldEnum = {
   id: 'id',
   groupName: 'groupName',
+  productId: 'productId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  productId: 'productId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type GroupOptionsScalarFieldEnum = (typeof GroupOptionsScalarFieldEnum)[keyof typeof GroupOptionsScalarFieldEnum]
@@ -1703,9 +1703,9 @@ export const ProductsOptionsScalarFieldEnum = {
   id: 'id',
   name: 'name',
   value: 'value',
+  groupOptionsId: 'groupOptionsId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  groupOptionsId: 'groupOptionsId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type ProductsOptionsScalarFieldEnum = (typeof ProductsOptionsScalarFieldEnum)[keyof typeof ProductsOptionsScalarFieldEnum]
@@ -1827,9 +1827,9 @@ export const AccountScalarFieldEnum = {
   accessToken: 'accessToken',
   refreshToken: 'refreshToken',
   expiresAt: 'expiresAt',
+  userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  userId: 'userId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -1905,13 +1905,6 @@ export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'AuthMethod'
  */
 export type EnumAuthMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthMethod'>
@@ -1922,6 +1915,13 @@ export type EnumAuthMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'AuthMethod[]'
  */
 export type ListEnumAuthMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

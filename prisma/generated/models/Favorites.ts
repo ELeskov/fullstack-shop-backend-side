@@ -232,16 +232,16 @@ export type FavoritesOrderByWithRelationInput = {
 
 export type FavoritesWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.FavoritesWhereInput | Prisma.FavoritesWhereInput[]
   OR?: Prisma.FavoritesWhereInput[]
   NOT?: Prisma.FavoritesWhereInput | Prisma.FavoritesWhereInput[]
   totalAmount?: Prisma.IntFilter<"Favorites"> | number
-  userId?: Prisma.StringNullableFilter<"Favorites"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Favorites"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Favorites"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   favoritesItems?: Prisma.FavoritesItemListRelationFilter
-}, "id">
+}, "id" | "userId">
 
 export type FavoritesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -326,14 +326,9 @@ export type FavoritesUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type FavoritesListRelationFilter = {
-  every?: Prisma.FavoritesWhereInput
-  some?: Prisma.FavoritesWhereInput
-  none?: Prisma.FavoritesWhereInput
-}
-
-export type FavoritesOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type FavoritesNullableScalarRelationFilter = {
+  is?: Prisma.FavoritesWhereInput | null
+  isNot?: Prisma.FavoritesWhereInput | null
 }
 
 export type FavoritesCountOrderByAggregateInput = {
@@ -373,46 +368,36 @@ export type FavoritesScalarRelationFilter = {
   isNot?: Prisma.FavoritesWhereInput
 }
 
-export type FavoritesCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput> | Prisma.FavoritesCreateWithoutUserInput[] | Prisma.FavoritesUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput | Prisma.FavoritesCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.FavoritesCreateManyUserInputEnvelope
-  connect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
+export type FavoritesCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput
+  connect?: Prisma.FavoritesWhereUniqueInput
 }
 
-export type FavoritesUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput> | Prisma.FavoritesCreateWithoutUserInput[] | Prisma.FavoritesUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput | Prisma.FavoritesCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.FavoritesCreateManyUserInputEnvelope
-  connect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
+export type FavoritesUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput
+  connect?: Prisma.FavoritesWhereUniqueInput
 }
 
-export type FavoritesUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput> | Prisma.FavoritesCreateWithoutUserInput[] | Prisma.FavoritesUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput | Prisma.FavoritesCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.FavoritesUpsertWithWhereUniqueWithoutUserInput | Prisma.FavoritesUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.FavoritesCreateManyUserInputEnvelope
-  set?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  disconnect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  delete?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  connect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  update?: Prisma.FavoritesUpdateWithWhereUniqueWithoutUserInput | Prisma.FavoritesUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.FavoritesUpdateManyWithWhereWithoutUserInput | Prisma.FavoritesUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.FavoritesScalarWhereInput | Prisma.FavoritesScalarWhereInput[]
+export type FavoritesUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput
+  upsert?: Prisma.FavoritesUpsertWithoutUserInput
+  disconnect?: Prisma.FavoritesWhereInput | boolean
+  delete?: Prisma.FavoritesWhereInput | boolean
+  connect?: Prisma.FavoritesWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FavoritesUpdateToOneWithWhereWithoutUserInput, Prisma.FavoritesUpdateWithoutUserInput>, Prisma.FavoritesUncheckedUpdateWithoutUserInput>
 }
 
-export type FavoritesUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput> | Prisma.FavoritesCreateWithoutUserInput[] | Prisma.FavoritesUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput | Prisma.FavoritesCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.FavoritesUpsertWithWhereUniqueWithoutUserInput | Prisma.FavoritesUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.FavoritesCreateManyUserInputEnvelope
-  set?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  disconnect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  delete?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  connect?: Prisma.FavoritesWhereUniqueInput | Prisma.FavoritesWhereUniqueInput[]
-  update?: Prisma.FavoritesUpdateWithWhereUniqueWithoutUserInput | Prisma.FavoritesUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.FavoritesUpdateManyWithWhereWithoutUserInput | Prisma.FavoritesUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.FavoritesScalarWhereInput | Prisma.FavoritesScalarWhereInput[]
+export type FavoritesUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.FavoritesCreateOrConnectWithoutUserInput
+  upsert?: Prisma.FavoritesUpsertWithoutUserInput
+  disconnect?: Prisma.FavoritesWhereInput | boolean
+  delete?: Prisma.FavoritesWhereInput | boolean
+  connect?: Prisma.FavoritesWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FavoritesUpdateToOneWithWhereWithoutUserInput, Prisma.FavoritesUpdateWithoutUserInput>, Prisma.FavoritesUncheckedUpdateWithoutUserInput>
 }
 
 export type FavoritesCreateNestedOneWithoutFavoritesItemsInput = {
@@ -450,36 +435,31 @@ export type FavoritesCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
 }
 
-export type FavoritesCreateManyUserInputEnvelope = {
-  data: Prisma.FavoritesCreateManyUserInput | Prisma.FavoritesCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type FavoritesUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.FavoritesWhereUniqueInput
+export type FavoritesUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.FavoritesUpdateWithoutUserInput, Prisma.FavoritesUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.FavoritesCreateWithoutUserInput, Prisma.FavoritesUncheckedCreateWithoutUserInput>
+  where?: Prisma.FavoritesWhereInput
 }
 
-export type FavoritesUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.FavoritesWhereUniqueInput
+export type FavoritesUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.FavoritesWhereInput
   data: Prisma.XOR<Prisma.FavoritesUpdateWithoutUserInput, Prisma.FavoritesUncheckedUpdateWithoutUserInput>
 }
 
-export type FavoritesUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.FavoritesScalarWhereInput
-  data: Prisma.XOR<Prisma.FavoritesUpdateManyMutationInput, Prisma.FavoritesUncheckedUpdateManyWithoutUserInput>
+export type FavoritesUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  favoritesItems?: Prisma.FavoritesItemUpdateManyWithoutFavoritesNestedInput
 }
 
-export type FavoritesScalarWhereInput = {
-  AND?: Prisma.FavoritesScalarWhereInput | Prisma.FavoritesScalarWhereInput[]
-  OR?: Prisma.FavoritesScalarWhereInput[]
-  NOT?: Prisma.FavoritesScalarWhereInput | Prisma.FavoritesScalarWhereInput[]
-  id?: Prisma.StringFilter<"Favorites"> | string
-  totalAmount?: Prisma.IntFilter<"Favorites"> | number
-  userId?: Prisma.StringNullableFilter<"Favorites"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Favorites"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Favorites"> | Date | string
+export type FavoritesUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  favoritesItems?: Prisma.FavoritesItemUncheckedUpdateManyWithoutFavoritesNestedInput
 }
 
 export type FavoritesCreateWithoutFavoritesItemsInput = {
@@ -526,36 +506,6 @@ export type FavoritesUncheckedUpdateWithoutFavoritesItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type FavoritesCreateManyUserInput = {
-  id?: string
-  totalAmount?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type FavoritesUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  favoritesItems?: Prisma.FavoritesItemUpdateManyWithoutFavoritesNestedInput
-}
-
-export type FavoritesUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  favoritesItems?: Prisma.FavoritesItemUncheckedUpdateManyWithoutFavoritesNestedInput
-}
-
-export type FavoritesUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
