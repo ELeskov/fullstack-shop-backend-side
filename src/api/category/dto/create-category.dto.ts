@@ -11,11 +11,4 @@ export class CreateCategoryDto {
   @IsString()
   @MinLength(1)
   description!: string
-
-  @ApiProperty({
-    example: '12hv12d121c1-d1351jhk1bh2i1d-dfiygdf6y8dgaf8',
-    description: 'Id магазина',
-  })
-  @IsString()
-  shopId!: string
 }

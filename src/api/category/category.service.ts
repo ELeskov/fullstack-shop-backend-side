@@ -1,44 +1,58 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
-import { ApiErrorCode } from '@/shared/types/api-error-response.dto'
 
 import { CreateCategoryDto } from './dto/create-category.dto'
-import { DeleteCategoryDto } from './dto/delete-category.dto'
 
 @Injectable()
 export class CategoryService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public async create(dto: CreateCategoryDto) {
-    const newCategory = await this.prismaService.category.create({
+  public async create(userId: string, shopId: string, dto: CreateCategoryDto) {
+    await this.verifyShopOwnership(userId, shopId)
+
+    return this.prismaService.category.create({
       data: {
         title: dto.title,
         description: dto.description,
-        shopId: dto.shopId,
+        shopId
       },
       omit: {
         updatedAt: true,
       },
     })
-
-    if (!newCategory) {
-      throw new ConflictException({
-        message: 'Не удалось создать категорию',
-        code: ApiErrorCode.CONFLICT,
-      })
-    }
-
-    return newCategory
   }
 
-  public async delete(dto: DeleteCategoryDto) {
+  public async delete(userId: string, shopId: string, categoryId: string) {
+    await this.verifyShopOwnership(userId, shopId)
+
     await this.prismaService.category.delete({
       where: {
-        id: dto.categoryId,
+        id: categoryId,
       },
     })
 
     return true
+  }
+
+  private async verifyShopOwnership(userId: string, shopId: string) {
+    const shop = await this.prismaService.shop.findUnique({
+      where: { id: shopId },
+      select: { userId: true },
+    })
+
+    if (!shop) {
+      throw new NotFoundException('Магазин не найден')
+    }
+
+    if (shop.userId !== userId) {
+      throw new ForbiddenException(
+        'У вас нет доступа к управлению этим магазином',
+      )
+    }
   }
 }
