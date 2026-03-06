@@ -9,7 +9,7 @@ import { CreateProductDto } from '@/api/product/dto/create-product.dto'
 import { UpdateProductDto } from '@/api/product/dto/update-product.dto'
 import { S3Service } from '@/api/s3/s3.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
-import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
+import { S3_NAME_FOLDERS } from '@/shared/consts'
 
 @Injectable()
 export class ProductService {
@@ -27,17 +27,16 @@ export class ProductService {
     await this.verifyShopOwnership(userId, shopId)
 
     let uploadedImageUrls: string[] = []
-
     if (files && files.length > 0) {
-      uploadedImageUrls = await Promise.all(
-        files.map(async file => {
-          const uploaded = await this.s3Service.upload('product', file)
-          return uploaded.path
-        }),
+      const uploadResults = await Promise.all(
+        files.map(file =>
+          this.s3Service.upload(S3_NAME_FOLDERS.S3_SHOP_PRODUCTS, file),
+        ),
       )
+      uploadedImageUrls = uploadResults.map(res => res.path)
     }
 
-    const product = await this.prismaService.product.create({
+    return this.prismaService.product.create({
       data: {
         shopId,
         title: dto.title,
@@ -69,8 +68,6 @@ export class ProductService {
         },
       },
     })
-
-    return product
   }
 
   public async findById(id: string) {
@@ -123,34 +120,42 @@ export class ProductService {
       throw new NotFoundException('Продукт не найден или не принадлежит вам')
     }
 
-    let uploadedImageUrls: string[] = []
+    const oldImagesInDb = existingProduct.images || []
+    const imagesToKeep = dto.existingImages || []
 
+    const imagesToDeleteFromS3 = oldImagesInDb.filter(
+      oldUrl => !imagesToKeep.includes(oldUrl),
+    )
+
+    if (imagesToDeleteFromS3.length > 0) {
+      await this.s3Service.deleteManyByUrls(imagesToDeleteFromS3)
+    }
+
+    let uploadedImageUrls: string[] = []
     if (files && files.length > 0) {
       const uploadResults = await Promise.all(
-        files.map(file => this.s3Service.upload('product', file)),
+        files.map(file =>
+          this.s3Service.upload(S3_NAME_FOLDERS.S3_SHOP_PRODUCTS, file),
+        ),
       )
       uploadedImageUrls = uploadResults.map(res => res.path)
     }
 
-    const finalImages = [...(dto.existingImages || []), ...uploadedImageUrls]
+    const finalImages = [...imagesToKeep, ...uploadedImageUrls]
 
     const updateData: Prisma.ProductUpdateInput = {
       title: dto.title,
       description: dto.description,
       price: dto.price,
-
       images: finalImages,
     }
+
     if (dto.categoryId) {
-      updateData.category = {
-        connect: { id: dto.categoryId },
-      }
+      updateData.category = { connect: { id: dto.categoryId } }
     }
 
     if (dto.colorId) {
-      updateData.color = {
-        connect: { id: dto.colorId },
-      }
+      updateData.color = { connect: { id: dto.colorId } }
     } else if (dto.colorId === null) {
       updateData.color = { disconnect: true }
     }
@@ -186,6 +191,7 @@ export class ProductService {
 
     const product = await this.prismaService.product.findUnique({
       where: { id: productId, shopId },
+      select: { id: true, images: true },
     })
 
     if (!product) {
@@ -195,14 +201,9 @@ export class ProductService {
     await this.prismaService.product.delete({
       where: { id: productId },
     })
-    if (product.images.length > 0) {
-      await Promise.all(
-        product.images.map(url => {
-          const key = extractKeyFromUrl(url)
 
-          return this.s3Service.delete(key)
-        }),
-      )
+    if (product.images && product.images.length > 0) {
+      await this.s3Service.deleteManyByUrls(product.images)
     }
 
     return true

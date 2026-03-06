@@ -3,15 +3,17 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { S3FolderValue } from '@/shared/consts'
+import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
 
 @Injectable()
 export class S3Service {
   private readonly client: S3Client
   private readonly bucket: string
+  private readonly logger = new Logger(S3Service.name)
 
   public constructor(private readonly prismaService: PrismaService) {
     this.client = new S3Client({
@@ -44,12 +46,30 @@ export class S3Service {
     return { path: `https://${this.bucket}.s3.timeweb.cloud/${key}` }
   }
 
-  async delete(key: string): Promise<void> {
+  public async delete(key: string): Promise<void> {
     const command = new DeleteObjectCommand({
       Bucket: this.bucket,
       Key: key,
     })
 
     await this.client.send(command)
+  }
+
+  public async deleteByUrl(fileUrl: string): Promise<void> {
+    try {
+      const key = extractKeyFromUrl(fileUrl)
+      await this.delete(key)
+    } catch (error) {
+      this.logger.error(
+        `Не удалось извлечь ключ или удалить файл: ${fileUrl}`,
+        error,
+      )
+    }
+  }
+
+  public async deleteManyByUrls(fileUrls: string[]): Promise<void> {
+    if (!fileUrls || fileUrls.length === 0) return
+
+    await Promise.all(fileUrls.map(url => this.deleteByUrl(url)))
   }
 }
