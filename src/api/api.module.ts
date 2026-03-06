@@ -11,6 +11,7 @@ import { ColorModule } from './color/color.module'
 import { S3Module } from './s3/s3.module'
 import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './users/users.module'
       inject: [ConfigService],
     }),
     ColorModule,
+    ProductModule,
   ],
 })
 export class ApiModule {}
