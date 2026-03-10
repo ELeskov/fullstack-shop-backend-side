@@ -102,6 +102,15 @@ export class ProductService {
     })
   }
 
+  public async findAll() {
+    return this.prismaService.product.findMany({
+      include: {
+        category: true,
+        color: true,
+      },
+    })
+  }
+
   public async update(
     userId: string,
     shopId: string,

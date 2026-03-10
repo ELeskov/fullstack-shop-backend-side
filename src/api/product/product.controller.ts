@@ -79,6 +79,23 @@ export class ProductController {
     return this.productService.findAllByShopId(shopId)
   }
 
+  @Get()
+  @Authorization()
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: 'Получить все товары',
+    description: 'Возвращает список всех товаров',
+  })
+  @ApiOkResponse({
+    description: 'Список товаров успешно получен',
+    type: ProductResponseDto,
+    isArray: true,
+  })
+  @ApiCommonErrors()
+  public async findAll() {
+    return this.productService.findAll()
+  }
+
   @Get(':id')
   @Authorization()
   @ApiCookieAuth()
