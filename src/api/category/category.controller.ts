@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -50,6 +51,18 @@ export class CategoryController {
     @Body() dto: CreateCategoryDto,
   ) {
     return this.categoryService.create(userId, shopId, dto)
+  }
+
+  @Get('')
+  @ApiOperation({ summary: 'Получение всех категорий' })
+  @ApiOkResponse({
+    description: 'Категории успешно получены',
+    isArray: true,
+    type: CategoryResponseDto,
+  })
+  @ApiCommonErrors()
+  public findAll() {
+    return this.categoryService.findAll()
   }
 
   @Delete(':shopId/:categoryId')

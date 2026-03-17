@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common'
@@ -19,9 +20,11 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 
+import { ProductFilterDto } from '@/api/product/dto/product-filter.dto'
 import { ProductResponseDto } from '@/api/product/dto/product-response.dto'
 import { UpdateProductDto } from '@/api/product/dto/update-product.dto'
 import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
@@ -80,8 +83,6 @@ export class ProductController {
   }
 
   @Get()
-  @Authorization()
-  @ApiCookieAuth()
   @ApiOperation({
     summary: 'Получить все товары',
     description: 'Возвращает список всех товаров',
@@ -94,6 +95,60 @@ export class ProductController {
   @ApiCommonErrors()
   public async findAll() {
     return this.productService.findAll()
+  }
+
+  @Get('filters')
+  @ApiOperation({ summary: 'Получить отфильтрованный список товаров' })
+  @ApiQuery({
+    name: 'categoryIds',
+    required: false,
+    type: [String],
+    example: ['category-1', 'category-2'],
+    description: 'Список id категорий',
+  })
+  @ApiQuery({
+    name: 'minPrice',
+    required: false,
+    type: Number,
+    example: 100,
+    description: 'Минимальная цена',
+  })
+  @ApiQuery({
+    name: 'maxPrice',
+    required: false,
+    type: Number,
+    example: 1000,
+    description: 'Максимальная цена',
+  })
+  @ApiQuery({
+    name: 'colorIds',
+    required: false,
+    type: [String],
+    example: ['color-1', 'color-2'],
+    description: 'Список id цветов',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'крем',
+    description: 'Поиск по названию товара',
+  })
+  @ApiQuery({
+    name: 'brandIds',
+    required: false,
+    type: String,
+    example: 'NIVEA',
+    description: 'Фильтр по бренду',
+  })
+  @ApiOkResponse({
+    description: 'Список товаров успешно получен',
+    type: ProductResponseDto,
+    isArray: true,
+  })
+  @ApiCommonErrors()
+  public async getProducts(@Query() query: ProductFilterDto) {
+    return this.productService.findAllWithFilters(query)
   }
 
   @Get(':id')

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -56,6 +57,18 @@ export class ColorController {
     @Body() dto: CreateColorDto,
   ) {
     return this.colorService.create(userId, shopId, dto)
+  }
+
+  @Get('')
+  @ApiOperation({ summary: 'Получение всех цветов' })
+  @ApiOkResponse({
+    description: 'Цвета успешно получены',
+    isArray: true,
+    type: ColorResponseDto,
+  })
+  @ApiCommonErrors()
+  public findAll() {
+    return this.colorService.findAll()
   }
 
   @Delete(':shopId/:colorId')

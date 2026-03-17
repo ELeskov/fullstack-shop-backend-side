@@ -68,6 +68,12 @@ export class ShopService {
     }
   }
 
+  public async findAll() {
+    return this.prismaService.shop.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
+  }
+
   public async findById(id: string) {
     const shop = await this.prismaService.shop.findUnique({
       where: { id },

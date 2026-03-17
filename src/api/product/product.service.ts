@@ -6,6 +6,7 @@ import {
 import { Prisma } from '@prisma/generated/client'
 
 import { CreateProductDto } from '@/api/product/dto/create-product.dto'
+import { ProductFilterDto } from '@/api/product/dto/product-filter.dto'
 import { UpdateProductDto } from '@/api/product/dto/update-product.dto'
 import { S3Service } from '@/api/s3/s3.service'
 import { PrismaService } from '@/infra/prisma/prisma.service'
@@ -109,6 +110,67 @@ export class ProductService {
         color: true,
       },
     })
+  }
+
+  public async findAllWithFilters(filtersQuery: ProductFilterDto) {
+    const where: Prisma.ProductWhereInput = {}
+    let orderBy: Prisma.ProductOrderByWithRelationInput = {
+      createdAt: 'desc',
+    }
+
+    if (filtersQuery.categoryIds) {
+      where.categoryId = { in: filtersQuery.categoryIds }
+    }
+
+    if (filtersQuery.colorIds && filtersQuery.colorIds.length > 0) {
+      where.colorId = { in: filtersQuery.colorIds }
+    }
+
+    if (
+      filtersQuery.minPrice !== undefined ||
+      filtersQuery.maxPrice !== undefined
+    ) {
+      where.price = {}
+      if (filtersQuery.minPrice !== undefined)
+        where.price.gte = filtersQuery.minPrice
+
+      if (filtersQuery.maxPrice !== undefined)
+        where.price.lte = filtersQuery.maxPrice
+    }
+
+    if (filtersQuery.brandIds) {
+      if (where.shop) {
+        where.shopId = { in: filtersQuery.brandIds }
+      }
+    }
+
+    if (filtersQuery.search) {
+      where.title = {
+        contains: filtersQuery.search,
+        mode: 'insensitive',
+      }
+    }
+
+    const SORT_MAP: Record<
+      NonNullable<ProductFilterDto['sort']>,
+      Partial<Prisma.ProductOrderByWithRelationInput>
+    > = {
+      price_asc: { price: 'asc' },
+      price_desc: { price: 'desc' },
+      newest: { createdAt: 'desc' },
+    }
+
+    if (filtersQuery.sort && SORT_MAP[filtersQuery.sort]) {
+      orderBy = SORT_MAP[filtersQuery.sort]
+    }
+
+    const products = await this.prismaService.product.findMany({
+      where,
+      include: { category: true, color: true },
+      orderBy,
+    })
+
+    return products
   }
 
   public async update(

@@ -24,6 +24,12 @@ export class ColorService {
     })
   }
 
+  public async findAll() {
+    return this.prismaService.color.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
+  }
+
   public async delete(userId: string, shopId: string, colorId: string) {
     await this.verifyShopOwnership(userId, shopId)
 

@@ -94,6 +94,14 @@ export class ShopController {
     return this.shopService.uploadPicture(shopId, file)
   }
 
+  @Get()
+  @ApiCommonErrors()
+  @ApiOperation({ summary: 'Получить все магазины' })
+  @ApiOkResponse({ type: ShopResponseDto, isArray: true })
+  async findAll() {
+    return this.shopService.findAll()
+  }
+
   @Get('@me')
   @Authorization()
   @ApiCookieAuth()

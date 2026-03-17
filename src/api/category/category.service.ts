@@ -19,11 +19,17 @@ export class CategoryService {
       data: {
         title: dto.title,
         description: dto.description,
-        shopId
+        shopId,
       },
       omit: {
         updatedAt: true,
       },
+    })
+  }
+
+  public async findAll() {
+    return this.prismaService.category.findMany({
+      orderBy: { createdAt: 'desc' },
     })
   }
 
