@@ -241,6 +241,7 @@ export type BasketItemOrderByWithRelationInput = {
 
 export type BasketItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  basketId_productId?: Prisma.BasketItemBasketIdProductIdCompoundUniqueInput
   AND?: Prisma.BasketItemWhereInput | Prisma.BasketItemWhereInput[]
   OR?: Prisma.BasketItemWhereInput[]
   NOT?: Prisma.BasketItemWhereInput | Prisma.BasketItemWhereInput[]
@@ -251,7 +252,7 @@ export type BasketItemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"BasketItem"> | Date | string
   basket?: Prisma.XOR<Prisma.BasketScalarRelationFilter, Prisma.BasketWhereInput>
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
-}, "id">
+}, "id" | "basketId_productId">
 
 export type BasketItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -348,6 +349,11 @@ export type BasketItemListRelationFilter = {
 
 export type BasketItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type BasketItemBasketIdProductIdCompoundUniqueInput = {
+  basketId: string
+  productId: string
 }
 
 export type BasketItemCountOrderByAggregateInput = {

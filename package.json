@@ -27,7 +27,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:g": "prisma generate",
     "db:p": "prisma db push",
-    "db:stud": "prisma studio",
+    "db:studio": "prisma studio",
     "dc:up": "docker compose up -d",
     "dc:start": "docker compose start",
     "dc:stop": "docker compose stop",

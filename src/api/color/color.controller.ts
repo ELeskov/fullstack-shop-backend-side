@@ -67,7 +67,7 @@ export class ColorController {
     type: ColorResponseDto,
   })
   @ApiCommonErrors()
-  public findAll() {
+  public async findAll() {
     return this.colorService.findAll()
   }
 

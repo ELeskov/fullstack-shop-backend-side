@@ -48,6 +48,13 @@ export class AccountService {
         password: await hash(dto.password),
         method: AuthMethod.CREDENTIALS,
         picture: '',
+
+        basket: {
+          create: {},
+        },
+        favorites: {
+          create: {},
+        },
       },
     })
 

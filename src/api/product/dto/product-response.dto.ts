@@ -78,8 +78,6 @@ export class ProductResponseDto {
   @ApiProperty()
   updatedAt!: Date
 
-  // --- Вложенные связи (которые вы достаете через include) ---
-
   @ApiPropertyOptional({ type: () => ProductCategoryResponseDto })
   category?: ProductCategoryResponseDto
 
@@ -88,8 +86,4 @@ export class ProductResponseDto {
 
   @ApiPropertyOptional({ type: [GroupOptionResponseDto] })
   groupedOptions?: GroupOptionResponseDto[]
-
-  // Если у вас есть ReviewResponseDto, можно добавить его сюда
-  @ApiPropertyOptional({ type: [Object], description: 'Массив отзывов' })
-  reviews?: any[]
 }

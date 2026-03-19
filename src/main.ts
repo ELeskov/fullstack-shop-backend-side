@@ -58,8 +58,8 @@ async function bootstrap() {
   )
 
   app.useGlobalFilters(
-    new ApiExceptionFilter(),
     new PrismaClientExceptionFilter(httpAdapter),
+    new ApiExceptionFilter(),
   )
 
   app.use(

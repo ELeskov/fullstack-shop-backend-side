@@ -156,7 +156,6 @@ export type ProductsOptionsScalarFieldEnum = (typeof ProductsOptionsScalarFieldE
 
 export const BasketScalarFieldEnum = {
   id: 'id',
-  totalAmount: 'totalAmount',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

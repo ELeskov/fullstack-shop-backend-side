@@ -12,6 +12,7 @@ import { S3Module } from './s3/s3.module'
 import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
 import { ProductModule } from './product/product.module';
+import { BasketModule } from './basket/basket.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProductModule } from './product/product.module';
     }),
     ColorModule,
     ProductModule,
+    BasketModule,
   ],
 })
 export class ApiModule {}

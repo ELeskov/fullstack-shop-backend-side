@@ -119,8 +119,7 @@ model ProductsOptions {
 }
 
 model Basket {
-  id          String @id @default(uuid())
-  totalAmount Int    @default(0)
+  id String @id @default(uuid())
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @unique @map("user_id")
@@ -146,6 +145,7 @@ model BasketItem {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([basketId, productId])
   @@index([basketId])
   @@index([productId])
   @@map("basket_items")

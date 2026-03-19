@@ -45,7 +45,7 @@ export class CategoryController {
   })
   @ApiBody({ type: CreateCategoryDto })
   @ApiCommonErrors()
-  public create(
+  public async create(
     @Authorized('id') userId: string,
     @Param('shopId') shopId: string,
     @Body() dto: CreateCategoryDto,
@@ -61,7 +61,7 @@ export class CategoryController {
     type: CategoryResponseDto,
   })
   @ApiCommonErrors()
-  public findAll() {
+  public async findAll() {
     return this.categoryService.findAll()
   }
 
@@ -76,7 +76,7 @@ export class CategoryController {
   @ApiParam({ name: 'categoryId', description: 'ID удаляемой категории' })
   @ApiOkResponse({ description: 'Категория удалена', type: Boolean })
   @ApiCommonErrors()
-  public delete(
+  public async delete(
     @Authorized('id') userId: string,
     @Param('shopId') shopId: string,
     @Param('categoryId') categoryId: string,

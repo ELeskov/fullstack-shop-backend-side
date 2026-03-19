@@ -17,7 +17,7 @@ type HttpExceptionBody = {
   details?: Record<string, string[]>
 }
 
-@Catch()
+@Catch(HttpException)
 export class ApiExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
