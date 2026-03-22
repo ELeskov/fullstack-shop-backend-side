@@ -1,5 +1,15 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common'
+import {
+  ApiBody,
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
@@ -50,6 +60,19 @@ export class BasketController {
     return this.basketService.getBasketByUserId(userId)
   }
 
+  @Patch('products/selection')
+  @Authorization()
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'Переключить выбор всех товаров в корзине' })
+  @ApiOkResponse({
+    type: GetBasketResponseDto,
+    description: 'Статус выбора всех товаров изменён',
+  })
+  @ApiCommonErrors()
+  public async toggleSelectAllItems(@Authorized('id') userId: string) {
+    return this.basketService.toggleSelectAllItems(userId)
+  }
+
   @Get('products/:productId')
   @Authorization()
   @ApiCookieAuth()
@@ -91,6 +114,37 @@ export class BasketController {
     @Param('productId') productId: string,
   ) {
     return this.basketService.decrementProductQuantity(userId, productId)
+  }
+
+  @Patch('products/:productId/selection')
+  @Authorization()
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'Изменить статус выбора товара в корзине' })
+  @ApiParam({
+    name: 'productId',
+    type: String,
+    description: 'Уникальный идентификатор товара',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        isSelected: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Статус выбора изменён' })
+  @ApiCommonErrors()
+  public async changeSelectedStatus(
+    @Authorized('id') userId: string,
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @Body('isSelected') isSelected?: boolean,
+  ) {
+    return this.basketService.changeSelectedStatus(
+      userId,
+      productId,
+      isSelected,
+    )
   }
 
   @Delete('products/:productId')

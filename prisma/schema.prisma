@@ -133,8 +133,9 @@ model Basket {
 }
 
 model BasketItem {
-  id       String @id @default(uuid())
-  quantity Int    @default(1)
+  id         String  @id @default(uuid())
+  quantity   Int     @default(1)
+  isSelected Boolean @default(true) @map("is_selected")
 
   basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
   basketId String @map("basket_id")

@@ -167,6 +167,7 @@ export type BasketScalarFieldEnum = (typeof BasketScalarFieldEnum)[keyof typeof 
 export const BasketItemScalarFieldEnum = {
   id: 'id',
   quantity: 'quantity',
+  isSelected: 'isSelected',
   basketId: 'basketId',
   productId: 'productId',
   createdAt: 'createdAt',

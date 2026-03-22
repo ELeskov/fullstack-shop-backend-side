@@ -37,16 +37,14 @@ export class BasketService {
   public async getBasketByUserId(userId: string) {
     return this.prismaService.basket.findUnique({
       where: { userId },
+
       include: {
         basketItems: {
+          orderBy: { createdAt: 'desc' },
+
           include: {
             product: {
               include: {
-                category: {
-                  select: {
-                    title: true,
-                  },
-                },
                 color: {
                   select: {
                     title: true,
@@ -54,9 +52,30 @@ export class BasketService {
                   },
                 },
               },
+              omit: {
+                shopId: true,
+                colorId: true,
+                categoryId: true,
+                createdAt: true,
+                updatedAt: true,
+                description: true,
+              },
             },
           },
+
+          omit: {
+            basketId: true,
+            productId: true,
+            createdAt: true,
+            updatedAt: true,
+          },
         },
+      },
+
+      omit: {
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
       },
     })
   }
@@ -88,6 +107,85 @@ export class BasketService {
     }
 
     return basketItem
+  }
+
+  public async changeSelectedStatus(
+    userId: string,
+    productId: string,
+    newStatus?: boolean,
+  ) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: { basket: true },
+    })
+
+    if (!user || !user.basket) {
+      throw new NotFoundException('Пользователь или корзина не найдены')
+    }
+
+    const existingItem = await this.prismaService.basketItem.findUnique({
+      where: {
+        basketId_productId: {
+          basketId: user.basket.id,
+          productId,
+        },
+      },
+      select: { isSelected: true },
+    })
+
+    if (!existingItem) {
+      throw new NotFoundException('Товар не найден в корзине')
+    }
+
+    const isSelected =
+      newStatus !== undefined ? newStatus : !existingItem.isSelected
+
+    const basketItem = await this.prismaService.basketItem.update({
+      where: {
+        basketId_productId: {
+          basketId: user.basket.id,
+          productId,
+        },
+      },
+      data: {
+        isSelected,
+      },
+      include: {
+        product: true,
+      },
+    })
+
+    return basketItem
+  }
+
+  public async toggleSelectAllItems(userId: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: { basket: true },
+    })
+
+    if (!user || !user.basket) {
+      throw new NotFoundException('Пользователь или корзина не найдены')
+    }
+
+    const basketItems = await this.prismaService.basketItem.findMany({
+      where: { basketId: user.basket.id },
+      select: { isSelected: true },
+    })
+
+    if (basketItems.length === 0) {
+      throw new NotFoundException('Корзина пуста')
+    }
+
+    const allSelected = basketItems.every(item => item.isSelected)
+    const newStatus = !allSelected
+
+    await this.prismaService.basketItem.updateMany({
+      where: { basketId: user.basket.id },
+      data: { isSelected: newStatus },
+    })
+
+    return this.getBasketByUserId(userId)
   }
 
   public async deleteProductFromBasket(userId: string, productId: string) {
