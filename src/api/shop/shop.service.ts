@@ -69,9 +69,11 @@ export class ShopService {
   }
 
   public async findAll() {
-    return this.prismaService.shop.findMany({
+    const allShops = await this.prismaService.shop.findMany({
       orderBy: { createdAt: 'desc' },
     })
+
+    return allShops ?? []
   }
 
   public async findById(id: string) {
@@ -87,10 +89,12 @@ export class ShopService {
   }
 
   public async findAllByUserId(userId: string) {
-    return this.prismaService.shop.findMany({
+    const meShops = this.prismaService.shop.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     })
+
+    return meShops ?? []
   }
 
   public async findCategoriesByShopId(shopId: string) {

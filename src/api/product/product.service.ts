@@ -112,65 +112,45 @@ export class ProductService {
     })
   }
 
-  public async findAllWithFilters(filtersQuery: ProductFilterDto) {
-    const where: Prisma.ProductWhereInput = {}
-    let orderBy: Prisma.ProductOrderByWithRelationInput = {
-      createdAt: 'desc',
-    }
-
-    if (filtersQuery.categoryIds) {
-      where.categoryId = { in: filtersQuery.categoryIds }
-    }
-
-    if (filtersQuery.colorIds && filtersQuery.colorIds.length > 0) {
-      where.colorId = { in: filtersQuery.colorIds }
-    }
-
-    if (
-      filtersQuery.minPrice !== undefined ||
-      filtersQuery.maxPrice !== undefined
-    ) {
-      where.price = {}
-      if (filtersQuery.minPrice !== undefined)
-        where.price.gte = filtersQuery.minPrice
-
-      if (filtersQuery.maxPrice !== undefined)
-        where.price.lte = filtersQuery.maxPrice
-    }
-
-    if (filtersQuery.brandIds) {
-      if (where.shop) {
-        where.shopId = { in: filtersQuery.brandIds }
-      }
-    }
-
-    if (filtersQuery.search) {
-      where.title = {
-        contains: filtersQuery.search,
-        mode: 'insensitive',
-      }
-    }
-
-    const SORT_MAP: Record<
-      NonNullable<ProductFilterDto['sort']>,
-      Partial<Prisma.ProductOrderByWithRelationInput>
-    > = {
-      price_asc: { price: 'asc' },
-      price_desc: { price: 'desc' },
-      newest: { createdAt: 'desc' },
-    }
-
-    if (filtersQuery.sort && SORT_MAP[filtersQuery.sort]) {
-      orderBy = SORT_MAP[filtersQuery.sort]
-    }
+  public async findAllWithFilters(
+    userId: string,
+    filtersQuery: ProductFilterDto,
+  ) {
+    const where = this.buildWhere(filtersQuery)
+    const orderBy = this.buildOrderBy(filtersQuery)
 
     const products = await this.prismaService.product.findMany({
       where,
-      include: { category: true, color: true },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        images: true,
+        shop: {
+          select: {
+            title: true,
+          },
+        },
+        color: {
+          select: {
+            title: true,
+          },
+        },
+        _count: {
+          select: {
+            favoritesItems: {
+              where: { favorites: { userId } },
+            },
+          },
+        },
+      },
       orderBy,
     })
 
-    return products
+    return products.map(({ _count, ...product }) => ({
+      ...product,
+      isFavorite: _count.favoritesItems > 0,
+    }))
   }
 
   public async update(
@@ -295,5 +275,53 @@ export class ProductService {
         'У вас нет доступа к управлению этим магазином',
       )
     }
+  }
+
+  private buildWhere(filtersQuery: ProductFilterDto): Prisma.ProductWhereInput {
+    const where: Prisma.ProductWhereInput = {}
+
+    if (filtersQuery.categoryIds?.length) {
+      where.categoryId = { in: filtersQuery.categoryIds }
+    }
+
+    if (filtersQuery.colorIds?.length) {
+      where.colorId = { in: filtersQuery.colorIds }
+    }
+
+    if (
+      filtersQuery.minPrice !== undefined ||
+      filtersQuery.maxPrice !== undefined
+    ) {
+      where.price = {}
+      if (filtersQuery.minPrice !== undefined)
+        where.price.gte = filtersQuery.minPrice
+      if (filtersQuery.maxPrice !== undefined)
+        where.price.lte = filtersQuery.maxPrice
+    }
+
+    if (filtersQuery.brandIds?.length) {
+      where.shopId = { in: filtersQuery.brandIds }
+    }
+
+    if (filtersQuery.search) {
+      where.title = { contains: filtersQuery.search, mode: 'insensitive' }
+    }
+
+    return where
+  }
+
+  private buildOrderBy(
+    filtersQuery: ProductFilterDto,
+  ): Prisma.ProductOrderByWithRelationInput {
+    const SORT_MAP: Record<
+      NonNullable<ProductFilterDto['sort']>,
+      Prisma.ProductOrderByWithRelationInput
+    > = {
+      price_asc: { price: 'asc' },
+      price_desc: { price: 'desc' },
+      newest: { createdAt: 'desc' },
+    }
+
+    return SORT_MAP[filtersQuery.sort ?? 'newest']
   }
 }

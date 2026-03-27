@@ -198,6 +198,7 @@ export type FavoritesItemOrderByWithRelationInput = {
 
 export type FavoritesItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  favoritesId_productId?: Prisma.FavoritesItemFavoritesIdProductIdCompoundUniqueInput
   AND?: Prisma.FavoritesItemWhereInput | Prisma.FavoritesItemWhereInput[]
   OR?: Prisma.FavoritesItemWhereInput[]
   NOT?: Prisma.FavoritesItemWhereInput | Prisma.FavoritesItemWhereInput[]
@@ -207,7 +208,7 @@ export type FavoritesItemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"FavoritesItem"> | Date | string
   favorites?: Prisma.XOR<Prisma.FavoritesScalarRelationFilter, Prisma.FavoritesWhereInput>
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
-}, "id">
+}, "id" | "favoritesId_productId">
 
 export type FavoritesItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -293,6 +294,11 @@ export type FavoritesItemListRelationFilter = {
 
 export type FavoritesItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FavoritesItemFavoritesIdProductIdCompoundUniqueInput = {
+  favoritesId: string
+  productId: string
 }
 
 export type FavoritesItemCountOrderByAggregateInput = {

@@ -25,6 +25,7 @@ import {
 } from '@nestjs/swagger'
 
 import { ProductFilterDto } from '@/api/product/dto/product-filter.dto'
+import { CatalogProductDto } from '@/api/product/dto/product-filtered-response.dto'
 import { ProductResponseDto } from '@/api/product/dto/product-response.dto'
 import { UpdateProductDto } from '@/api/product/dto/update-product.dto'
 import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
@@ -98,6 +99,8 @@ export class ProductController {
   }
 
   @Get('filters')
+  @Authorization()
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Получить отфильтрованный список товаров' })
   @ApiQuery({
     name: 'categoryIds',
@@ -143,12 +146,15 @@ export class ProductController {
   })
   @ApiOkResponse({
     description: 'Список товаров успешно получен',
-    type: ProductResponseDto,
+    type: CatalogProductDto,
     isArray: true,
   })
   @ApiCommonErrors()
-  public async getProducts(@Query() query: ProductFilterDto) {
-    return this.productService.findAllWithFilters(query)
+  public async getProducts(
+    @Authorized('id') userId: string,
+    @Query() query: ProductFilterDto,
+  ) {
+    return this.productService.findAllWithFilters(userId, query)
   }
 
   @Get(':id')

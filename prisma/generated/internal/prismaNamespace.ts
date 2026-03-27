@@ -1736,7 +1736,6 @@ export type BasketItemScalarFieldEnum = (typeof BasketItemScalarFieldEnum)[keyof
 
 export const FavoritesScalarFieldEnum = {
   id: 'id',
-  totalAmount: 'totalAmount',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

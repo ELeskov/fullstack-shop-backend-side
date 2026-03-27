@@ -13,6 +13,7 @@ import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
 import { ProductModule } from './product/product.module';
 import { BasketModule } from './basket/basket.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BasketModule } from './basket/basket.module';
     ColorModule,
     ProductModule,
     BasketModule,
+    FavoritesModule,
   ],
 })
 export class ApiModule {}
