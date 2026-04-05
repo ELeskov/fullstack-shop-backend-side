@@ -13,7 +13,6 @@ import { Request, Response } from 'express'
 import { v4 as uuidV4 } from 'uuid'
 
 import { LoginDto } from '@/api/auth/account/dto/login.dto'
-import { PatchUserDto } from '@/api/auth/account/dto/patchUser.dto'
 import { RegisterDto } from '@/api/auth/account/dto/register.dto'
 import { ResetPasswordDto } from '@/api/auth/account/dto/reset-password.dto'
 import { VerificationTokenDto } from '@/api/auth/account/dto/verificationToken.dto'
@@ -23,6 +22,7 @@ import { PrismaService } from '@/infra/prisma/prisma.service'
 import { MailService } from '@/libs/mail/mail.service'
 import { S3_NAME_FOLDERS } from '@/shared/consts'
 import { extractKeyFromUrl } from '@/shared/utils/extractionKeyFromUrl'
+import { PatchUserDto } from '@/api/auth/account/dto/patchUser.dto'
 
 @Injectable()
 export class AccountService {
