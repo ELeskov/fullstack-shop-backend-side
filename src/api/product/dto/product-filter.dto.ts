@@ -19,6 +19,31 @@ export class ProductFilterDto {
   categoryIds?: string[]
 
   @ApiPropertyOptional({
+    example: ['color-1', 'color-2'],
+    description: 'Список id цветов',
+  })
+  @IsOptional()
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.split(',') : value,
+  )
+  @IsArray()
+  @IsString({ each: true })
+  colorIds?: string[]
+
+  @ApiPropertyOptional({
+    example: 'NIVEA',
+    description: 'Фильтр по бренду',
+    isArray: true,
+  })
+  @IsOptional()
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.split(',') : value,
+  )
+  @IsArray()
+  @IsString({ each: true })
+  brandIds?: string[]
+
+  @ApiPropertyOptional({
     example: 100,
     description: 'Минимальная цена',
   })
@@ -37,33 +62,12 @@ export class ProductFilterDto {
   maxPrice?: number
 
   @ApiPropertyOptional({
-    example: ['color-1', 'color-2'],
-    description: 'Список id цветов',
-  })
-  @IsOptional()
-  @Transform(({ value }: { value: unknown }) =>
-    typeof value === 'string' ? value.split(',') : value,
-  )
-  @IsArray()
-  @IsString({ each: true })
-  colorIds?: string[]
-
-  @ApiPropertyOptional({
     example: 'крем',
     description: 'Поиск по названию товара',
   })
   @IsOptional()
   @IsString()
   search?: string
-
-  @ApiPropertyOptional({
-    example: 'NIVEA',
-    description: 'Фильтр по бренду',
-    isArray: true,
-  })
-  @IsOptional()
-  @IsString()
-  brandIds?: string[]
 
   @ApiPropertyOptional({
     example: 'news',

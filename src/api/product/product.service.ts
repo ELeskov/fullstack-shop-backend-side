@@ -77,6 +77,12 @@ export class ProductService {
       include: {
         category: true,
         color: true,
+        shop: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
         groupedOptions: {
           include: {
             options: true,

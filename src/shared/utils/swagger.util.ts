@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { SwaggerModule } from '@nestjs/swagger'
 
-import { getSwaggerConfig } from '../../config/loaders/swagger.config.js'
+import { getSwaggerConfig } from '../../config/loaders/swagger.config-loader.js'
 
 export function setupSwagger(app: INestApplication) {
   const document = SwaggerModule.createDocument(app, getSwaggerConfig())

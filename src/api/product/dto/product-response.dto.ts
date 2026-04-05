@@ -36,6 +36,14 @@ export class ProductCategoryResponseDto {
   title!: string
 }
 
+export class ProductShopResponseDto {
+  @ApiProperty({ example: 'uuid-col' })
+  id!: string
+
+  @ApiProperty({ example: 'Shop' })
+  title!: string
+}
+
 export class ProductColorResponseDto {
   @ApiProperty({ example: 'uuid-col' })
   id!: string
@@ -63,8 +71,8 @@ export class ProductResponseDto {
   @ApiProperty({ type: [String], example: ['https://s3.../img1.jpg'] })
   images!: string[]
 
-  @ApiProperty({ example: 'uuid-shop' })
-  shopId!: string
+  @ApiPropertyOptional({ type: ProductShopResponseDto })
+  shop!: ProductShopResponseDto
 
   @ApiProperty({ example: 'uuid-category' })
   categoryId!: string
