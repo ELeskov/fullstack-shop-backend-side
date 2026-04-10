@@ -37,7 +37,9 @@ export type TokenType = (typeof TokenType)[keyof typeof TokenType]
 
 export const EnumOrderStatus = {
   PENDING: 'PENDING',
-  PAYED: 'PAYED'
+  PAYMENT_PENDING: 'PAYMENT_PENDING',
+  PAYED: 'PAYED',
+  CANCELED: 'CANCELED'
 } as const
 
 export type EnumOrderStatus = (typeof EnumOrderStatus)[keyof typeof EnumOrderStatus]

@@ -121,8 +121,8 @@ model ProductsOptions {
 model Basket {
   id String @id @default(uuid())
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String? @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @map("user_id")
 
   basketItems BasketItem[]
 
@@ -247,8 +247,9 @@ model Review {
 model Order {
   id String @id @default(uuid())
 
-  status EnumOrderStatus @default(PENDING)
-  total  Int
+  status      EnumOrderStatus @default(PENDING)
+  totalAmount Int             @map("total_amount")
+  paymentId   String?         @unique @map("payment_id")
 
   items OrderItem[]
 
@@ -339,7 +340,9 @@ enum TokenType {
 
 enum EnumOrderStatus {
   PENDING
+  PAYMENT_PENDING
   PAYED
+  CANCELED
 
   @@map("enum_order_statuses")
 }

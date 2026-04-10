@@ -23,4 +23,8 @@ export class AppValidator {
   @IsString()
   @IsOptional()
   public HTTP_CORS!: string
+
+  @IsString()
+  @IsOptional()
+  public ALLOWED_ORIGIN!: string
 }

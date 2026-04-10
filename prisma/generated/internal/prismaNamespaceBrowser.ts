@@ -239,7 +239,8 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 export const OrderScalarFieldEnum = {
   id: 'id',
   status: 'status',
-  total: 'total',
+  totalAmount: 'totalAmount',
+  paymentId: 'paymentId',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

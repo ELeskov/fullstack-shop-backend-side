@@ -15,6 +15,8 @@ import { ProductModule } from './product/product.module'
 import { S3Module } from './s3/s3.module'
 import { ShopModule } from './shop/shop.module'
 import { UsersModule } from './users/users.module'
+import { OrdersModule } from './orders/orders.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { UsersModule } from './users/users.module'
     ProductModule,
     BasketModule,
     FavoritesModule,
+    OrdersModule,
+    ReviewsModule,
   ],
 })
 export class ApiModule {}

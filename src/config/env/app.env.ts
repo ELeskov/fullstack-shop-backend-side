@@ -11,6 +11,7 @@ export const appEnv = registerAs<AppConfig>('app', () => {
   return {
     nodeEnv: process.env.NODE_ENV,
     port: Number(process.env.APPLICATION_PORT),
+    allowedOrigin: process.env.ALLOWED_ORIGIN,
     // host: process.env.HTTP_HOST,
     // corsOrigin: process.env.HTTP_CORS,
   }

@@ -533,12 +533,10 @@ export type UserCreateNestedOneWithoutBasketInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneWithoutBasketNestedInput = {
+export type UserUpdateOneRequiredWithoutBasketNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutBasketInput, Prisma.UserUncheckedCreateWithoutBasketInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutBasketInput
   upsert?: Prisma.UserUpsertWithoutBasketInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBasketInput, Prisma.UserUpdateWithoutBasketInput>, Prisma.UserUncheckedUpdateWithoutBasketInput>
 }

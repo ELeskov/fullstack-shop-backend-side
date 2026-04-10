@@ -143,7 +143,7 @@ export type BasketGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type BasketGroupByOutputType = {
   id: string
-  userId: string | null
+  userId: string
   createdAt: Date
   updatedAt: Date
   _count: BasketCountAggregateOutputType | null
@@ -171,16 +171,16 @@ export type BasketWhereInput = {
   OR?: Prisma.BasketWhereInput[]
   NOT?: Prisma.BasketWhereInput | Prisma.BasketWhereInput[]
   id?: Prisma.StringFilter<"Basket"> | string
-  userId?: Prisma.StringNullableFilter<"Basket"> | string | null
+  userId?: Prisma.StringFilter<"Basket"> | string
   createdAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   basketItems?: Prisma.BasketItemListRelationFilter
 }
 
 export type BasketOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -195,13 +195,13 @@ export type BasketWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.BasketWhereInput | Prisma.BasketWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Basket"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   basketItems?: Prisma.BasketItemListRelationFilter
 }, "id" | "userId">
 
 export type BasketOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BasketCountOrderByAggregateInput
@@ -214,7 +214,7 @@ export type BasketScalarWhereWithAggregatesInput = {
   OR?: Prisma.BasketScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BasketScalarWhereWithAggregatesInput | Prisma.BasketScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Basket"> | string
-  userId?: Prisma.StringNullableWithAggregatesFilter<"Basket"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"Basket"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Basket"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Basket"> | Date | string
 }
@@ -223,13 +223,13 @@ export type BasketCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutBasketInput
+  user: Prisma.UserCreateNestedOneWithoutBasketInput
   basketItems?: Prisma.BasketItemCreateNestedManyWithoutBasketInput
 }
 
 export type BasketUncheckedCreateInput = {
   id?: string
-  userId?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   basketItems?: Prisma.BasketItemUncheckedCreateNestedManyWithoutBasketInput
@@ -239,13 +239,13 @@ export type BasketUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutBasketNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutBasketNestedInput
   basketItems?: Prisma.BasketItemUpdateManyWithoutBasketNestedInput
 }
 
 export type BasketUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basketItems?: Prisma.BasketItemUncheckedUpdateManyWithoutBasketNestedInput
@@ -253,7 +253,7 @@ export type BasketUncheckedUpdateInput = {
 
 export type BasketCreateManyInput = {
   id?: string
-  userId?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -266,7 +266,7 @@ export type BasketUpdateManyMutationInput = {
 
 export type BasketUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -396,12 +396,12 @@ export type BasketCreateWithoutBasketItemsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutBasketInput
+  user: Prisma.UserCreateNestedOneWithoutBasketInput
 }
 
 export type BasketUncheckedCreateWithoutBasketItemsInput = {
   id?: string
-  userId?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -426,12 +426,12 @@ export type BasketUpdateWithoutBasketItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutBasketNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutBasketNestedInput
 }
 
 export type BasketUncheckedUpdateWithoutBasketItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -472,7 +472,7 @@ export type BasketSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   basketItems?: boolean | Prisma.Basket$basketItemsArgs<ExtArgs>
   _count?: boolean | Prisma.BasketCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["basket"]>
@@ -482,7 +482,7 @@ export type BasketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["basket"]>
 
 export type BasketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -490,7 +490,7 @@ export type BasketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["basket"]>
 
 export type BasketSelectScalar = {
@@ -502,26 +502,26 @@ export type BasketSelectScalar = {
 
 export type BasketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["basket"]>
 export type BasketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   basketItems?: boolean | Prisma.Basket$basketItemsArgs<ExtArgs>
   _count?: boolean | Prisma.BasketCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BasketIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type BasketIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Basket$userArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $BasketPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Basket"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
     basketItems: Prisma.$BasketItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    userId: string | null
+    userId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["basket"]>
@@ -918,7 +918,7 @@ readonly fields: BasketFieldRefs;
  */
 export interface Prisma__BasketClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.Basket$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Basket$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   basketItems<T extends Prisma.Basket$basketItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Basket$basketItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BasketItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1346,25 +1346,6 @@ export type BasketDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Baskets to delete.
    */
   limit?: number
-}
-
-/**
- * Basket.user
- */
-export type Basket$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
 }
 
 /**
