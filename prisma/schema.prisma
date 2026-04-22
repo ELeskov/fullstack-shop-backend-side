@@ -57,11 +57,12 @@ model Shop {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  price       Int
-  images      String[]
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  images         String[]
+  price          Int
+  purchasesCount Int      @default(0) @map("purchases_count")
 
   groupedOptions GroupOptions[]
   reviews        Review[]

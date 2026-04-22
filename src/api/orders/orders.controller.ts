@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -18,6 +19,7 @@ import {
 import { GetOrdersQueryDto } from '@/api/orders/dto/get-orders-query.dto'
 import { OrderResponseDto } from '@/api/orders/dto/order-response.dto'
 import { PayOrderResponseDto } from '@/api/orders/dto/pay-order-response.dto'
+import { YookassaWebhookDto } from '@/api/orders/types/webhookbody.type'
 import { ApiCommonErrors } from '@/shared/decorators/api-common-errors.decorator'
 import { Authorization } from '@/shared/decorators/auth.decorator'
 import { Authorized } from '@/shared/decorators/authorized.decorator'
@@ -68,6 +70,11 @@ export class OrdersController {
     @Query() query: GetOrdersQueryDto,
   ) {
     return this.ordersService.getByUserId(userId, query)
+  }
+
+  @Post('notification')
+  public async notification(@Body() body: YookassaWebhookDto) {
+    return this.ordersService.handleWebhook(body)
   }
 
   @Get(':id')

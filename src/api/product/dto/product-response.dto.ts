@@ -68,6 +68,9 @@ export class ProductResponseDto {
   @ApiProperty({ example: 89990 })
   price!: number
 
+  @ApiProperty({ example: 12 })
+  purchasesCount!: number
+
   @ApiProperty({ type: [String], example: ['https://s3.../img1.jpg'] })
   images!: string[]
 

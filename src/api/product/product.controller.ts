@@ -64,6 +64,22 @@ export class ProductController {
     return this.productService.create(userId, shopId, dto, files)
   }
 
+  @Get('hits')
+  @ApiOperation({
+    summary: 'Получить топ-15 популярных товаров',
+    description:
+      'Возвращает список из 15 наиболее популярных товаров, отсортированных по количеству покупок в порядке убывания.',
+  })
+  @ApiOkResponse({
+    description: 'Список популярных товаров успешно получен',
+    type: ProductResponseDto,
+    isArray: true,
+  })
+  @ApiCommonErrors()
+  public async hitsProduct() {
+    return this.productService.hitsProduct()
+  }
+
   @Get('shop/:shopId')
   @Authorization()
   @ApiCookieAuth()

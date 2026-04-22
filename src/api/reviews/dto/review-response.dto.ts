@@ -18,7 +18,7 @@ export class ReviewAuthorResponseDto {
     example: 'https://example.com/avatar.jpg',
     nullable: true,
   })
-  picture!: string | null
+  picture!: string
 }
 
 export class ReviewProductResponseDto {

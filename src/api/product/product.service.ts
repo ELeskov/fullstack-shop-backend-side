@@ -88,7 +88,6 @@ export class ProductService {
             options: true,
           },
         },
-        reviews: true,
       },
     })
 
@@ -157,6 +156,22 @@ export class ProductService {
       ...product,
       isFavorite: _count.favoritesItems > 0,
     }))
+  }
+
+  public async hitsProduct() {
+    const products = await this.prismaService.product.findMany({
+      take: 15,
+      orderBy: {
+        purchasesCount: 'desc',
+      },
+      include: {
+        color: true,
+        category: true,
+        shop: true,
+      },
+    })
+
+    return products
   }
 
   public async update(
@@ -262,6 +277,28 @@ export class ProductService {
     if (product.images && product.images.length > 0) {
       await this.s3Service.deleteManyByUrls(product.images)
     }
+
+    return true
+  }
+
+  public async incrementPurchasesCount(productId: string, quantity: number) {
+    const product = await this.prismaService.product.findUnique({
+      where: { id: productId },
+      select: { id: true },
+    })
+
+    if (!product) {
+      throw new NotFoundException('Товар не найден')
+    }
+
+    await this.prismaService.product.update({
+      where: { id: productId },
+      data: {
+        purchasesCount: {
+          increment: quantity,
+        },
+      },
+    })
 
     return true
   }

@@ -56,7 +56,6 @@
     "express-session": "^1.19.0",
     "multer": "^2.0.2",
     "nestjs-cloudflare-captcha": "^0.0.11",
-    "nestjs-yookassa": "^2.3.6",
     "redis": "^5.10.0",
     "reflect-metadata": "^0.2.2",
     "resend": "^6.9.1",
